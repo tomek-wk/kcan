@@ -50,3 +50,11 @@ Nie uruchamiano nieznanych plików wykonywalnych; dotychczasowe wnioski pochodz�
 - **2026-10-23, trzecia analiza `VWTester.exe` FULL 2.5:** odtworzono dwa kompletne bloki konfiguracji `0x53`, w tym ID `0x200+x` i `0x300`; odnaleziono cztery tryby budowania wiadomości K-Line, rolę `60 00` w stanie programu, niepełną obsługę błędów zapisu COM i dodatkową ścieżkę `9600` po nieudanym ustawieniu portu. [Raport](docs/ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md), [filtry](docs/FILTERS.md), [testy KCAN-D023–D028](docs/DISCREPANCIES.md). Nadal **brak testów na konkretnym adapterze**.
 
 - **2026-10-23 — czwarta analiza `VWTester.exe` FULL 2.5:** wykryto bitowe inicjalizacje K-Line przez `SETBREAK/CLRBREAK` (8-bit oraz 7-bit+parity), osobne ustawienie COM **10472 bit/s**, parser echa i `7F ... 78`, możliwą nieskończoną pętlę ponawiania `TransmitCommChar` oraz obsługę COM10+. [Raport](docs/ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md) · [testy KCAN-D029–D035](docs/DISCREPANCIES.md). Te mechanizmy K-Line **nie są dodatkowymi opkodami protokołu CAN PC↔PIC**.
+
+
+## Najnowsze ustalenia CAN i przekazanie do kolejnego czatu
+
+- **2026-10-23, piąta analiza `VWTester.exe` 2.5 (tylko CAN):** oddzielne ścieżki `0x53` (inicjalizacja z kontrolą odpowiedzi vs okno „Set Filter” bez bezpośredniej kontroli), **dwa 2048-slotowe workery TX z `Sleep(10 ms)` po iteracji**, czas `GetTickCount` pochodzi z hosta i **nie jest sprzętowym timestampem CAN**, brak pewnej semantyki CAN29/listen-only. [Pełny raport](docs/ANALYSIS_VWTESTER_25_CAN_FOCUS_2026-10-23.md), [nowe testy KCAN-D036–D042](docs/DISCREPANCIES.md).
+- **Przed następnym plikiem w nowym czacie:** zacząć od **[HANDOFF_NEXT_CHAT.md](docs/HANDOFF_NEXT_CHAT.md)**. Podano tam kompletny stan projektu, hashe wszystkich znanych wersji, źródła, mapę CAN, niedowiedzione funkcje, plan testów i zasady zapisu do repo.
+
+Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, programów, bibliotek i logów.
