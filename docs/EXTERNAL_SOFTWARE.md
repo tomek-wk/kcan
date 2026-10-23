@@ -106,3 +106,9 @@ Historyczne materiały opisują Polski VAG 4.9 jako program **starszej diagnosty
 Archiwum `VAG COMMANDER 3.6(2).rar` dostarcza **nowy `VWTester.exe` (647 168 B, SHA-256 `a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`)**. Ma sekcje `.vmp0/.vmp1`, których układ/entropia odpowiada ochronie typu VMProtect. To istotna różnica względem czytelniejszego 2.5: **komend PC↔PIC nie dało się tutaj odtworzyć ze statycznego kodu**. Nazwa „3.6” pochodzi z pakietu, a VERSIONINFO nadal zawiera `1.0.0.1`.
 
 EXE **importuje po ordinalach** `FT_Open`, `FT_Close`, `FT_GetDeviceInfo` z dołączonej `FTD2XX.dll` i `FTID_GetChipIDFromHandle` z `FTChipID.dll`. Jednocześnie ma jawne API Win32 COM. To **poszerza hipotezy dotyczące wykrywania/identyfikacji sprzętu**, nie potwierdza toru transmisji CAN ani mechanizmu licencyjnego. Obecne `RCMicroDogSetup.dll` jest bajtowo identyczne ze starszymi pakietami. Dokumentacja: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md), test **KCAN-D043**.
+
+## Dwa programy z VAG-CAN Commander V4.5.zip (2026-10-23)
+
+W archiwum znaleziono **dwa różne Win32 PE32**: `VAG-CAN Commander 3.0 beta.exe` (417 792 B, SHA-256 `dfb5e3f4724f6898c7c82d5d6e69ed3f795edb5f536f4aa5ff37ab17eae2a39b`) i `VAG-CAN Commander4.5.exe` (477 472 B, SHA-256 `85e89882a434ad83d19381ecbb5f9e77b14b237343b1432feb2f7300810e0050`). Obie mają **czytelne wykonawcze ścieżki CAN11 `0x60/0x70` i `0x53`**; 4.5 ma dodatkową walidację krótkiego statusu `0x60` i wybór prędkości COM **115200 lub 833333** zależnie od parametru (bez rozpoznania nazw trybów).
+
+Oryginalna instrukcja instalacji mówi o „2.0 beta” i ustawianiu `[COM] PORT`, mimo obecności EXE 3.0 beta i 4.5 — dlatego nie należy rozumieć tej nazwy jako tożsamości oprogramowania/firmware. Dane diagnostyczne są wspólne z pakietami 1.4, sterownik FTDI jest bardzo stary (`1.00.2154`). [Pełne badanie](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md), testy `KCAN-D044–D045`.
