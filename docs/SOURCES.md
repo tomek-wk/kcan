@@ -122,3 +122,11 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Analiza importów programu i eksportów dołączonych bibliotek: D2XX ordinal 1=`FT_Open`, 2=`FT_Close`, 61=`FT_GetDeviceInfo`, FTChipID ordinal 8=`FTID_GetChipIDFromHandle`. **Jest to dowód zależności na etapie importu, nie wykonanych wywołań, sposobu nadawania CAN ani dodatkowego dongla.**
 - `FTDIBUS.INF` i `FTDIPORT.INF`: `DriverVer=05/19/2006,2.00.00` (wersja pakietu, nie potwierdzona wersja sterownika na PC). `FixDiag.ini`, `MWB.TXT`, `MWB_de.TXT`, `VAG.txt` identyczne po normalizacji CRLF→LF z publicznym katalogiem [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4), co potwierdzono Git blob SHA-1.
 - Raport: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md). Wyłącznie własne opracowanie; oryginalne binaria/sterowniki niepublikowane.
+
+## S12 — dwa kolejne archiwa Commandera 3.6: porównanie binarne (2026-10-23)
+
+- `VAG K CAN COMMANDER FULL 3,6.rar` — **RAR4, 1 730 535 B**, SHA-256 `e0059df5cb1e51434ae1eea95d4f7ff7234a176360fb739d2b382dbace83069b`.
+- `VAG-K CAN-V3.6.zip` — **ZIP, 1 971 451 B**, SHA-256 `9b59b9490c0011edea1976d9d4ad16a4671e1870b45576088f298ed23b5d8b32`.
+- Każde archiwum zawiera **26 plików i 2 katalogi**. Po zdjęciu odmiennego katalogu głównego i porównaniu wszystkich rozpakowanych bajtów, **25/26 plików jest identycznych z wcześniejszym `VAG COMMANDER 3.6(2).rar`** (S11); jedyna różnica to `Tester.ini`. Całe EXE `VWTester.exe` w każdym ma ten sam SHA-256 `a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`.
+- `Tester.ini` SHA-256: poprzedni 3.6 `949e7fadb8da0a3dc10a480dd157923dfb8e496c39c526468f91fb486d3bfd62`; nowy FULL `03549d88a2df4d324fed66275ec463e1152dee8046c64f1d43a91cce4f83e949`; nowy ZIP `fbdc181b9aff69b849faea489ea7d0766daf53fdd42840e576ad3f0830fd1caa`. Parametry pierwszego `TARGET` 6/6/0, `FILEINDEX` 1872/1877/1879.
+- Metoda i wynik: [ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md](ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md). Nie publikowano otrzymanych archiwów, EXE/DLL/sterowników ani surowych plików danych.
