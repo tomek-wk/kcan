@@ -148,3 +148,13 @@ Nowy audyt statyczny [ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md](AN
 4. **DLC tylko offline:** własny encoder jawnie odrzuca `N>8`, test `N=0,3,8,9,255` wykonywać na własnym kodzie/mocku, **nigdy w starym EXE**, ponieważ kopiuje N bajtów do ograniczonego bufora stosu bez lokalnej walidacji.
 
 Powiązane **KCAN-D048–D050** w [DISCREPANCIES.md](DISCREPANCIES.md), a testy sprzętowe **wyłącznie poza autem**.
+
+## Weryfikacja pakietu 5.0+ECU z etykietą V5.1 (D051/D052)
+
+**Rozpoznane statycznie:** `VAG-CAN Commander+EDC15.exe` z ZIP `V5.1` wyświetla w zasobach `5.0+ECU`, używa zwykłych komend hosta `51 00 → C0 00 → 53 20`, CAN11 `0x60/0x70` oraz UART 833333 w badanej ścieżce. Nie wykazano CAN29/IDE ani bezpieczeństwa transmitera. `memory.bin` 2048 B jest powiązany z obsługą plików, lecz jego rola jest nieznana.
+
+1. **Offline:** ustalić semantykę kodu przy `0x4135E0` odnoszącego się do `memory.bin` i czy to wejście, wyjście, backup/EEprom lub inne; nie otwierać/rozpowszechniać surowych danych dla celów niekoniecznych. Prześledzić osobno obecność ewentualnych innych nadajników EID29 poza rozpoznanym `0x403520`.
+2. **Bez samochodu:** sprawdzić numer COM zgodny z `Tester.ini`, fizyczną sekwencję DTR/RTS i baud; **nie instalować sterowników FTDI 2.04.06 na zwykłym komputerze wyłącznie dla eksperymentu**. `LatencyTimer=16` w INF jest domyślną wartością pakietu, nie aktualnym ustawieniem Windows.
+3. **Na odizolowanym CAN z drugim analizatorem**: porównywać stany żądanie nadania / zakończenie UART / odpowiedź PIC / fizyczny CAN, a w pasywnym teście porównać CAN11 `0x110` i CAN29 `0x18DAF110`; **nie wysyłać nieznanych `C0/53/55/60` w samochodzie**. Nie uruchamiać otrzymanego EXE bez oceny bezpieczeństwa i środowiska izolowanego.
+
+[Raport](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md), [D051/D052](DISCREPANCIES.md).
