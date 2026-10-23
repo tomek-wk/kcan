@@ -168,3 +168,15 @@ Zaktualizowano `PROTOCOL.md`, `COMMANDS.md`, `DISCREPANCIES.md`, `SAFE_TESTS.md`
 ### Istotne przy reprodukcji: bieżący katalog i COM0
 
 W 3.0 beta/4.5 `GetCurrentDirectoryA` + `\\TESTER.INI` i `GetPrivateProfileIntA("COM","PORT",0,...)` oznacza, że uruchomienie z innym katalogiem roboczym może prowadzić do **braku INI → PORT=0 → próby otwarcia COM0** (4.5 z UART 115200, 3.0 z UART 833333). To wniosek z wykonawczego kodu hosta, nie test systemowy. Wszelkie porównania powinny rejestrować working directory. Zob. [dalszą analizę](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
+
+## Uzupełnienie: pełniejszy audyt inicjalizacji i CAN29 w 3.0 beta/4.5 (2026-10-23)
+
+Użytkownik poprosił o **ponowną analizę inicjalizacji oraz możliwości CAN 29-bit** w dwóch EXE z wcześniej przesłanego `VAG-CAN Commander V4.5.zip` (bez nowego pliku). Raport: [ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md).
+
+**Wynik istotny dla niezależnego oprogramowania:** TX 3.0 beta `0x403510` / 4.5 `0x4034F0` czyta ID jako **WORD** i wysyła `60 (N+4) ((ID>>3)&FF) ((ID&7)<<2) 00 00 [dane]`. RX 3.0 beta `0x402D10` / 4.5 `0x402CE0` z `70` buduje **wyłącznie 11-bitowy ID** `(b2<<3)|((b3>>2)&7)` i pomija dalsze dwa bajty pola. **29-bit nie jest reprezentowalny w tych ścieżkach**, mimo 4B nagłówka. Test aliasowania: CAN29 `0x18DAF110` i CAN11 `0x110` oba dają nagłówek `22 00 00 00` w TX tego kodu. W obu EXE bezpośrednich wywołań UART-writera `0x408BD0` jest 5 (51, C0, 53, 60, generic raw); brak dodatkowego potwierdzonego kodowania extended-ID.
+
+**Inicjalizacja:** COM (`Tester.ini [COM] PORT`) → Sleep(50) → `51 00` → Sleep(50) → `C0 00` → Sleep(50) → `53 20 [32B]` (oczekiwanie do 100 ms w podprocedurach). W **obu** programach statycznie zrekonstruowano osiem 4-bajtowych wpisów bloku init: rekordy 0–5 = `FF 1C 00 00`, nr 6 = **`FF 1C 00 FF`**, nr 7 = `FF 1C 00 00`. Znaczenie `C0` i specjalnego ostatniego `FF` nieznane, brak jawnego przełączenia IDE29. 4.5 prędkość UART nadal zależy od numeru COM (PORT<2:115200, >=2:833333), a nie od CAN/K-Line; to nie bitrate CAN.
+
+**Bardzo ważny niuans:** bajt nazwany `SIDL` w protokole **NIE JEST surowym PIC SIDL**: UART `(ID&7)<<2` umieszcza SID w bitach 4–2, a w rejestrze potencjalnego PIC18F248/258 to bity 7–5; `EXIDE` (bit 3 PIC) nie może być odczytany z hostowego `0x1C`. Rodzina PIC sprzętowo może CAN 2.0B Active, ale **typ PCB/firmware konkretnego adaptera i faktyczna obsługa CAN29 pozostają nieznane**. Chroniony 3.6 nie został rozstrzygnięty.
+
+Nowe **KCAN-D047** w [DISCREPANCIES.md](DISCREPANCIES.md), test w [SAFE_TESTS.md](SAFE_TESTS.md): referencyjny CAN11 `0x110` kontra CAN29 `0x18DAF110` tylko na izolowanej magistrali, obserwacja UART i fizycznego CAN, bez prób w pojeździe. Nie wymyślać nowego opkodu CAN29.
