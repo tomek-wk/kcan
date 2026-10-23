@@ -123,3 +123,14 @@ Pełne adresy i ograniczenia: [ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md]
 **Priorytet:** D036 (rzeczywiste potwierdzenie filtrów), D037/038 (przepustowość i straty sniffera), D041 (nieznane opkody), D042 (bezpieczeństwo hosta). **Tryb listen-only bez ACK i CAN29 wciąż niepotwierdzone.**
 
 Następna rozmowa: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md).
+
+## Uzupełnienie KCAN-D006/D011 — zainstalowany Commander 1.4 (2026-10-23)
+
+Nowy materiał: `VAG K+CAN COMMANDER 1.4zainstalowany.rar`, SHA-256 `8f76b5f4e1b420878e159b42f83367e7a4586c826cae3d5319715268409fdbd2`. Szczegóły: [ANALYSIS_INSTALLED14_2026-10-23.md](ANALYSIS_INSTALLED14_2026-10-23.md).
+
+| Test | Nowe ustalenie | Aktualny status / co pozostaje |
+| --- | --- | --- |
+| **KCAN-D006** | Zainstalowany `VAG K+CAN COMMANDER 1.4.exe` ma SHA-256 `ea69c09b51fda25107d9926d7d033f4e25f5374ec0dd2b1bc4a9867a7b19b932` — identyczny z chronionym 1.4; DLL także identyczna. Metadane deinstalatora wskazują `Setup VAG K+CAN COMMANDER 1.4.exe` jako źródło instalacji. | **OPEN — silny dowód pośredni, częściowo wyjaśnione.** Nie odczytano *bezpośrednio* plików ze środka konkretnego archiwalnego instalatora, więc brak kryptograficznego powiązania instalatora z wynikowym EXE. |
+| **KCAN-D011** | `Tester.ini` z instalacji ma pierwsze `TARGET=6`, drugie `TARGET=0`, `DIAGNOSTICID=1761195548`, `FILEINDEX=1955`. W `FULL 1.4` było analogicznie, poza `FILEINDEX=1956`. | **OPEN — nowa wariacja ustawienia śladu.** Wyjaśnić parser duplikatów `[CHANNEL]` i czy `FILEINDEX` zmienia się w czasie; **nie traktować go jako opkodu PC↔PIC**. |
+
+Nie powstał nowy test `KCAN-D043`: zidentyfikowane różnice należą do już istniejących zadań D006/D011. Brak nowych dowodów działania CAN na konkretnym adapterze.
