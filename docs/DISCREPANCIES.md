@@ -73,3 +73,17 @@ Dla każdej pozycji po teście dopisać: **model PIC**, oznaczenia PCB, mostek U
 | **KCAN-D022** | Ogólny schemat pakietów `[opcode,length,payload]` | `0x4037D0` waliduje `0x70` length 4..12, `0x60` 0..4, a inne pakiety z ośmioma deskryptorami; parser próbuje resynchronizacji | Czy konkretne firmware generuje wszystkie warianty; jakie są statusy i recovery? Przechwycenie transmisji + test jednostkowy offline parsera. | **OPEN — reguły hosta potwierdzone** |
 
 Doprecyzowanie: problem `KCAN-D013` pozostaje otwarty tylko co do **semantyki CAN/K-Line na adapterze**; fakt przełączania `0x50/0x51` przez wybór w GUI został ustalony kodem. Żadne z powyższych nie dowodzi trybu *listen-only* bez ACK.
+
+ 
+## Trzecia analiza VWTester 2.5 — testy KCAN-D023–D028
+
+| ID | Nowy wynik w EXE | Co sprawdzić | Status |
+| --- | --- | --- | --- |
+| **KCAN-D023** | Po wyborze `50 00` / `51 00` program wysyła kolejno **dwa** bloki `53 20`: stały i adresowy | Przechwycić kolejność, dwie odpowiedzi PIC i wynik `52 00` po każdym zapisie; bez pojazdu | OPEN; kolejność hosta potwierdzona |
+| **KCAN-D024** | Blok adresowy używa identyfikatorów CAN **`0x200+x`** (dwa wpisy) oraz **`0x300`** (jeden wpis), maska robocza M0 ma `FF1C00FF` | Zmieniać x tylko na izolowanej magistrali, sprawdzić reakcję RX i dokładne mapowanie masek/filtrów PIC | OPEN; algorytm hosta potwierdzony |
+| **KCAN-D025** | `0x42B250` składa 4 formaty K-Line/KWP, w tym `[80+N,target,F1,data,sum]` i `[N,data,sum]` | Określić warunki wyboru wariantów i timeouty transmisji, bez mieszania z protokołem PC↔PIC | OPEN |
+| **KCAN-D026** | Parser synchronizacji K-Line `0x42B1B7` wykorzystuje `0x55` i negację bajtu | Zarejestrować fazy inicjalizacji i odpowiedzi urządzenia, nie interpretować jako `55 03` dla CAN | OPEN |
+| **KCAN-D027** | Wrapper `0x40A3D0` może zwrócić `1` mimo błędu zakończenia `WriteFile/GetOverlappedResult` | Własny sterownik powinien osobno testować sukces Win32, liczbę zapisanych bajtów, odpowiedź PIC oraz nadawanie CAN | OPEN; ograniczenie EXE rozpoznane |
+| **KCAN-D028** | Przy błędnym ustawieniu COM program próbuje `9600` i zwraca błąd inicjalizacji | Czy to tylko procedura przywracająca ustawienia portu; nie wnioskować o pracy PIC z 9600 | OPEN |
+
+Adresy, zawartość obu bloków i ograniczenia: [ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md](ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md). Żadnej z kwestii nie zweryfikowano jeszcze na niebieskim adapterze.
