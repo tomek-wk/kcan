@@ -182,3 +182,13 @@ Na podstawie [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BE
 ### Uwaga do D045 — katalog roboczy i brak INI (2026-10-23)
 
 Obie stare aplikacje budują ścieżkę pliku `\\TESTER.INI` względem **GetCurrentDirectoryA**, nie względem EXE. `GetPrivateProfileIntA` ma wartość domyślną **0**, co przy braku prawidłowego INI prowadzi w rozpoznanej ścieżce do **COM0** (4.5 z baud 115200, 3.0 beta z baud 833333). W izolowanym teście odtwarzać **working directory**, nie samą lokalizację EXE, i nie interpretować błędu COM0 jako awarii adaptera. [Ślad kodu](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
+
+## KCAN-D047 — czy istnieje rzeczywista ścieżka CAN29? (2026-10-23)
+
+**Źródło:** [ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), ponowna statyczna analiza dwóch binariów z `VAG-CAN Commander V4.5.zip` (identyfikatory w [S13](SOURCES.md)).
+
+| ID | Potwierdzone z kodu hosta | Otwarte pytania / proponowany test | Status |
+| --- | --- | --- | --- |
+| **KCAN-D047 (P0/P1)** | **3.0 beta `0x403510` i 4.5 `0x4034F0` odczytują ID jako WORD i przesyłają tylko `ID&0x7FF` w formacie `0x60`**; RX `0x402D10`/`0x402CE0` odzyskuje **tylko 11 bitów**. Konfiguracja `0x53` koduje standardowe ID, brak jawnej procedury konstruowania 29-bit EID w tych ścieżkach. Przy inicjalizacji `51 00 → C0 00 → 53 20` nie stwierdzono jawnego włączenia CAN29. `ID=0x18DAF110` i `ID=0x110` aliasują do `22 00 00 00`; 4-bajtowy field UART **nie jest surowym rejestrem PIC SIDL** (przesunięcie `<<2` vs PIC `<<5`). | Czy firmware przyjmuje **inne** komendy/formy ID? Czy odpowiada ramkami CAN29 ze wszystkimi 29 bitami lub sygnałem IDE; czy jedynie przepuszcza/odrzuca lub aliasuje? **Najpierw offline** szukać innej, czytelnej implementacji i źródła firmware. Następnie tylko **odizolowana magistrala** i drugi interfejs referencyjny: generować osobno standardowe `0x110` i rozszerzone `0x18DAF110`, porównać niezmodyfikowany strumień UART oraz fizyczne ACK/listen-only; nie nadawać `C0/53/55/60` do auta. | **OPEN — CAN11 potwierdzony kodem; CAN29 NIEOBSŁUGIWANY przez badane 0x60/0x70; inne ścieżki i firmware NIEZWERYFIKOWANE** |
+
+**Doprecyzowanie istniejących D019/D024/D044:** charakterystyczne `FF 1C 00 00` i `FF 1C 00 FF` pochodzą z domyślnej konfiguracji **hosta**. Nie wolno uznawać `0x1C` za bezpośrednią wartość bitów EXIDE w rejestrze PIC. Nie przenosić numeru „CAN 2.0B Active” z datasheet potencjalnego PIC na funkcjonalność aplikacji i nie twierdzić, że program 3.6 ma/nie ma CAN29, bo jego wykonywalne funkcje nadal są chronione.
