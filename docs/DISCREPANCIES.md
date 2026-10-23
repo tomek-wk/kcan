@@ -104,3 +104,22 @@ Adresy, zawartość obu bloków i ograniczenia: [ANALYSIS_VWTESTER_25_DEEP_2026-
 Pełne adresy i ograniczenia: [ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md](ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md).
 
 **Zasada:** funkcje `SETBREAK/CLRBREAK` i diagnostyczne `7F 78` są elementami pracy K-Line, nie nowymi opkodami binarnego protokołu `0x50–0x70`. Żadnej z nowych funkcji nie testowano dotąd na niebieskim adapterze.
+
+
+## Piąta analiza VWTester 2.5 — wyłącznie CAN (2026-10-23)
+
+Źródło: [ANALYSIS_VWTESTER_25_CAN_FOCUS_2026-10-23.md](ANALYSIS_VWTESTER_25_CAN_FOCUS_2026-10-23.md). Dowody pochodzą z **kodu EXE 2.5**, **nie** z testów adaptera.
+
+| ID | Nowe ustalenie | Test rozstrzygający / zadanie | Status |
+| --- | --- | --- | --- |
+| **KCAN-D036** | Inicjalizacja filtrów: `0x404270` oczekuje na odpowiedź `0x53`. Ścieżka okna filtrów `0x40E490→0x404300` nadaje ten sam typ bloku **bez bezpośredniego sprawdzenia odpowiedzi**. | Na izolowanym CAN porównać surowe TX/RX obu ścieżek, odpowiedzi `0x53`, wynik odczytu `0x52`; sprawdzić warunek `[object+0x5C]`. Nie wnioskować o aplikacji filtra z samego GUI. | **OPEN**, różnica hosta potwierdzona kodem |
+| **KCAN-D037** | Worker TX `0x403DC0` i analog `0x409A80` wywołują **Sleep(10 ms)** po iteracji kolejki 2048 rekordów. | Izolowana magistrala, kontrolowane obciążenie i dwa zegary UART/CAN: porównać throughput i opóźnienia z rzeczywistym wątkiem EXE oraz własnym senderem bez sztucznej pauzy. | **OPEN**, Sleep potwierdzony |
+| **KCAN-D038** | Odbiór `0x70` i TX używają historii 20-bajtowych rekordów i indeksów 2048; timestamp `GetTickCount` jest **hostowy**, historia ma mechanizm przesuwania wpisów. | Niezależny logger CAN ze sprzętowymi timestampami, ramki z numerami sekwencji; zmierzyć straty, zmianę kolejności i precyzję czasu, zwłaszcza po nasyceniu UART/GUI. | **OPEN**, architektura hosta potwierdzona |
+| **KCAN-D039** | Parser uznaje odpowiedź `0x60 length=0..4`, ale dyspozytor jawnie interpretuje wyłącznie `60 00`, zerując lokalny status. | Obserwować odpowiedzi adaptera na izolowanym CAN, bez prowokowania usterek pojazdu; parser fuzzować wyłącznie offline dla długości 0..4. | **OPEN** |
+| **KCAN-D040** | Wyborowi indeksu GUI odpowiada `50 00` lub `51 00`; nie ustalono nazwy opcji CAN dla każdego indeksu ani wpływu na firmware. | Zmapować listę opcji GUI do kodów i rejestrować odpowiedzi, RTS/DTR na laboratoryjnym adapterze. Uzupełnia KCAN-D013/021. | **OPEN** |
+| **KCAN-D041** | W tej kompilacji kod `0x52/0x54/0x6F` potwierdzono w deskryptorach, **nie w ścieżkach wykonawczych komend**; `0x55/0x5F` udokumentowano w **innej DLL**. Dosłownej sekwencji `55 03 01 FA 07` nie znaleziono w PE 2.5. | Poszukać produkcji pakietów przez xrefs i w **legalnym, własnym logu PC↔PIC**; nie twierdzić o braku tych funkcji w firmware ani nie wysyłać nieznanych payloadów. | **OPEN** |
+| **KCAN-D042** | TX worker kopiuje N bajtów z 20-bajtowego rekordu do lokalnego pakietu, a bezpośrednio w tej funkcji brak jawnej kontroli `N<=8`. RX dopuszcza `0x70 length 4..12`. | Odnaleźć walidację w producentach wiadomości; własne testy/parser fuzz wyłącznie offline dla N=0,8,9,255 i podzielonych pakietów. Na magistrali testować tylko poprawny Classical CAN N<=8. | **OPEN**, brak walidacji dotyczy wyłącznie tej ścieżki |
+
+**Priorytet:** D036 (rzeczywiste potwierdzenie filtrów), D037/038 (przepustowość i straty sniffera), D041 (nieznane opkody), D042 (bezpieczeństwo hosta). **Tryb listen-only bez ACK i CAN29 wciąż niepotwierdzone.**
+
+Następna rozmowa: [HANDOFF_NEXT_CHAT.md](HANDOFF_NEXT_CHAT.md).
