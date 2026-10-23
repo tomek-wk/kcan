@@ -78,3 +78,9 @@ Dodatkowo w `0x420462–0x42046F` parametr **block size** jest używany w instru
 - **KCAN-D047/CAN29**: bez zmiany — wszystkie odnalezione ramki TP2.0 przechodzą przez **znane `0x403520` CAN11**, a nie poprzez alternatywny format CAN29. **D048/D049** o błędach Win32 TX pozostają aktualne.
 
 Nie opublikowano całego pliku `memory.bin`, danych konkretnego ECU, sterowników, EXE ani surowych logów. Całą analizę przeprowadzono offline.
+
+## Suplement audytu: TP2.0 dziedziczony z 3.0 beta i 4.5 (2026-10-23)
+
+**Nowa weryfikacja:** segmentacja TP2.0, wcześniej szczegółowo opisana na przykładzie `0x420360` (5.0+ECU), **nie jest specyficzna dla tego EXE**. Ta sama konstrukcja występuje w **3.0 beta `0x4166E0`** oraz **4.5 `0x417FB0`** (RX odpowiednio `0x416900` i `0x4181D0`), z bardzo podobnym kodem x86 i wspólnym błędem `AND EAX,0xFF`/ `CMP AX,0x300` przed gałęzią A1/A3. To sugeruje **odziedziczoną implementację**, nie trzy niezależne projekty. Część inicjalizacji D0 istnieje niezależnie, a gałąź A1/A3 w tym miejscu jest matematycznie nieosiągalna.
+
+**Kolejne ryzyko (D055):** handler odbioru TP2.0 w 5.0+ECU `0x4206BD–0x4206CE` robi `DLC-1` przed masowym kopiowaniem, bez wcześniejszej ochrony `DLC>=1` w ogólnej gałęzi; dla pustej ramki dopuszczonej przez `0x70` licznik może zawinąć. Ten sam kod jest w 3.0 beta/4.5. Dopasowanie ACK `&0xB0 ==0xB0` jest szersze niż poprawne sprawdzenie górnego nibble. Patrz [pełny audyt wszystkich ośmiu archiwów z wyłączeniem chronionego kodu](AUDIT_READABLE_FILES_2026-10-23.md) i D053–D056.
