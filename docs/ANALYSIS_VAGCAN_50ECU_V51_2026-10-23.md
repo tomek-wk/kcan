@@ -101,3 +101,9 @@ Oba `drivers/ftdibus.inf` i `drivers/ftdiport.inf` deklarują **`DriverVer=03/13
 - **D048–D050:** dowiedziono zachowania tego samego typu w kolejnej kompilacji; naprawy wymagane **we własnym programie**, nie przez bezrefleksyjne kopiowanie klienta Win32.
 
 **Wniosek:** pakiet oznaczony V5.1 jest **nową kompilacją hosta z funkcjami EDC15 i nowym artefaktem pamięci**, ale **nie dostarcza udokumentowanego nowego formatu CAN29**. Wspólne opkody `51/C0/53/60/70` i wady write/TX są odtwarzalne po stronie EXE. Żadnego pomiaru firmware, CAN ACK, listen-only lub CAN29 nie wykonano. Testy sprzętowe wyłącznie na stanowisku izolowanym, nie na samochodzie.
+
+## Addendum: eksport pamięci i VAG TP2.0 (2026-10-23)
+
+**Skorygowano wcześniejszą niepewność dotyczącą `memory.bin`:** w kodzie `0x4135E0` aplikacja otwiera `CFile::Open(modeCreate|modeWrite)` → `0x413A13/0x413A86` `Write(1)` → `0x413DC4` `Close()` → tekst `ReadMemory - Done.`. To **eksport odczytu pamięci**, nie potwierdzony obraz firmware PIC. Parametry `0x414F40` przewidują nominalnie **4 KiB/16 KiB/512 KiB** i tryb własny; pochodzenie dostarczonej próbki 2048B pozostaje nieznane, a otwarcie może nadpisać istniejący `memory.bin`.
+
+**Nowa warstwa CAN:** `0x420360` implementuje faktyczny **VAG TP2.0** (segmenty 1+do7 bajtów, nibble sekwencji, flags `0x10/0x20/0x00`, block-size/ACK), wysyłany jako CAN11 przez `0x4207D0→0x403520`. To **nie nowy UART opcode i nie CAN29**. W RX jest `B0|seq` i obsługa połączenia; pełny handshake nadal niezweryfikowany. Dodatkowo odkryto dwa busy-wait bez lokalnego timeoutu i brak lokalnej kontroli dzielnika block-size `>0`. Szczegółowe dowody z adresami: [ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md](ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md); D052–D054.
