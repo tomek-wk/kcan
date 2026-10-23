@@ -97,3 +97,11 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Użyte pliki: `Tester.ini` oraz **lokalnie** `Uninstall/uninstall.xml` (zawiera dane konta i ścieżki komputera; **nie publikować treści**). Nazwa instalatora podana w XML potwierdza kontekst Setup Factory, ale nie jest hashem konkretnego instalatora.
 - Wyniki porównania 8 pozostałych tekstów po CRLF→LF z [repo Skylakc](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4): identyczne; `Tester.ini` wariant `FILEINDEX=1955`.
 - Raport: [ANALYSIS_INSTALLED14_2026-10-23.md](ANALYSIS_INSTALLED14_2026-10-23.md). Oryginalne binaria, archiwum, lokalny XML i logi pozostają poza repo.
+
+## S9 — VWTOOL / VDS-PRO 2.09 (2026-10-23)
+
+- Materiał użytkownika: `VWool 2 0 9 en PL.rar` — RAR v4, 482777 B, SHA-256 `70b992d60f4b5cc014b30bca9fb6840ac213e883a7fd9378d92745e568a9079d`; **16 plików, bez hasła**.
+- `VWTOOL.EXE` SHA-256 `c83f27287903b4d466b48406db20944be4783a59100b690832e3b134e3bfb93a`; `VWTOOL-pl.EXE` SHA-256 `2a473cb2f55706df9682ec8e78181c1f18dce2c2ea377c468b493e30ddbc5120`. Programy 16-bitowe NE/Visual Basic 3, **nie VAG K+CAN Commander**.
+- `ERRCODE4.CSV` oraz `LABELS.CSV` — dane w kodowaniu XOR `0x85` z niezmienionymi CR/LF (opisy błędów i grup pomiarowych). Pełne bazy nie są publikowane.
+- Źródła zewnętrzne: [VDSPro 2.09, archiwalna instrukcja](https://www.manualzz.com/doc/6336906/baum-tools-unlimited-vdspro-diagnostic-software-instructi...), [Ross-Tech: podręcznik i historyczny komentarz o VWTool](https://ross-tech.net/vag-com/download/old-manual/PrintableManual4090d.pdf), [Ross-Tech: stare interfejsy](https://www.register.ross-tech.com/vag-com/old-interfaces/discontinued_interfaces.php). Nie dowodzą współpracy z konkretnym interfejsem K+CAN użytkownika.
+- Wyniki: [ANALYSIS_VWTOOL_209_2026-10-23.md](ANALYSIS_VWTOOL_209_2026-10-23.md); brak nowych komend CAN PC↔PIC.
