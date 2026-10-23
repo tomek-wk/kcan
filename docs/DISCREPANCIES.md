@@ -42,3 +42,19 @@ Dla każdej pozycji po teście dopisać: **model PIC**, oznaczenia PCB, mostek U
 | **KCAN-D011** | `VAG-K_CAN_Commander_1[X].4.zip`: pierwsze `[CHANNEL] TARGET=0`, `[TRACE] FILEINDEX=3221` | `VAG K CAN COMMANDER FULL 1.4.zip`: pierwsze `[CHANNEL] TARGET=6`, `[TRACE] FILEINDEX=1956` | Pliki mają także **drugie `[CHANNEL] TARGET=0`**: która wartość jest stosowana i czy wpływa na komunikację? | Analiza parsera konfiguracji w innej wersji programu; ewentualnie test porównawczy widocznego celu i pierwszych ramek PC↔PIC, wyłącznie na odizolowanym stanowisku; niezależna obserwacja indeksu logów. | **OPEN** |
 
 **Ważne:** identyczne binaria EXE i DLL potwierdzają, że różnice w `Tester.ini` nie są dowodem istnienia nowej komendy protokołu ani nowej wersji firmware. [Dowody](ANALYSIS_FULL14_2026-10-23.md).
+
+
+---
+
+## Nowe różnice wykryte w kodzie Commandera FULL 2.5
+
+| ID | Ustalenie A | Ustalenie B | Co należy rozstrzygnąć | Plan testu | Status |
+| --- | --- | --- | --- | --- | --- |
+| **KCAN-D012** | `J2534KCAN.dll` i wszystkie logi KCANTEST korzystają z `0x60/0x70` z **N=8** | `VWTester.exe` 2.5 oblicza `L=N+4` dla nadawania i `N=L-4` dla odbioru | Czy firmware obsługuje fizyczne ramki CAN DLC 0–7 oraz czy uzupełnianie do 8 jest właściwością aplikacji J2534? | Na odizolowanej magistrali, po zweryfikowaniu inicjalizacji, spróbować `N=3`, ID `0x123`, payload `11 22 33`; porównać odczyt niezależnym interfejsem, DLC i odpowiedź Commandera. Najpierw obserwacja znanego EXE bez pojazdu. | **OPEN — różnica hosta potwierdzona** |
+| **KCAN-D013** | Starszy rejestr `0x50` opierał się jedynie o zewnętrzne logi; `0x51` nie był udokumentowany | EXE 2.5 wysyła `50 00` i `51 00`, weryfikuje opkod odpowiedzi | Jakie funkcje mają oba kody, czy są zależne od kolejności i wersji firmware? | Obserwować sesję inicjalizacji 2.5 i identyfikować odpowiedzi; bez automatycznego nadawania do auta. | **OPEN** |
+| **KCAN-D014** | Funkcja `0x5F` znana z J2534; zestaw opkodów niepełny | EXE 2.5 inicjalizuje `0x54` oraz `0x6F` obok `0x50–0x53/0x60/0x70` | Czy są to funkcje sterowania CAN, potwierdzenia lub zdarzenia? | Kontynuować deasemblację dyspozytora; następnie porównać odczytane bajty z własnego logu PC↔PIC. | **OPEN — znaczenie nieustalone** |
+| **KCAN-D015** | Oznaczenie dystrybucji „Commander FULL 2.5” | Zasób VERSIONINFO w EXE 2.5 nadal `FileVersion=1.0.0.1` | Który numer oznacza produkt, kompilację, firmware? | Porównać SHA-256 i zasoby kolejnych wersji; sprawdzić odpowiedź identyfikacji adaptera, jeśli istnieje. Powiązane KCAN-D001. | **OPEN** |
+| **KCAN-D016** | Polaryzacja DTR/RTS i reset dla konkretnego PCB pozostają nieznane | EXE 2.5 wykonuje `SETDTR`, 500 ms, `CLRDTR`, potem `SETRTS` albo `CLRRTS` | Jaki skutek ta sekwencja ma na konkretnym niebieskim klonie? | Pomiar analizatorem logicznym stanów DTR/RTS na FTDI i resetu/sterowania PIC w kontrolowanym zasilaniu, bez auta. | **OPEN** |
+| **KCAN-D017** | INI FULL 1.4: `TARGET=6`, `DIAGNOSTICID=1761195548`, `FILEINDEX=1956` | INI FULL 2.5: `TARGET=0`, `DIAGNOSTICID=-674897751`, `FILEINDEX=1802` | Które parametry pochodzą z programu, które są zmienne użytkownika i czy mają wpływ na protokół? | Prześledzić parser INI / przygotować porównawcze logi na izolowanym stanowisku. Powiązane KCAN-D011. | **OPEN** |
+
+**Uwaga:** różnice KCAN-D012–D017 są na razie udokumentowane kodem lub plikami programu, **nie pomiarem adaptera**. Nie zakładać, że ten sam firmware działa ze wszystkimi dystrybucjami. Pełne miejsca kodu: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md).

@@ -79,3 +79,12 @@ Instrukcja pakietu podaje konfigurację VCP COM1–COM4, Latency Timer 1 ms, USB
 ## Kolejny katalog aplikacji `FULL 1.4` — wynik porównania
 
 Dostarczone `VAG K CAN COMMANDER FULL 1.4.zip` **nie jest nową kompilacją** programu. `VAG-K+CAN Commander.exe` i `RCMicroDogSetup.dll` są **bajtowo identyczne** z pakietem `VAG-K_CAN_Commander_1[X].4.zip`; pozostałe teksty są takie same po normalizacji CRLF/LF poza dwoma parametrami `Tester.ini`. Nie znaleziono nowych instrukcji komunikacji PC↔PIC. To **alternatywny zestaw ustawień tego samego chronionego EXE**, nie potwierdzony wariant firmware. [Pełne porównanie](ANALYSIS_FULL14_2026-10-23.md).
+
+
+---
+
+## Pierwsza rzeczywiście inna kompilacja — VAG K+CAN Commander FULL 2.5
+
+`k+can2.5(1).zip` zawiera `VWTester.exe` **688 128 B**, SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`; to **inny plik** niż dotychczasowe `VAG-K+CAN Commander.exe` 1.4 (**1 060 864 B**). W zasobach wprost `VAG-K+CAN COMMANDER FULL 2.5`. EXE 2.5 jest bardziej czytelny w deasemblacji mimo eksportów EXECryptor. Biblioteka `RCMicroDogSetup.dll` jest **identyczna** z pakietem 1.4, co może oznaczać wspólny komponent dongla, lecz nie potwierdza kompatybilności urządzeń.
+
+**Znacząca funkcja:** kod 2.5 wysyła i odbiera CAN11 o **zmiennej długości N**, zamiast jedynie ośmiobajtowego pola obserwowanego wcześniej. Nadaje także krótkie komunikaty `50 00` oraz `51 00` i zapisuje `53 20 [32 B]`. [Raport](ANALYSIS_VWTESTER_25_2026-10-23.md).

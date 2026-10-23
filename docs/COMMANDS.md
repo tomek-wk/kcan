@@ -36,3 +36,25 @@
 | Konstrukcja `0x53` / filtry | `0x41EC62` |
 
 Adresy odnoszą się wyłącznie do biblioteki SHA-256 `3b8cc66f95a174a0a3b5c94a5a8976e34c5211798dbdfd8105903038fd2bf09b`. Inne kompilacje mogą mieć inne adresy.
+
+
+---
+
+## Dodatkowe potwierdzenia z innej kompilacji — `VWTester.exe` FULL 2.5
+
+EXE 2.5 SHA-256: `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`. Poniższe są **potwierdzone w kodzie tej kompilacji**, lecz nie zostały zweryfikowane na fizycznym adapterze.
+
+| Kod | Zidentyfikowane zachowanie | Adresy VA 2.5 | Status |
+| --- | --- | --- | --- |
+| `0x50` | Nadanie krótkiego polecenia z bufora, zwykle `50 00`, i kontrola opkodu odpowiedzi | `0x403B4C`, `0x404210` | **EXE 2.5**; dokładny sens nieznany |
+| `0x51` | Nadanie krótkiego polecenia `51 00` i kontrola opkodu odpowiedzi | `0x403B53`, `0x4041B0` | **EXE 2.5**; dokładny sens nieznany |
+| `0x52` | Inicjalizowany bufor polecenia (wcześniej 32-bajtowy odczyt z DLL + logów) | `0x403B5A` | **EXE 2.5** (inicjalizacja bufora), semantyka z wcześniejszej DLL |
+| `0x53` | Zapis **32 bajtów** jako `53 20 [32 B]`, kontrola opkodu odpowiedzi | `0x404270–0x4042ED` | **EXE 2.5 + wcześniejsze DLL/logi** |
+| `0x54` | Kod inicjalizowany w buforach wiadomości | `0x403B68`, `0x403B8F` | **EXE 2.5**; semantyka i kierunek nieustalone |
+| `0x60` | Nadanie CAN11 z **N-bajtowym** payloadem i `length=N+4` | `0x403E54–0x403EC1` | **EXE 2.5**; niezależne potwierdzenie kodowania |
+| `0x6F` | Kod inicjalizowany w buforze wiadomości | `0x403B95` | **EXE 2.5**; semantyka nieustalona |
+| `0x70` | Odebrana ramka CAN11 z **N=length-4** bajtami danych | `0x403850–0x4038D0` | **EXE 2.5**; niezależne potwierdzenie RX |
+
+**Uściślenie względem tabeli na początku dokumentu:** stwierdzenie „`0x50` tylko w zewnętrznym logu” dotyczyło **materiału dostępnego przed analizą EXE 2.5**. Teraz mamy osobne, mocniejsze potwierdzenie kodowe `0x50` oraz pierwszą przesłankę `0x51`.
+
+Zgodność 2.5 z konkretnym firmware oraz znaczenie `0x54`/`0x6F` pozostają otwarte; nie traktować tych kodów jako poleceń gotowych do nadawania do samochodu. [Pełny raport](ANALYSIS_VWTESTER_25_2026-10-23.md).

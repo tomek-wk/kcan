@@ -70,3 +70,17 @@ Szczegóły i interpretacja stanów: [DISCREPANCIES.md](DISCREPANCIES.md).
 - Jeśli eksperyment z programem jest dopuszczalny po weryfikacji bezpieczeństwa: na **odizolowanym stanowisku, bez samochodu**, porównać widoczny cel i inicjalne komunikaty UART przy `TARGET=0` i `TARGET=6`, zachowując **obie** sekcje `[CHANNEL]`. Każdorazowo notować wersję EXE i stan dongla.
 - Oddzielnie porównać zachowanie `[TRACE] FILEINDEX`, aby nie mieszać dziennika programu z protokołem adaptera.
 - Ponieważ EXE w obu pakietach jest bitowo identyczny, rozbieżność nie upoważnia do zmiany opkodów w [COMMANDS.md](COMMANDS.md).
+
+
+---
+
+## Badania wynikające z Commander FULL 2.5
+
+**Wszystkie próby z nadawaniem należy przeprowadzać na osobnej, prawidłowo terminowanej magistrali testowej, nie na samochodzie.**
+
+- **KCAN-D012:** po potwierdzeniu inicjalizacji PC↔PIC wysłać CAN11 `0x123` z N=3 i danymi `11 22 33` w izolowanym układzie. Sprawdzić, czy na rzeczywistej magistrali wystąpił **DLC=3**, a nie osiem bajtów/padding; porównać zapis HEX i timestampy drugiego interfejsu.
+- **KCAN-D013/D014:** najpierw obserwować oryginalne komunikaty `50 00`, `51 00` i kody `0x54/0x6F` w legalnej, kontrolowanej sesji testowej; nie zgadywać nieznanych payloadów i nie wysyłać ich w ciemno.
+- **KCAN-D016:** zarejestrować wywołania `EscapeCommFunction` oraz rzeczywiste poziomy DTR/RTS; kod 2.5 używa `SETDTR(5)`, `Sleep(500)`, `CLRDTR(6)`, następnie `SETRTS(3)` lub `CLRRTS(4)`. Odłączyć od pojazdu.
+- **KCAN-D015/D017:** porównać metadane EXE i INI bez instalowania lub uruchamiania nieznanych programów; późniejsze eksperymenty tylko na izolowanym stanowisku.
+
+Kod 2.5 i hipotezy: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Testy należą do konkretnej kompilacji/wersji sprzętu, a nie całej rodziny produktów.

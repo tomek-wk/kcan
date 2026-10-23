@@ -78,3 +78,14 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - EXE/DLL odpowiadają **dokładnie** wcześniejszemu pakietowi `1[X].4` i plikom [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4).
 - Jedyna różnica zawartości tekstów to konfiguracja `Tester.ini`; szczegóły: [ANALYSIS_FULL14_2026-10-23.md](ANALYSIS_FULL14_2026-10-23.md) i [DISCREPANCIES.md](DISCREPANCIES.md).
 - Do GitHub trafiają tylko metadane/opracowanie, **nie źródłowe archiwum ani program**.
+
+
+---
+
+## S7 — `k+can2.5(1).zip` (2026-10-23)
+
+- Materiał dostarczony przez użytkownika. ZIP SHA-256: `9018525b61f96a23166dcfa8dcff502154bd95b15084c9b24ba39707d3af9835`.
+- Oryginalny program `VWTester.exe`, SHA-256: `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`, kod w przeważającej części czytelny statycznie. W zasobach nazwa **Commander FULL 2.5**.
+- `RCMicroDogSetup.dll` jest bajtowo identyczne z wcześniejszym pakietem FULL 1.4.
+- Raport szczegółowy z adresami VA, algorytmami i ograniczeniami: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Rozbieżności do testów: [DISCREPANCIES.md](DISCREPANCIES.md).
+- Nie dołączono żadnego oryginalnego EXE/DLL ani ZIP do repozytorium.

@@ -105,3 +105,20 @@ Szczegóły: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-
 - 9/10 plików TXT/INI identyczne po CRLF→LF i porównaniu Git blob SHA-1 ze źródłem [Skylakc](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4).
 - `Tester.ini`: dwie różnice treści: pierwsze `[CHANNEL] TARGET=0` → `6` i `[TRACE] FILEINDEX=3221` → `1956`. Druga sekcja `[CHANNEL] TARGET=0` pozostaje niezmieniona.
 - **Nie ma nowych poleceń PC↔PIC**; pliki EXE/DLL nie były uruchamiane. Pełen audyt: [ANALYSIS_FULL14_2026-10-23.md](ANALYSIS_FULL14_2026-10-23.md).
+
+
+---
+
+## `k+can2.5(1).zip` — pierwsza nowa kompilacja i nowe ślady protokołu
+
+- ZIP 939 417 B, SHA-256 `9018525b61f96a23166dcfa8dcff502154bd95b15084c9b24ba39707d3af9835`, **7 plików**.
+- `VWTester.exe` **688 128 B**, SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`; inny niż EXE 1.4, ma czytelną sekcję `.text` (entropia ok. **6,743 bitów/bajt**) i kompletną tablicę Win32 importów. W zasobach wprost tytuł „VAG-K+CAN COMMANDER FULL 2.5”; `FileVersion` ciągle **1.0.0.1**. Pliku nie uruchamiano.
+- `RCMicroDogSetup.dll` ma SHA-256 **identyczne** z 1.4: `5671711caf7446ce3496028375156cf4443c12311ac4e75c626dd740652d8ef4`.
+- `VWTester.exe` otwiera COM przy **833333 bps** (`0x403CF8`, `0x4099C4`) i wywołuje `WriteFile` (`0x40A3D0`), `ReadFile` oraz `EscapeCommFunction`.
+- Inicjalizacja buforów `0x403B38–0x403B9C`: opkody `50,51,52,53,54,60,6F,70`.
+- Obsługa `0x50` / `0x51` w `0x404210` / `0x4041B0`. Zapis `53 20 [32 B]` w `0x404270`.
+- Nadajnik CAN11 `0x403E73`: `length=N+4`; odbiornik `0x403850`: `N=length-4`. W obu `CAN_ID=(SIDH<<3)|((SIDL>>2)&7)`.
+- Po otwarciu COM `SETDTR`, 500 ms, `CLRDTR`, warunkowo `SETRTS/CLRRTS` (`0x40A60C–0x40A662`).
+- Różnice INI: `DIAGNOSTICID=-674897751`, `FILEINDEX=1802`, pierwsze `TARGET=0`; pozostałe TXT/INI bez nowych treści względem FULL 1.4, oprócz wymienionych wartości.
+
+**Dowód jest statyczny:** podane adresy dotyczą wyłącznie wskazanego SHA-256 EXE; to nie dowód działania na konkretnym adapterze. [Kompletny raport i granice wnioskowania](ANALYSIS_VWTESTER_25_2026-10-23.md).

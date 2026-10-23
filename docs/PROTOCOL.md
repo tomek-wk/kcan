@@ -98,3 +98,23 @@ polecenie: 55 03 N FA 07
 - Nie należy mylić protokołu USB–UART z ISO-TP/UDS/KWP/TP2.0 realizowanymi na magistrali pojazdu.
 - Nie potwierdzono trybu *listen-only* bez ACK ani możliwości pełnego dumpu CAN.
 - Zachowanie innych klonów i firmware może być inne.
+
+
+---
+
+## Uzupełnienie — niezależny kod Commandera FULL 2.5 (2026-10-23)
+
+W chronionym, ale w znacznej części czytelnym `VWTester.exe` 2.5 (SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`) potwierdzono **Win32 COM 833333 bit/s** oraz format CAN11. W przeciwieństwie do dotychczasowej ścieżki DLL używającej N=8, oryginalny EXE 2.5 obsługuje **N w parametrze długości pakietu**:
+
+```text
+PC -> PIC: 60 (N+4)  ID_HI ID_LO 00 00 [N bajtów danych CAN]
+PIC -> PC: 70 (N+4)  ID_HI ID_LO 00 00 [N bajtów danych CAN]
+
+ID_HI = (CAN_ID >> 3) & 0xFF
+ID_LO = ((CAN_ID & 7) << 2) & 0x1C
+N = length - 4 przy dekodowaniu
+```
+
+Przykład **wyłącznie wyliczony z kodu** (`CAN_ID=0x123`, N=3): `60 07 24 0C 00 00 11 22 33`. **Nie jest to wynik pomiaru z interfejsu.** Warianty DLC/RTR i obsługiwany zakres N po stronie konkretnego PIC nadal wymagają testów. Funkcje: TX `0x403DC0/0x403E73`, RX `0x403850`.
+
+W EXE 2.5 odkryto również **prawdziwe użycie `0x50` i `0x51`**, oraz niezależne nadawanie `53 20 + 32 bajty`. Patrz [COMMANDS.md](COMMANDS.md), [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Nie zmieniać wcześniejszych ustaleń dla konkretnej DLL, lecz traktować dane jako **wariant implementacji hosta**.

@@ -42,3 +42,5 @@ Nie uruchamiano nieznanych plików wykonywalnych; dotychczasowe wnioski pochodz�
 - **2026-10-23:** druga dystrybucja: `commander vag-k can.zip` (polskie instrukcje, instalator Setup Factory 8.0, sterowniki FTDI 2008). **Nie jest potwierdzoną nową wersją firmware ani nową implementacją protokołu.** Różnice i plan testów: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](docs/ANALYSIS_SETUP_FACTORY_2026-10-23.md) oraz [DISCREPANCIES.md](docs/DISCREPANCIES.md).
 
 - **2026-10-23:** archiwum `VAG K CAN COMMANDER FULL 1.4.zip` — ten sam EXE i DLL co w pakiecie `1[X].4`, dziewięć identycznych po normalizacji plików tekstowych; jedyna różnica zawartości to `Tester.ini` (`TARGET` i `FILEINDEX`). [Porównanie binarne](docs/ANALYSIS_FULL14_2026-10-23.md), [test KCAN-D011](docs/DISCREPANCIES.md).
+
+- **2026-10-23:** otrzymano pierwszą rzeczywiście **inną kompilację** — `VWTester.exe` „Commander FULL 2.5”, rozmiar 688 128 B. Jego czytelny kod niezależnie potwierdza UART 833333 i CAN11 `0x60/0x70`, **ujawnia zmienną długość danych** oraz `0x50/0x51` i `0x53`. [Analiza 2.5](docs/ANALYSIS_VWTESTER_25_2026-10-23.md). Nowe testy: [rejestr rozbieżności](docs/DISCREPANCIES.md).

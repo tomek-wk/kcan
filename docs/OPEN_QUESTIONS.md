@@ -60,3 +60,18 @@ Lista rozbieżności, proponowanych testów i statusów: [DISCREPANCIES.md](DISC
 - [ ] **KCAN-D011 / P2:** rozstrzygnąć kolejność interpretacji podwójnej sekcji `[CHANNEL]` w `Tester.ini` oraz wpływ `TARGET=6` zamiast `TARGET=0` na wybrany cel diagnostyczny i/lub bajty PC↔PIC.
 - [ ] **KCAN-D011 / P2:** ustalić semantykę `[TRACE] FILEINDEX=1956` vs `3221`, bez traktowania wartości jako poleceń adaptera.
 - [ ] **P1:** dostarczyć **inny SHA-256 EXE** lub log UART do faktycznego porównania implementacji. Plik z pakietu FULL 1.4 jest identyczny z poprzednim.
+
+
+---
+
+## Priorytety po analizie Commandera 2.5
+
+- [ ] **P0 / KCAN-D012:** potwierdzić na izolowanej magistrali, czy firmware obsługuje `0x60/0x70` z N różnym od 8 (zwłaszcza DLC=3).
+- [ ] **P0 / KCAN-D013:** rozstrzygnąć rolę `0x50`/`0x51` w inicjalizacji i recovery; kod 2.5 wysyła oba.
+- [ ] **P0 / KCAN-D014:** odnaleźć pełną semantykę `0x54`, `0x6F` i konfiguracji szybkości `0x55` w EXE 2.5.
+- [ ] **P0 / KCAN-D016:** zweryfikować na płytce sekwencję DTR 5→6 i RTS 3/4 (stan rzeczywisty, PIC reset, wersje FTDI).
+- [ ] **P1 / KCAN-D015:** rozróżnić wersję widoczną „2.5” i zasób `1.0.0.1` od wersji firmware.
+- [ ] **P1 / KCAN-D017:** sprawdzić różnice `DIAGNOSTICID`/`FILEINDEX`/podwójne `[CHANNEL]` w INI.
+- [ ] **P1:** odtworzyć obsługę CAN29, przepełnienia kolejki i asynchronicznych statusów w tej kompilacji (bez uruchamiania nieznanego EXE).
+
+[Adresy kodu i wyniki analizy 2.5](ANALYSIS_VWTESTER_25_2026-10-23.md).
