@@ -126,3 +126,14 @@ Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026
 2. Przy badaniu komunikacji **bez samochodu** użyć izolowanego środowiska, zweryfikowanej aplikacji i bezpiecznych numerów **COM2–COM9**. **COM10+** w tych starych EXE jest problematyczne przez nazwę `COM%d`, a `PORT>=16` może przekraczać tablicę rekordów. Weryfikować systemowy `DCB.BaudRate`, rzeczywisty UART i DTR/RTS, bez założenia, że inne wydania sprzętu zadziałają.
 3. Do eksperymentów `C0/53/60` używać **tylko odizolowanego, prawidłowo zakończonego stanowiska CAN** po poznaniu rodzaju płytki i trybu; nie wykonywać losowych rozkazów na pojeździe.
 4. Pełny raport: [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). Wzorce `54 02` i `6F 00` to **sam walidator RX**, bez potwierdzenia, że zostały wygenerowane przez firmware.
+
+## CAN29: izolowany test ID standardowego i rozszerzonego (D047)
+
+Ponowna deasemblacja 3.0 beta/4.5 potwierdziła, że opisane funkcje `0x60/0x70` **gubią 18 wyższych bitów identyfikatora**. Nie można na tej podstawie przesądzić, jak konkretny PIC obsługuje *inne* komendy albo czy może obserwować EID29 bez wystawiania informacji hostowi.
+
+1. **Offline:** przeprowadzić na własnym dekoderze test kolizji `ID 0x110` (standard) i `ID 0x18DAF110` (extended) — obydwa powodują w badanym kodzie ten sam nagłówek `22 00 00 00`. Nie proponować użytkownikowi wysyłki 29-bit po obecnym TX `0x60`.
+2. Zidentyfikować faktyczny PIC/kontroler i firmware, zmapować cztery bajty UART osobno od *rejestrów* kontrolera (PIC `TXBnSIDL` ma inne przesunięcie, EXIDE nie wyznacza się bezpośrednio z `0x1C`).
+3. **Odizolowana, terminowana magistrala CAN**, niezależny analizator obsługujący zarówno CAN11 jak CAN29. Najpierw nadać referencyjnie **ramkę standardową 0x110 i rozszerzoną 0x18DAF110** (nie na magistrali samochodu), obserwować RX PC↔PIC i ACK/listen-only, sprawdzać ewentualne aliasowanie i brak ramek. Jedynie po rozpoznaniu rzeczywistych komend można rozważyć TX extended.
+4. `C0`, `51`, `53`, `55` i `60` **nie są** obecnie udowodnionymi przełącznikami CAN29; nie wysyłać ich do auta ani w ciemno do nieznanego sprzętu.
+
+[Analiza z adresami kodu](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), [KCAN-D047](DISCREPANCIES.md).
