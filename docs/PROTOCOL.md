@@ -136,3 +136,11 @@ W odbiorze K-Line (`0x42AFB0`) rozpoznano osobne formaty długości, odfiltrowyw
 Program 2.5 potrafi również użyć nazwy **`\\.\COM%d`** dla COM10+; dawna wskazówka instalacyjna COM1–COM4 nie jest ogólnym ograniczeniem protokołu.
 
 [Pełny raport z dowodami i adresami](ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md) · [testy KCAN-D029–D035](DISCREPANCIES.md).
+
+## Dodatkowe potwierdzenie z Commander 3.0 beta i 4.5 (2026-10-23)
+
+Z dwóch **różnych** EXE dostarczonych razem w `VAG-CAN Commander V4.5.zip` odtworzono **wykonawczy kod** budowy TX CAN11 `0x60`, dekodera RX `0x70` oraz `0x53` — niezależnie od wcześniejszych wyników DLL J2534 i FULL 2.5. Kody TX `0x403510` (3.0 beta) i `0x4034F0` (4.5) liczą `length=N+4`, kodują `SIDH=ID>>3`, `SIDL=(ID&7)<<2` i kopiują N bajtów danych. Parsery `0x402C80` (3.0) i `0x402C40` (4.5) wymagają `0x70 length=4..12`. Fizyczny DLC, CAN29, filtrowanie i tryb bez ACK nadal niepotwierdzone.
+
+**Nowe ograniczenie uogólniania UART:** w 3.0 beta kod `0x4031A0` ustawia `833333` w badanej ścieżce, ale 4.5 w `0x403170` **warunkowo** wybiera `115200` (parametr 0 lub 1) albo `833333` (parametr >=2). Jest to konfiguracja po stronie **COM/UART**, nie prędkość CAN. Semantyka parametru i przypisanie do CAN/K-Line wymagają sprawdzenia. Zatem `833333` **nie jest udowodnioną uniwersalną prędkością wszystkich trybów Commandera**.
+
+W 4.5 walidator `0x402C64` jawnie przyjmuje `0x60 length=0..4`; w 3.0 beta w badanym walidatorze nie ma takiego specjalnego wyjątku (inne wiadomości przechodzą przez tablicę deskryptorów). Nie interpretować dodatkowych bajtów odpowiedzi jako sprzętowego ACK. [Dowody z deasemblacji i ograniczenia](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md) · [testy D044/D045](DISCREPANCIES.md).
