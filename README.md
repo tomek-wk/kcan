@@ -105,3 +105,11 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - **Rozstrzygnięto różnicę odpowiedzi `0x60`** na poziomie kodu: 3.0 beta ma w deskryptorze `60 00` i przyjmuje dokładnie zero bajtów; 4.5 ma osobny walidator akceptujący **0–4**. Ośmiowpisowe tablice RX obejmują także `C0 00, 51 00, 52 20, 53 00, 54 02, 6F 00` (oczekiwane odpowiedzi, nie automatycznie wykonane komendy).
 - **Ryzyko COM10+:** oba starsze EXE przekazują do `CreateFileA` nazwę `COM%d` bez prefiksu `\\\\.\\`, dlatego w typowym Windows **COM10+ nie zadziała tą ścieżką**; 2.5 ma osobne wsparcie rozszerzonego formatu.
 - [Raport z adresami i tabelami](docs/ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md); aktualizacja **D044/D045**, nowy **D046**. Potwierdzenia dotyczą hosta, nie firmware.
+
+## Audyt inicjalizacji i CAN29 w Commander 3.0 beta/4.5 (2026-10-23)
+
+Po ponownej deasemblacji obu EXE potwierdzono **ograniczenie do CAN11 w zbadanych wykonawczych ścieżkach TX/RX**: funkcje `0x403510`/ `0x4034F0` pobierają ID jako **WORD**, emitują tylko `(ID>>3)&FF`, `(ID&7)<<2`, `00 00`; odbiorniki `0x402D10`/`0x402CE0` rekonstruują tylko 11 bitów. Na przykład CAN29 `0x18DAF110` i CAN11 `0x110` dałyby **identyczne cztery bajty nagłówka `22 00 00 00`**. To ograniczenie **kodu hosta**, nie dowód braku CAN29 w każdym firmware/adapterze.
+
+Sekwencja init obu: COM → `51 00` → `C0 00` → `53 20[32 B]`; początkowy blok 0x53 składa się z sześciu `FF 1C 00 00`, następnie `FF 1C 00 FF` i `FF 1C 00 00`. **Nie znaleziono jawnego przełączenia CAN29**. Bajt formatu UART nie jest rejestrem PIC `SIDL`: standardowe bity ID są przesunięte o 2 (protokół PC↔PIC), a w hipotetycznym PIC18F248/258 byłyby w bitach 7–5. Nie interpretować wartości `1C` jako flagi EXIDE.
+
+[Pełny raport z adresami i ograniczeniami](docs/ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), nowe **KCAN-D047**, bez modyfikowania potwierdzonych opkodów. Nadal brak fizycznej walidacji konkretnego adaptera.
