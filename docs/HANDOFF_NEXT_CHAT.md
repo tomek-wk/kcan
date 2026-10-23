@@ -128,3 +128,13 @@ Przesłano `VAG COMMANDER 3.6(2).rar` (RAR4, SHA-256 `4c4e448077836806c593ef2f08
 EXE jawnie importuje `FTD2XX.dll` ordinals **1,2,61** = `FT_Open`, `FT_Close`, `FT_GetDeviceInfo`; `FTChipID.dll` ordinal **8** = `FTID_GetChipIDFromHandle`. W imporcie Win32 są `CreateFileA/ReadFile/WriteFile/SetCommState/EscapeCommFunction`. **Rola D2XX w komunikacji danych, chip ID/licencji, bitrate 833333, opkodów `0x50..0x70`, CAN29, listen-only i kompatybilność firmware są nieustalone.** Biblioteka `RCMicroDogSetup.dll` ma ten sam SHA-256 co w 1.4 i 2.5; dołączone FTDI INF są wersji **2.00.00 (2006)**. `Tester.ini`: pierwszy `TARGET=6`, drugi `TARGET=0`, `DIAGNOSTICID=-674897751`, `FILEINDEX=1872`, `CAN_PORT=2`, `KWP_PORT=2`. Cztery wspólne pliki TXT/INI identyczne po CRLF→LF z 1.4 (Git blob SHA).
 
 **Raport:** [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md), **nowe KCAN-D043** w [DISCREPANCIES.md](DISCREPANCIES.md). Nie modyfikowano formatu `PROTOCOL.md`/`COMMANDS.md`. Przed dalszym testowaniem **nie uruchamiać niezweryfikowanych EXE, nie podłączać do samochodu**, nie importować prawd o transmisji z 2.5 jako potwierdzonych dla 3.6.
+
+## Uzupełnienie stanu: drugi i trzeci pakiet „3.6” (2026-10-23)
+
+Użytkownik przesłał dwa dalsze pakiety:
+- `VAG K CAN COMMANDER FULL 3,6.rar` (RAR4, 1 730 535 B, SHA-256 `e0059df5cb1e51434ae1eea95d4f7ff7234a176360fb739d2b382dbace83069b`).
+- `VAG-K CAN-V3.6.zip` (ZIP, 1 971 451 B, SHA-256 `9b59b9490c0011edea1976d9d4ad16a4671e1870b45576088f298ed23b5d8b32`).
+
+Porównano je **bajtowo po rozpakowaniu** z poprzednim `VAG COMMANDER 3.6(2).rar` (S11). Każde ma **26 plików**, z czego **25/26 identycznych we wszystkich trzech pakietach**: `VWTester.exe` SHA-256 **`a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`**, `FTChipID.dll`, `FTD2XX.dll`, `RCMicroDogSetup.dll`, kompletny `CDM_Setup`, dane VAG/INI/TXT. **Wyłącznie `Tester.ini` różni się**: pierwszy `TARGET=6/6/0`, drugi `TARGET=0`, `FILEINDEX=1872/1877/1879`; `CAN_PORT=2`, `KWP_PORT=2`, `DIAGNOSTICID=-674897751` bez zmian.
+
+Szczegółowy raport: [ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md](ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md). **Brak nowego EXE, nowej deasemblacji CAN, nowego opkodu oraz dowodu działania na sprzęcie.** Zaktualizowano **KCAN-D011** i **D043**, bez D044. Nie wysyłać nieznanych komend do samochodu; do dalszego rozpoznania CAN potrzebne są nowe bajty EXE lub własne logi PC↔PIC/izolowany CAN.
