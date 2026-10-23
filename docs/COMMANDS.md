@@ -110,3 +110,9 @@ Przy starcie oba EXE nadają **`51 00` → `C0 00` → `53 20[32]`**; żadna z t
 **Rozdzielać `UART_write_requested` / `UART_write_completed` / `PIC_0x60_status` / `physical_CAN_TX/ACK`.** Stare EXE 3.0 beta i 4.5 w funkcji `0x408BD0` nie sprawdzają końcowego wyniku `WriteFile/GetOverlappedResult` ani `bytesWritten`, zaś funkcje `0x403510/0x4034F0` **ignorują** wynik writer, zapisują historię CAN TX i zwracają **1 po `Sleep(10)`**, bez powiązania z odpowiedzią `0x60` PIC. Wpis TX w GUI nie jest dowodem sprzętowej transmisji lub ACK.
 
 W `0x60` PC→PIC odczytywane jest N z pojedynczego bajtu rekordu i kopiowane do pakietu **bez lokalnego ograniczenia do Classical CAN DLC 0..8**; nie wnioskować stąd o CAN-FD, a w własnej implementacji zawsze walidować `N<=8`. Rozpoznano także GUI/raw-writer `0x403740` (ogólny strumień binarny UART) — **nie jest to nowa komenda CAN29 ani deklaracja zdolności firmware**. [Dokładne adresy i zastrzeżenia](ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md).
+
+## Potwierdzenie kodem 5.0+ECU z archiwum V5.1 (2026-10-23)
+
+`VAG-CAN Commander+EDC15.exe` (SHA-256 `811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`) potwierdza **kolejną niezależną implementację** rozpoznanych komend PC→PIC `51 00`, `C0 00`, `53 20[32]` oraz **CAN11 TX `0x60`** (`0x403520`), **RX `0x70`** (`0x402CE0`). Tablica walidatora `0x456A20` zawiera `C0 00, 51 00, 52 20, 53 00, 54 02, 60 00, 6F 00, 70 00`; walidator `0x402C40` **specjalnie akceptuje `0x60 length<=4`**, więc wartość w rekordzie nie oznacza ograniczenia do 0. **Nie odnaleziono nowego opkodu CAN29 ani rzeczywistej semantyki `C0/54/6F`.**
+
+Przypominamy, że udokumentowane TX `0x60` koduje tylko **11-bit ID**, ignoruje wyniki write i nie czeka na fizyczne CAN ACK. [Analiza wersji nazwanej 5.0+ECU](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md).
