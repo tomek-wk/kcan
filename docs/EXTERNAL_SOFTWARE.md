@@ -112,3 +112,9 @@ EXE **importuje po ordinalach** `FT_Open`, `FT_Close`, `FT_GetDeviceInfo` z doł
 W archiwum znaleziono **dwa różne Win32 PE32**: `VAG-CAN Commander 3.0 beta.exe` (417 792 B, SHA-256 `dfb5e3f4724f6898c7c82d5d6e69ed3f795edb5f536f4aa5ff37ab17eae2a39b`) i `VAG-CAN Commander4.5.exe` (477 472 B, SHA-256 `85e89882a434ad83d19381ecbb5f9e77b14b237343b1432feb2f7300810e0050`). Obie mają **czytelne wykonawcze ścieżki CAN11 `0x60/0x70` i `0x53`**; 4.5 ma dodatkową walidację krótkiego statusu `0x60` i wybór prędkości COM **115200 lub 833333** zależnie od parametru (bez rozpoznania nazw trybów).
 
 Oryginalna instrukcja instalacji mówi o „2.0 beta” i ustawianiu `[COM] PORT`, mimo obecności EXE 3.0 beta i 4.5 — dlatego nie należy rozumieć tej nazwy jako tożsamości oprogramowania/firmware. Dane diagnostyczne są wspólne z pakietami 1.4, sterownik FTDI jest bardzo stary (`1.00.2154`). [Pełne badanie](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md), testy `KCAN-D044–D045`.
+
+## VAG-CAN Commander „V5.1” — w GUI 5.0+ECU (2026-10-23)
+
+Nowy pakiet `VAG-CAN Commander V5.1.zip` dostarczył `VAG-CAN Commander+EDC15.exe` (466968 B, SHA-256 `811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`). W zasobach UTF-16 aplikacja określa się jako **`VAG-CAN COMMANDER 5.0+ECU (full)`**, nie bezpośrednio 5.1. Program ma czytelny Win32 CAN11 **`0x60/0x70`**, inicjalizację **`51 00 → C0 00 → 53 20[32B]`**, UART **833333** w zbadanej ścieżce, ale nie odkryto tam poprawnego CAN29. Zwrócić uwagę na ponownie wykazane wady potwierdzania serial-write i TX.
+
+Plik `memory.bin` 2048 B pojawia się także jako **nazwa w kodzie EXE**; przeznaczenie niejasne, możliwe dane ECU, **nie wolno publikować zawartości ani nazywać go firmware PIC bez dowodu**. Pakiet ma nowsze **FTDI 2.04.06 (2008) dla 32/64 bit**, `LatencyTimer=16` w INF, ale EXE nie importuje bezpośrednio D2XX. Raport: [ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md).
