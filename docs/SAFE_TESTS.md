@@ -106,3 +106,13 @@ Nowy `VWTester.exe` z pakietu 3.6 zawiera wyłącznie **jawne zależności** `FT
 4. Zarejestrować i udokumentować wariant sprzętu/firmware, API, rzeczywisty baudrate, timeouty, odczyt i ACK; **obecność importu nie jest wywołaniem**. Sprawdzić oddzielnie użycie chip ID; nie obchodzić mechanizmów licencyjnych.
 
 Pełna karta analizy: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md). Oryginalne programy, sterowniki, logi i dane urządzenia poza repo.
+
+## Testy Commandera 3.0 beta/4.5 i dwóch prędkości COM (D044/D045)
+
+Kod 4.5 ujawnił **warunkowy wybór 115200/833333 bit/s**, a obie nowe kompilacje potwierdziły format hosta CAN11 `0x60/0x70` oraz konstrukcję konfiguracji `0x53` (6+2). To nie są zweryfikowane funkcje posiadanego PIC.
+
+- **Najpierw statycznie/offline:** w programie 4.5 rozpoznać wywołania funkcji `0x403170` i znaczenie parametru `0/1/>=2`; w programie 3.0 beta wyjaśnić ogólną walidację odpowiedzi `0x60` w tablicy deskryptorów. Nie zgadywać semantyki `0x55`, `0x54` itd. na podstawie pojedynczych wartości.
+- **Później, w izolowanym środowisku bez pojazdu i po ocenie bezpieczeństwa EXE:** przy obserwacji znanego programu rejestrować użyty numer COM, rzeczywisty `DCB.BaudRate`, DTR/RTS, surowe bajty UART i kolejność inicjalizacji; nie instalować sterownika FTDI 2004 na normalnym systemie.
+- **Tylko izolowana magistrala CAN** z drugim referencyjnym interfejsem: CAN11 ID 0x123, DLC=3 i 8, skutki konfiguracji `0x53`, dokładne straty i odpowiedzi `0x60` o długości 0–4, fizyczny ACK. Nie wysyłać niesprawdzonych komend do pojazdu.
+
+Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md), rejestr [DISCREPANCIES.md](DISCREPANCIES.md).
