@@ -64,3 +64,10 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - Otrzymane `VAG K+CAN COMMANDER 1.4zainstalowany.rar` zawiera **ten sam bajtowo EXE 1.4** (`ea69c09b...`) i `RCMicroDogSetup.dll` (`5671711c...`) co wcześniejsze archiwa. Nie stwierdzono nowej implementacji CAN.
 - `Uninstall/uninstall.xml` wskazuje jako źródło instalacji `Setup VAG K+CAN COMMANDER 1.4.exe`; jest to **pośrednia**, a nie kryptograficzna weryfikacja zawartości wcześniejszego instalatora. `Tester.ini` ma `FILEINDEX=1955` zamiast `1956` w `FULL 1.4`. Zaktualizowano **KCAN-D006 i D011**.
 - [Pełne porównanie i ograniczenia](docs/ANALYSIS_INSTALLED14_2026-10-23.md). Nie dodano do repo żadnych materiałów źródłowych ani lokalnych danych użytkownika.
+
+## Analiza VWTOOL / VDS-PRO 2.09 (2026-10-23)
+
+- Archiwum `VWool 2 0 9 en PL.rar` (RAR4, 16 plików, SHA-256 `70b992d60f4b5cc014b30bca9fb6840ac213e883a7fd9378d92745e568a9079d`) zawiera **16-bitowy program VWTOOL/VDS-PRO 2.09**, a **nie nowy Commander ani implementację protokołu CAN PC↔PIC**.
+- Dwie wersje `VWTOOL.EXE` / `VWTOOL-pl.EXE` różnią się bajtowo, w znacznej części przez polskie komunikaty; program używa Windows NE, Visual Basic 3 i portu szeregowego COM, z plikiem `VWTOOL.INI`.
+- **Nowe ustalenie:** `ERRCODE4.CSV` i `LABELS.CSV` dekodują się przez **XOR 0x85** na każdym bajcie z wyjątkiem CR/LF; zawierają opisy usterek i 569 rekordów etykiet grup pomiarowych starszych ECU VAG. To **dane aplikacyjne**, nie ramki CAN.
+- [Szczegółowy raport i hashe](docs/ANALYSIS_VWTOOL_209_2026-10-23.md). Brak zmiany protokołu i nowych zadań KCAN-D0xx. Nie publikowano binariów ani pełnych danych z programu.
