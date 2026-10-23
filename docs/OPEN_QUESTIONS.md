@@ -51,3 +51,12 @@ Lista rozbieżności, proponowanych testów i statusów: [DISCREPANCIES.md](DISC
 - [ ] **P1 / KCAN-D008:** weryfikacja wersji sterownika FTDI (własny INF 2.04.06 versus PDF 2.6.0.0) i faktycznie zainstalowanego na PC.
 - [ ] **P1 / KCAN-D009:** pomiar wpływu buforów USB 512/4096 B i Latency Timer 1/16 ms na zachowanie starej aplikacji; **nie zakładać**, że te wartości są częścią protokołu UART.
 - [ ] **P1 / KCAN-D010:** określić, czy konkretny egzemplarz PIC jest zasilany z USB czy OBD (i jakie ma wartości napięcia); instrukcje różnych urządzeń nie rozstrzygają tego.
+
+
+---
+
+## Po otrzymaniu `FULL 1.4`
+
+- [ ] **KCAN-D011 / P2:** rozstrzygnąć kolejność interpretacji podwójnej sekcji `[CHANNEL]` w `Tester.ini` oraz wpływ `TARGET=6` zamiast `TARGET=0` na wybrany cel diagnostyczny i/lub bajty PC↔PIC.
+- [ ] **KCAN-D011 / P2:** ustalić semantykę `[TRACE] FILEINDEX=1956` vs `3221`, bez traktowania wartości jako poleceń adaptera.
+- [ ] **P1:** dostarczyć **inny SHA-256 EXE** lub log UART do faktycznego porównania implementacji. Plik z pakietu FULL 1.4 jest identyczny z poprzednim.

@@ -33,3 +33,12 @@ Dla każdej pozycji po teście dopisać: **model PIC**, oznaczenia PCB, mostek U
 | **KCAN-D010** | Model z Viaken (instrukcja PDF) podaje zasilanie 12,5–15 V przez OBD | Konkretny niebieski egzemplarz nie został zmierzony | Czy PIC działa przy samym USB i z jakiego źródła zasilana jest elektronika CAN? | Pomiar napięć PIC i transceiverów przy kontrolowanych wariantach zasilania na stanowisku, bez auta. | OPEN |
 
 **Uwaga metodologiczna:** nie wykryto nowej sprzeczności w kodowaniu bajtów `0x52/0x53/0x55/0x60/0x70`, ponieważ nowe materiały nie pokazują niskopoziomowej transmisji. Są to kwestie dystrybucji, sterowników i sprzętu.
+
+
+## KCAN-D011 — różne ustawienia w `Tester.ini` pakietów tego samego EXE
+
+| ID | Materiał A | Materiał B | Pytanie | Test rozstrzygający | Status |
+| --- | --- | --- | --- | --- | --- |
+| **KCAN-D011** | `VAG-K_CAN_Commander_1[X].4.zip`: pierwsze `[CHANNEL] TARGET=0`, `[TRACE] FILEINDEX=3221` | `VAG K CAN COMMANDER FULL 1.4.zip`: pierwsze `[CHANNEL] TARGET=6`, `[TRACE] FILEINDEX=1956` | Pliki mają także **drugie `[CHANNEL] TARGET=0`**: która wartość jest stosowana i czy wpływa na komunikację? | Analiza parsera konfiguracji w innej wersji programu; ewentualnie test porównawczy widocznego celu i pierwszych ramek PC↔PIC, wyłącznie na odizolowanym stanowisku; niezależna obserwacja indeksu logów. | **OPEN** |
+
+**Ważne:** identyczne binaria EXE i DLL potwierdzają, że różnice w `Tester.ini` nie są dowodem istnienia nowej komendy protokołu ani nowej wersji firmware. [Dowody](ANALYSIS_FULL14_2026-10-23.md).

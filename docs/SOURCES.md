@@ -68,3 +68,13 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - `ftdiport.inf` z archiwum: metadane wersji FTDI 2.04.06.
 - Analiza bez wykonywania programów: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-10-23.md). Rozbieżności: [DISCREPANCIES.md](DISCREPANCIES.md).
 - Brak publikacji zawartości ZIP/PDF/EXE/DLL w GitHubie.
+
+
+---
+
+## S6 — katalog programu „FULL 1.4” (2026-10-23)
+
+- Archiwum użytkownika: `VAG K CAN COMMANDER FULL 1.4.zip`, SHA-256 `05f138209fb36a97fbb299213ec4e97376c6980887f867836dc9e7b1cca048d1`.
+- EXE/DLL odpowiadają **dokładnie** wcześniejszemu pakietowi `1[X].4` i plikom [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4).
+- Jedyna różnica zawartości tekstów to konfiguracja `Tester.ini`; szczegóły: [ANALYSIS_FULL14_2026-10-23.md](ANALYSIS_FULL14_2026-10-23.md) i [DISCREPANCIES.md](DISCREPANCIES.md).
+- Do GitHub trafiają tylko metadane/opracowanie, **nie źródłowe archiwum ani program**.

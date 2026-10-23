@@ -93,3 +93,15 @@ Szczegółowa karta analizy: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIG
 - Nie znaleziono nowych, potwierdzonych bajtów protokołu PC ↔ PIC; dokumenty dotyczą instalacji i używania funkcji diagnostycznych, nie niskopoziomowego protokołu USB–UART.
 
 Szczegóły: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-10-23.md).
+
+
+---
+
+## `VAG K CAN COMMANDER FULL 1.4.zip` — trzeci pakiet (2026-10-23)
+
+- ZIP **1 667 457 B**, SHA-256 `05f138209fb36a97fbb299213ec4e97376c6980887f867836dc9e7b1cca048d1`, **14 pozycji = 12 plików + 2 katalogi**, łącznie **3 425 594 B** po dekompresji.
+- `VAG-K+CAN Commander.exe` 1 060 864 B, SHA-256 `ea69c09b51fda25107d9926d7d033f4e25f5374ec0dd2b1bc4a9867a7b19b932` — **identyczny** z wcześniej badanym.
+- `RCMicroDogSetup.dll` 2 146 304 B, SHA-256 `5671711caf7446ce3496028375156cf4443c12311ac4e75c626dd740652d8ef4` — **identyczny**.
+- 9/10 plików TXT/INI identyczne po CRLF→LF i porównaniu Git blob SHA-1 ze źródłem [Skylakc](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4).
+- `Tester.ini`: dwie różnice treści: pierwsze `[CHANNEL] TARGET=0` → `6` i `[TRACE] FILEINDEX=3221` → `1956`. Druga sekcja `[CHANNEL] TARGET=0` pozostaje niezmieniona.
+- **Nie ma nowych poleceń PC↔PIC**; pliki EXE/DLL nie były uruchamiane. Pełen audyt: [ANALYSIS_FULL14_2026-10-23.md](ANALYSIS_FULL14_2026-10-23.md).

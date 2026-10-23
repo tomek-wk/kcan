@@ -72,3 +72,10 @@ Nowy ZIP zawiera instalator **Setup Factory 8.0** (`Setup VAG K+CAN COMMANDER 1.
 Instrukcja pakietu podaje konfigurację VCP COM1–COM4, Latency Timer 1 ms, USB RX/TX po 512 B. Opisuje uruchamianie `VAG K+CAN COMMANDER FULL 1.4` z osobnego archiwum na płycie CD, nie potwierdza więc zgodności zawartości tego ZIP z opisywaną aplikacją. Nie zawiera instrukcji używania osobnego dongla USB, ale **jego brak w instrukcji nie dowodzi braku takiego wymagania**.
 
 [Wynik audytu](ANALYSIS_SETUP_FACTORY_2026-10-23.md).
+
+
+---
+
+## Kolejny katalog aplikacji `FULL 1.4` — wynik porównania
+
+Dostarczone `VAG K CAN COMMANDER FULL 1.4.zip` **nie jest nową kompilacją** programu. `VAG-K+CAN Commander.exe` i `RCMicroDogSetup.dll` są **bajtowo identyczne** z pakietem `VAG-K_CAN_Commander_1[X].4.zip`; pozostałe teksty są takie same po normalizacji CRLF/LF poza dwoma parametrami `Tester.ini`. Nie znaleziono nowych instrukcji komunikacji PC↔PIC. To **alternatywny zestaw ustawień tego samego chronionego EXE**, nie potwierdzony wariant firmware. [Pełne porównanie](ANALYSIS_FULL14_2026-10-23.md).

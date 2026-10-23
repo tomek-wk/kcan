@@ -60,3 +60,13 @@ Szczegóły i interpretacja stanów: [DISCREPANCIES.md](DISCREPANCIES.md).
 - **KCAN-D008** — sprawdzić urządzenie w Menedżerze urządzeń oraz jego rzeczywistą wersję sterownika; PDF podaje FTDI 2.6.0.0, a INF w ZIP 2.04.06.
 - **KCAN-D009** — w izolowanym eksperymencie ze stałą sekwencją odczytów porównać ustawienia Latency Timer 1/16 ms i USB TX/RX 512/4096 B, rejestrując pełny TX/RX, liczbę timeoutów i opóźnienia. To parametry sterownika, nie opkody Commandera.
 - **KCAN-D010** — zweryfikować zasilanie PIC i transceivera przy podłączeniu **tylko USB** oraz na bezpiecznie przygotowanym zasilaniu laboratoryjnym OBD; nie zakładać, że Viaken i niebieski klon mają tę samą architekturę.
+
+
+---
+
+## Test KCAN-D011 — duplikaty `[CHANNEL]` i konfiguracja `Tester.ini`
+
+- Najpierw porównać działanie parsera INI (analiza statyczna, jeśli dostępny niechroniony program).
+- Jeśli eksperyment z programem jest dopuszczalny po weryfikacji bezpieczeństwa: na **odizolowanym stanowisku, bez samochodu**, porównać widoczny cel i inicjalne komunikaty UART przy `TARGET=0` i `TARGET=6`, zachowując **obie** sekcje `[CHANNEL]`. Każdorazowo notować wersję EXE i stan dongla.
+- Oddzielnie porównać zachowanie `[TRACE] FILEINDEX`, aby nie mieszać dziennika programu z protokołem adaptera.
+- Ponieważ EXE w obu pakietach jest bitowo identyczny, rozbieżność nie upoważnia do zmiany opkodów w [COMMANDS.md](COMMANDS.md).
