@@ -169,3 +169,14 @@ Powiązane **KCAN-D048–D050** w [DISCREPANCIES.md](DISCREPANCIES.md), a testy 
 4. **Ryzyka kodu:** `0x420371` i `0x420498` czekają na flagi bez lokalnego timeoutu/Sleep; `0x42046D` dzieli przez `blockSize`, którego `!=0` nie sprawdzono w funkcji. Testy zerowego block-size i brakujących ACK **wyłącznie w własnym mocku**, nie w obcym EXE/pojeździe.
 
 Dalsza weryfikacja fizyczna UART/PIC/CAN i skutków `C0/53` tylko na izolowanym bench. Nie ma nowych, potwierdzonych opkodów PC↔PIC ani CAN29.
+
+## Po audycie trzech czytelnych wersji: DLC0, TP2.0, nieosiągalne A1 (D055/D056; 2026-10-23)
+
+**Nie uruchamiać oryginalnych EXE** ani nie prowokować błędów w pojeździe. Dokumentacja: [AUDIT_READABLE_FILES_2026-10-23.md](AUDIT_READABLE_FILES_2026-10-23.md). Na podstawie czytelnego kodu **3.0 beta, 4.5, 5.0+ECU**:
+
+1. Własny parser **CAN11** musi obsługiwać poprawne `DLC=0` (pusty payload). Dopiero dekoder **TP2.0** wymaga `DLC>=1`, zanim odczyta bajt sterujący i policzy `payload_len=DLC-1`. Stare EXE przy `DLC=0` mogą zejść do kopiowania z ogromnym licznikiem po `dec ecx` (D055). **Testy tylko we własnej bibliotece** z `DLC=0,1,8`, nie w legacy EXE.
+2. Własne składanie TP2.0 musi sprawdzać: ID/kanał, `(ctl&0xF0)` i dolny nibble sekwencji, długość całkowitą, liczbę segmentów, max pamięć, timeout, cancellation, `blockSize>0`. W starych RX istnieje nieosiągalna gałąź A1/A3 po `ID & 0xFF` vs `0x300`, a zbyt luźna maska `ctl&0xB0` może dopasować `0xF0` do potwierdzenia B0 (D056).
+3. Porównywać **trzy różne kompilacje, ale jeden prawdopodobnie dziedziczony TP2.0**: segmentery `0x4166E0/0x417FB0/0x420360`. Nie należy traktować identycznego błędu w trzech EXE jako trzech niezależnych potwierdzeń poprawności.
+4. Zewnętrzny bench do prawdziwego CAN11/TP2.0 dopiero po identyfikacji adaptera i na izolowanej, prawidłowo zakończonej magistrali. Nadal **brak dowodów listen-only bez ACK i CAN29**.
+
+Wersje chronione 1.4 i 3.6 oraz program w niewypakowanym instalatorze Polski VAG zostały świadomie wyłączone z tej analizy, bez prób odszyfrowania.
