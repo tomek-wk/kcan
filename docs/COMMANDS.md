@@ -80,3 +80,21 @@ Zobacz [ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md](ANALYSIS_VWTESTER_25_FOLLOW
 | **`0x60` PIC→PC** | walidacja poprzez ogólne deskryptory; brak osobnej gałęzi w zbadanej funkcji | `0x402C64`: **`length<=4`** | Nie jest to fizyczny ACK; semantyka statusów nieznana |
 
 **Uwaga dotycząca `0x50/0x51/0x52/0x54/0x55`:** ich wartości występują również w kodzie niezwiązanym bezpośrednio z ramkowaniem CAN; **nie przypisujemy żadnego nowego znaczenia PC↔PIC bez wywołania nadawczego i kontekstu**. To szczególnie ważne dla `0x55` z bibliotek J2534. Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md). Zgodność z konkretnym PIC/firmware pozostaje do przetestowania.
+
+## Dodatkowe opkody ze starych EXE: C0 i odpowiedzi (2026-10-23)
+
+Wykonawcze funkcje TX **3.0 beta** i **4.5** ujawniają sekwencję inicjalizacji **`51 00` → `C0 00` → `53 20 [32B]`**, rozdzieloną dwoma `Sleep(50)`. W 4.5 odpowiednie adresy wywołań to `0x409F0F`, `0x409F25`, `0x409FC4`, w 3.0 `0x409E84`, `0x409E99`, `0x409F38`.
+
+| Opcode/ramka | Kierunek | Dowód | Ograniczenie |
+| --- | --- | --- | --- |
+| **`C0 00`** | **PC→PIC** w 3.0 beta i 4.5 | Szablon TX `0x44A8A8/0x44C8A8`, rzeczywiste wywołania TX `0x4033F0/0x4033D0`, oczekiwana odpowiedź RX `C0 00` | **Nowa komenda na poziomie kodu hosta. Semantyka NIEZNANA, nie wysyłać jej w ciemno**, nie utożsamiać z `50 00` z FULL 2.5 |
+| `51 00` | PC→PIC | 3.0 `0x403370`, 4.5 `0x403350` | Starsza komenda inicjalizacji |
+| `53 20 [32B]` | PC→PIC | 3.0 `0x403470`, 4.5 `0x403450` | Potwierdzona budowa hosta, działanie filtrów w PIC nieznane |
+| `52 20` | PIC→PC (oczekiwany format RX) | Tablice walidacji 3.0/4.5 | Długość danych 32 B; nie jest dowodem, że GUI w tych ścieżkach nadaje `52 00` |
+| `54 02` | PIC→PC (oczekiwany RX) | Tablice walidacji 3.0/4.5 | **Oczekiwana odpowiedź o 2 B**, treść i semantyka nieznane; nie znaleziono wykonawczego TX w badanej inicjalizacji |
+| `6F 00` | PIC→PC (oczekiwany RX) | Tablice walidacji 3.0/4.5 | Semantyka nieznana |
+| **`60 00`** | PIC→PC | Tablica 3.0 `0x44A998`, walidator `0x402C80` | **Dokładnie N=0** w badanym parserze 3.0 |
+| **`60 00..04`** | PIC→PC | Walidator 4.5 `0x402C64` | **N=0–4**, semantyka dodatkowego payloadu nadal nieznana |
+| `70 04..0C` | PIC→PC | Obie wersje mają osobny walidator | CAN11, N=0..8, kod hosta |
+
+Pełny kontekst adresowy i rozróżnienie TX/RX w [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). **Żadna z nowych danych nie jest pomiarem konkretnego adaptera**.
