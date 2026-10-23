@@ -94,3 +94,9 @@ Dostarczone `VAG K CAN COMMANDER FULL 1.4.zip` **nie jest nową kompilacją** pr
 Z dostarczonego archiwum `VWool 2 0 9 en PL.rar` przeanalizowano statycznie `VWTOOL.EXE`, `VWTOOL-pl.EXE`, `CONFIGVW.EXE` i `DATAVIEW.EXE`. To **16-bitowe aplikacje Windows NE / Visual Basic 3** do starszej diagnostyki VAG przez szeregowy interfejs ISO/K-Line, nie nowa wersja VAG K+CAN Commander 1.4/2.5. Wariant PL różni się od EN tłumaczeniami, ale nie jest bajtowo identyczny. `CONFIGVW.EXE` wskazuje COM1–4, `VWTOOL.INI` ma `CommPort=2`. **Nie udowodniono kompatybilności z konkretnym niebieskim Commanderem ani obsługi jego binarnego protokołu PC↔PIC.**
 
 Dodatkowo odtworzono kodowanie XOR `0x85` baz `ERRCODE4.CSV` i `LABELS.CSV` (zwykłe CR/LF), pozwalające odczytać opisy DTC i bloków pomiarowych. Nie są to identyfikatory CAN. Raport: [ANALYSIS_VWTOOL_209_2026-10-23.md](ANALYSIS_VWTOOL_209_2026-10-23.md).
+
+## Polski VAG 4.9 — instalator i możliwa zgodność K-Line (2026-10-23)
+
+`Polski VAG 4.9(1).rar` zawiera **wyłącznie instalator `setup.exe`** (Inno Setup 5.2.1, PE32 x86, 9 414 111 B, SHA-256 `132d7d275a1b3a406a963f1a625a3ceb4bea174ea1a5b22135f4720d8db6046e`). **Nie udało się wydobyć wewnętrznej aplikacji**, więc jej importy i protokół COM nie zostały bezpośrednio przeanalizowane. Znalezione API Windows należą do stuba instalatora, nie do programu diagnostycznego.
+
+Historyczne materiały opisują Polski VAG 4.9 jako program **starszej diagnostyki VAG bez CAN**, z relacjami poprawnego działania na pewnych interfejsach K+CAN Commander **przez K-Line**. Nie oznacza to korzystania z komend CAN PC↔PIC `0x50–0x70`, a zgodność z posiadanym niebieskim adapterem wymaga osobnego testu. [Szczegółowy raport](ANALYSIS_POLSKI_VAG_49_2026-10-23.md). Nie rozstrzygać o bezpieczeństwie i kompatybilności jedynie na podstawie nazwy pakietu.
