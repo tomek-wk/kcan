@@ -164,3 +164,7 @@ Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026
 4. Oba EXE `CreateFileA("COM%d")` bez prefiksu `\\\\.\\` dla COM10+, więc taka ścieżka nie obsługuje standardowo COM10+ (Microsoft CreateFileA). Program tworzy 16 rekordów, lecz brak jawnej kontroli `PORT` w `0x403170`; potencjalny problem dla `PORT>=16`. Nowe **D046**; rekomendowane laboratoryjne COM2–COM9. FULL 2.5 ma już rozpoznane wsparcie COM10+.
 
 Zaktualizowano `PROTOCOL.md`, `COMMANDS.md`, `DISCREPANCIES.md`, `SAFE_TESTS.md`. Nie wysyłać `C0/53/60` do samochodu ani uruchamiać niezweryfikowanych EXE na głównym komputerze. Do potwierdzenia firmware potrzebny **własny bezpieczny zrzut PC↔PIC/stanowisko CAN**.
+
+### Istotne przy reprodukcji: bieżący katalog i COM0
+
+W 3.0 beta/4.5 `GetCurrentDirectoryA` + `\\TESTER.INI` i `GetPrivateProfileIntA("COM","PORT",0,...)` oznacza, że uruchomienie z innym katalogiem roboczym może prowadzić do **braku INI → PORT=0 → próby otwarcia COM0** (4.5 z UART 115200, 3.0 z UART 833333). To wniosek z wykonawczego kodu hosta, nie test systemowy. Wszelkie porównania powinny rejestrować working directory. Zob. [dalszą analizę](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
