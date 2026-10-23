@@ -95,3 +95,14 @@ Kod 2.5 i hipotezy: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_20
 - **KCAN-D022 (walidacja):** przygotować testy jednostkowe parsera dla `0x70` długość 4 i 12, odrzucenia 3 i 13, `0x60` długości 0..4 i 5 oraz synchronizacji po śmieciach. Wszystkie te testy można zrobić **bez adaptera i bez wykonywania obcego EXE**.
 
 Szczegóły i adresy kodu: [ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).
+
+## Osobne sprawdzenie Commandera „3.6” (KCAN-D043)
+
+Nowy `VWTester.exe` z pakietu 3.6 zawiera wyłącznie **jawne zależności** `FTD2XX.dll` (`FT_Open/FT_Close/FT_GetDeviceInfo`) i `FTChipID.dll` (`FTID_GetChipIDFromHandle`), a kod CAN jest chroniony. To nie uprawnia do zakładania, że program używa FTDI D2XX do samej transmisji CAN.
+
+1. Zacząć od **statycznej identyfikacji USB/FTDI i modelu PIC**, bez uruchamiania niezweryfikowanego programu i bez pojazdu.
+2. Jeżeli uruchomienie będzie zgodne z procedurą bezpieczeństwa: w izolowanym systemie/stanowisku rejestrować **Win32 COM, wywołania D2XX/FTChipID, RTS/DTR oraz surowe bajty UART**, zanim oceni się protokół lub spróbuje nadawać CAN.
+3. W razie wykazania znanych komend `0x50/51/52/53/55/60/70` porównywać odpowiedzi z zachowaniem referencyjnym 2.5 na **izolowanym CAN**, rozróżniając sprzęt i host; nie stosować w ciemno komend `0x53/55/60` do auta.
+4. Zarejestrować i udokumentować wariant sprzętu/firmware, API, rzeczywisty baudrate, timeouty, odczyt i ACK; **obecność importu nie jest wywołaniem**. Sprawdzić oddzielnie użycie chip ID; nie obchodzić mechanizmów licencyjnych.
+
+Pełna karta analizy: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md). Oryginalne programy, sterowniki, logi i dane urządzenia poza repo.
