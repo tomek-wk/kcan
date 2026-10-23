@@ -77,3 +77,10 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - Archiwum `Polski VAG 4.9(1).rar` (RAR4, SHA-256 `3febfd5015830fb6626134f6e13fed107f09ff2d7544e36ad244e4102d0c8e7f`) zawiera **jeden plik** `setup.exe`, SHA-256 `132d7d275a1b3a406a963f1a625a3ceb4bea174ea1a5b22135f4720d8db6046e`, zidentyfikowany jako **Inno Setup 5.2.1** / `Polski VAG` / `4.9` / `www.obd2.pl`.
 - Rozpoznano stub PE32 i duże dane dołączone (99,33% EXE), ale **nie wydobyto wewnętrznych plików aplikacji**; nie ma potwierdzonego nowego kodu CAN Commandera. Publiczne źródła wskazują na **diagnostykę K-Line** i doniesienia o zgodności z *niektórymi* Commanderami K+CAN, bez dowodu współpracy z konkretnym egzemplarzem.
 - [Analiza, hashe i ograniczenia](docs/ANALYSIS_POLSKI_VAG_49_2026-10-23.md). Nie zmieniono protokołu ani listy opkodów; brak nowych testów KCAN-D0xx. Bez publikowania oryginalnego RAR/EXE.
+
+## Nowa kompilacja — VAG Commander „3.6” (2026-10-23)
+
+- Archiwum `VAG COMMANDER 3.6(2).rar` — RAR4, **26 plików + 2 katalogi**, SHA-256 `4c4e448077836806c593ef2f08a948ee56d0bde73f6f7dd8f56148b0097403a4`.
+- `VWTester.exe` **647 168 B**, SHA-256 **`a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`** — **nowa, różna kompilacja** od 1.4/2.5. Sekcje `.vmp0/.vmp1`, zaszyfrowana/skompresowana reprezentacja właściwego kodu; nie udało się statycznie odtworzyć wykonawczych funkcji CAN. **Numer „3.6” wynika z nazwy pakietu**, zasób FileVersion nadal `1.0.0.1`.
+- **Nowy ślad:** jawne importy `FTD2XX.dll` ordinal `1/2/61` = `FT_Open/FT_Close/FT_GetDeviceInfo` oraz `FTChipID.dll` ordinal `8` = `FTID_GetChipIDFromHandle`. Są też importy Win32 COM; **nie ustalono**, która ścieżka służy do ramek CAN. `RCMicroDogSetup.dll` jest identyczne z 1.4/2.5. Sterowniki FTDI pochodzą z pakietu `2.00.00` (2006).
+- [Raport statyczny i granice wnioskowania](docs/ANALYSIS_VWTESTER_36_2026-10-23.md); nowy **KCAN-D043** dotyczy zgodności protokołu tej wersji, powiązany z D003/D004/D015/D016. Brak nowych potwierdzonych opkodów CAN; oryginalne pliki poza repo.
