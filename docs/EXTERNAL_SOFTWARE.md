@@ -88,3 +88,9 @@ Dostarczone `VAG K CAN COMMANDER FULL 1.4.zip` **nie jest nową kompilacją** pr
 `k+can2.5(1).zip` zawiera `VWTester.exe` **688 128 B**, SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`; to **inny plik** niż dotychczasowe `VAG-K+CAN Commander.exe` 1.4 (**1 060 864 B**). W zasobach wprost `VAG-K+CAN COMMANDER FULL 2.5`. EXE 2.5 jest bardziej czytelny w deasemblacji mimo eksportów EXECryptor. Biblioteka `RCMicroDogSetup.dll` jest **identyczna** z pakietem 1.4, co może oznaczać wspólny komponent dongla, lecz nie potwierdza kompatybilności urządzeń.
 
 **Znacząca funkcja:** kod 2.5 wysyła i odbiera CAN11 o **zmiennej długości N**, zamiast jedynie ośmiobajtowego pola obserwowanego wcześniej. Nadaje także krótkie komunikaty `50 00` oraz `51 00` i zapisuje `53 20 [32 B]`. [Raport](ANALYSIS_VWTESTER_25_2026-10-23.md).
+
+## VWTOOL / VDS-PRO 2.09 — osobny program K-Line (2026-10-23)
+
+Z dostarczonego archiwum `VWool 2 0 9 en PL.rar` przeanalizowano statycznie `VWTOOL.EXE`, `VWTOOL-pl.EXE`, `CONFIGVW.EXE` i `DATAVIEW.EXE`. To **16-bitowe aplikacje Windows NE / Visual Basic 3** do starszej diagnostyki VAG przez szeregowy interfejs ISO/K-Line, nie nowa wersja VAG K+CAN Commander 1.4/2.5. Wariant PL różni się od EN tłumaczeniami, ale nie jest bajtowo identyczny. `CONFIGVW.EXE` wskazuje COM1–4, `VWTOOL.INI` ma `CommPort=2`. **Nie udowodniono kompatybilności z konkretnym niebieskim Commanderem ani obsługi jego binarnego protokołu PC↔PIC.**
+
+Dodatkowo odtworzono kodowanie XOR `0x85` baz `ERRCODE4.CSV` i `LABELS.CSV` (zwykłe CR/LF), pozwalające odczytać opisy DTC i bloków pomiarowych. Nie są to identyfikatory CAN. Raport: [ANALYSIS_VWTOOL_209_2026-10-23.md](ANALYSIS_VWTOOL_209_2026-10-23.md).
