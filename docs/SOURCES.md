@@ -105,3 +105,11 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - `ERRCODE4.CSV` oraz `LABELS.CSV` — dane w kodowaniu XOR `0x85` z niezmienionymi CR/LF (opisy błędów i grup pomiarowych). Pełne bazy nie są publikowane.
 - Źródła zewnętrzne: [VDSPro 2.09, archiwalna instrukcja](https://www.manualzz.com/doc/6336906/baum-tools-unlimited-vdspro-diagnostic-software-instructi...), [Ross-Tech: podręcznik i historyczny komentarz o VWTool](https://ross-tech.net/vag-com/download/old-manual/PrintableManual4090d.pdf), [Ross-Tech: stare interfejsy](https://www.register.ross-tech.com/vag-com/old-interfaces/discontinued_interfaces.php). Nie dowodzą współpracy z konkretnym interfejsem K+CAN użytkownika.
 - Wyniki: [ANALYSIS_VWTOOL_209_2026-10-23.md](ANALYSIS_VWTOOL_209_2026-10-23.md); brak nowych komend CAN PC↔PIC.
+
+## S10 — Polski VAG 4.9 (2026-10-23)
+
+- Archiwum użytkownika `Polski VAG 4.9(1).rar`: RAR4, 9 407 067 B, SHA-256 `3febfd5015830fb6626134f6e13fed107f09ff2d7544e36ad244e4102d0c8e7f`; jeden `setup.exe` (9 414 111 B, SHA-256 `132d7d275a1b3a406a963f1a625a3ceb4bea174ea1a5b22135f4720d8db6046e`, CRC `5037C6C0`).
+- Analiza lokalna stuba: **Inno Setup 5.2.1**, zasoby **`Polski VAG` / `4.9` / `www.obd2.pl`**, 8 sekcji PE i 9 350 623 B danych dołączonych. **Nie rozpakowano wewnętrznego ładunku instalatora**; brak podstaw do wskazywania bibliotek lub opkodów aplikacji. Plik uruchamialny *nie był wykonywany*.
+- Publiczne potwierdzenie tożsamości poprzez dokładnie ten sam hash: [herdProtect, Polski VAG 4.9](https://www.herdprotect.com/polski-vag-4.9.exe-db8089cd37de46fe56348b93656403e366d0da0a.aspx).
+- Kontekst obsługi: [opis Polski VAG 4.9 — brak diagnostyki CAN](https://pliki.pl/polski-vag-4-9/), [historyczna relacja zgodności K+CAN z Polski VAG](https://forum.vw-passat.pl/topic/34160-interfejs-diagnostyczny-co-nim-mozna/), [opis K+CAN 3.6 — Polski VAG po K-Line vs Commander po CAN](https://www.ccy.pl/pl/sklep/interfejs-obd2-vag-k-can-3-6-usb-detail.html). To **relacje/opisy zewnętrzne**, nie pomiary posiadanego interfejsu.
+- Raport: [ANALYSIS_POLSKI_VAG_49_2026-10-23.md](ANALYSIS_POLSKI_VAG_49_2026-10-23.md). Archiwum i instalator nie trafiają do repo.
