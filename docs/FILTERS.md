@@ -99,3 +99,9 @@ Przykład B, x=0x37 (wyliczony, bez pomiaru):
 W `VAG-CAN Commander 3.0 beta.exe` kod `0x40A3F9–0x40A465` tworzy `53 20` z dwoma pętlami **6×4 B oraz 2×4 B**; odpowiadający kod `VAG-CAN Commander4.5.exe` znajduje się w `0x40A489–0x40A4F5`. Obie kompilacje dodatkowo mają osobne funkcje nadania 32-bajtowego bloku (`0x403470` i `0x403450`). Kodowanie standardowego CAN ID w wpisie: `SIDH=ID>>3`, `SIDL=(ID&7)<<2`, pozostałe 2 B zerowe w zbadanej ścieżce.
 
 Jest to **dalsze potwierdzenie po stronie aplikacji** struktury „6 elementów + 2 elementy”, lecz **nie** bezpośredni odczyt RXF0..RXF5/RXM0..RXM1 na PIC ani test efektywnej filtracji. Wymagane pojedyncze kontrolowane modyfikacje i niezależne pomiary odbioru na stanowisku CAN. [Raport kodowy](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md).
+
+## Audyt filtrów 29-bitowych: 3.0 beta/4.5 (2026-10-23)
+
+W obu EXE **inicjalizacja** nadaje `53 20` z **32 bajtami**: rekordy 0–5 to `FF 1C 00 00`, rekord **6 to `FF 1C 00 FF`**, rekord 7 to `FF 1C 00 00`. Kod 4.5: `0x409F32..0x409FC4`; 3.0 beta: `0x409EAC..0x409F38`. `EBX=0` jest inicjalizowane na wejściu do tych procedur. Znaczenie specjalnego ostatniego `FF` w rekordzie 6 **niezidentyfikowane**. Osobny algorytm ustawień filtrów (`0x40A3F9`/ `0x40A489`) **koduje wyłącznie 11-bit ID** w pierwszych 2 bajtach, a pozostałe ustawia na 0 — **bez wyprowadzenia EID29 lub flagi IDE**.
+
+**Nie wolno** odczytywać `FF 1C` jako surowych `SIDH/SIDL` kontrolera PIC — w protokole hosta dolne 3 bity są `<<2`, podczas gdy rejestr PIC18F248 `TXBnSIDL` ma standardowe SID[2:0] na bitach 7..5 oraz oddzielny EXIDE. To dowodzi *konieczności translacji* w firmware lub innego prywatnego formatu, a nie tego, czy moduł CAN29 jest sprzętowo włączony. [Raport](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), [test D047](DISCREPANCIES.md).
