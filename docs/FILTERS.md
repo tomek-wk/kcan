@@ -93,3 +93,9 @@ Przykład B, x=0x37 (wyliczony, bez pomiaru):
 **Interpretacja „6 filtrów + 2 maski” nadal jest hipotezą mapowania na rejestry PIC.** Nie wiemy, jak w firmware działają wpisy `FF1C` i szczególny końcowy `FF` w pozycji 6. Bloki są wynikiem deasemblacji hosta, a nie pomiaru ruchu UART na Twoim adapterze.
 
 [Pełny ślad kodu i metodologia](ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md) · [KCAN-D023/D024](DISCREPANCIES.md).
+
+## Kolejne niezależne potwierdzenie konstrukcji 6+2 (3.0 beta oraz 4.5; 2026-10-23)
+
+W `VAG-CAN Commander 3.0 beta.exe` kod `0x40A3F9–0x40A465` tworzy `53 20` z dwoma pętlami **6×4 B oraz 2×4 B**; odpowiadający kod `VAG-CAN Commander4.5.exe` znajduje się w `0x40A489–0x40A4F5`. Obie kompilacje dodatkowo mają osobne funkcje nadania 32-bajtowego bloku (`0x403470` i `0x403450`). Kodowanie standardowego CAN ID w wpisie: `SIDH=ID>>3`, `SIDL=(ID&7)<<2`, pozostałe 2 B zerowe w zbadanej ścieżce.
+
+Jest to **dalsze potwierdzenie po stronie aplikacji** struktury „6 elementów + 2 elementy”, lecz **nie** bezpośredni odczyt RXF0..RXF5/RXM0..RXM1 na PIC ani test efektywnej filtracji. Wymagane pojedyncze kontrolowane modyfikacje i niezależne pomiary odbioru na stanowisku CAN. [Raport kodowy](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md).
