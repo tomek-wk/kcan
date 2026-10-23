@@ -97,3 +97,11 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - **Nowe niezależne potwierdzenie w wykonawczym kodzie hosta** dla obu EXE: CAN11 `0x60` TX z `length=N+4`, `0x70` RX z `length=4..12`, i konstrukcja `53 20` jako **6×4 + 2×4 B**. W 4.5 parser dodatkowo akceptuje odpowiedzi `0x60 length<=4`.
 - **Istotna różnica:** 4.5 w kodzie otwierania COM wybiera **115200 bit/s przy parametrze <2** albo **833333 bit/s przy parametrze >=2**; 3.0 beta w badanej ścieżce używa **833333**. Nie mapowano parametru do nazw trybów GUI ani działania konkretnego adaptera.
 - `Tester.ini` używa `[COM] PORT=4` (a nie osobnych `CAN_PORT/KWP_PORT`); dołączone FTDI INF są wersji **1.00.2154 z 2004**. Teksty diagnostyczne identyczne z 1.4 po normalizacji końców linii. [Pełna analiza z adresami x86](docs/ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md); nowe **KCAN-D044/D045**. Wyłącznie analiza statyczna, bez uruchamiania programów i bez pomiaru interfejsu.
+
+## Pogłębiona analiza 3.0 beta/4.5 — inicjalizacja, numer COM i odpowiedzi (2026-10-23)
+
+- **Rozstrzygnięto znaczenie warunku `115200/833333` w 4.5:** argument `0x403170` to **numer portu odczytany z `[COM] PORT` w `Tester.ini`**, **nie tryb CAN/K-Line**. `PORT=0/1` wybiera 115200 bit/s, `PORT>=2` wybiera 833333 bit/s. W dołączonym pliku `PORT=4`, zatem kod wybiera COM4/833333. Podobna sekwencja INI istnieje w 3.0 beta, ale bez rozgałęzienia prędkości.
+- **Nowy faktyczny rozkaz hosta:** oba EXE w badanej inicjalizacji wysyłają kolejno **`51 00` → `C0 00` → `53 20 [32B]`**, z przerwami 50 ms; to **`C0`**, nie `50` obserwowane w innych wersjach. Semantyka `C0` i zgodność firmware nieudowodnione.
+- **Rozstrzygnięto różnicę odpowiedzi `0x60`** na poziomie kodu: 3.0 beta ma w deskryptorze `60 00` i przyjmuje dokładnie zero bajtów; 4.5 ma osobny walidator akceptujący **0–4**. Ośmiowpisowe tablice RX obejmują także `C0 00, 51 00, 52 20, 53 00, 54 02, 6F 00` (oczekiwane odpowiedzi, nie automatycznie wykonane komendy).
+- **Ryzyko COM10+:** oba starsze EXE przekazują do `CreateFileA` nazwę `COM%d` bez prefiksu `\\\\.\\`, dlatego w typowym Windows **COM10+ nie zadziała tą ścieżką**; 2.5 ma osobne wsparcie rozszerzonego formatu.
+- [Raport z adresami i tabelami](docs/ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md); aktualizacja **D044/D045**, nowy **D046**. Potwierdzenia dotyczą hosta, nie firmware.
