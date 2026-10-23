@@ -138,3 +138,12 @@ Sekwencja init obu: COM → `51 00` → `C0 00` → `53 20[32 B]`; początkowy b
 - **Potwierdzono w kodzie transport VAG TP2.0 ponad CAN11**: `0x420360` tnie wiadomości na maks. **7 bajtów danych/ramkę**, dodaje 4-bitową sekwencję i znaczniki `0x10/0x20/0x00`, respektuje parametr block-size i kieruje każdą ramkę przez `0x4207D0→0x403520` do opkodu UART `0x60`; RX ma obsługę potwierdzeń `B0|sequence`. To **nie nowy protokół CAN29**.
 - W `0x420360` wykryto dwie **potencjalnie nieograniczone pętle aktywnego oczekiwania** oraz lokalnie niezweryfikowany dzielnik block-size (możliwość dzielenia przez 0, o ile nie sprawdzono go wcześniej). **Nowe D053/D054** dotyczą protokołu transportowego i odporności aplikacji, a nie zmian firmware.
 - [Pełny raport z adresami, mapą MFC, stanami i ograniczeniami](docs/ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md).
+
+## Ponowny audyt wszystkich dostępnych plików — bez chronionych EXE (2026-10-23)
+
+- Sprawdzono integralność i manifesty **8 dostępnych archiwów**. Do analizy kodu użyto **wyłącznie czytelnych instrukcji** trzech różnych programów: Commander **3.0 beta**, **4.5** oraz **5.0+ECU** z ZIP V5.1. Chronione główne EXE **1.4**, trzy identyczne **3.6** i niedostępną zawartość programu Polski VAG z instalatora **pominięto bez prób odszyfrowywania**; VWTOOL NE/VB3 sprawdzono tylko pod kątem jawnych danych K-Line.
+- **Nowość:** wszystkie trzy dostępne czytelne EXE mają rzeczywisty kod **VAG TP2.0**, a nie wyłącznie 5.0+ECU: segmentery `0x4166E0`, `0x417FB0`, `0x420360`. Zbieżność instrukcji i wspólne błędy wskazują na **dziedziczony kod**, nie trzy niezależne projekty.
+- **Wspólna nieosiągalna gałąź handshake:** `AND EAX,0xFF` bezpośrednio przed `CMP AX,0x300` uniemożliwia wejście do wskazanej obsługi A1/A3. Nie oznacza to automatycznie niesprawności całego TP2.0.
+- **Ważne ryzyko odbioru:** legalna ramka CAN z **DLC=0** może trafić do ogólnego składania TP2.0, gdzie `dec ecx` przed `rep movsd` zamienia długość `0` w `0xFFFFFFFF`. Zbadana ścieżka ma brak ogólnej walidacji `DLC>=1`; **nie twierdzimy**, że awaria występuje dla każdej pustej ramki.
+- Dodatkowo odbiór ACK sprawdza `control & 0xB0 == 0xB0`, przez co m.in. `0xF0` również przechodzi test maski (przy zgodnym ID kanału). Nie znaleziono nowego CAN29 ani opkodu.
+- [Pełny audyt z adresami, inwentarzem i poziomami dowodów](docs/AUDIT_READABLE_FILES_2026-10-23.md), aktualizacje **D053/D054**, nowe **D055/D056**. Bez uruchamiania obcych plików i bez binariów w repo.
