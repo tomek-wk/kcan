@@ -180,3 +180,16 @@ Użytkownik poprosił o **ponowną analizę inicjalizacji oraz możliwości CAN 
 **Bardzo ważny niuans:** bajt nazwany `SIDL` w protokole **NIE JEST surowym PIC SIDL**: UART `(ID&7)<<2` umieszcza SID w bitach 4–2, a w rejestrze potencjalnego PIC18F248/258 to bity 7–5; `EXIDE` (bit 3 PIC) nie może być odczytany z hostowego `0x1C`. Rodzina PIC sprzętowo może CAN 2.0B Active, ale **typ PCB/firmware konkretnego adaptera i faktyczna obsługa CAN29 pozostają nieznane**. Chroniony 3.6 nie został rozstrzygnięty.
 
 Nowe **KCAN-D047** w [DISCREPANCIES.md](DISCREPANCIES.md), test w [SAFE_TESTS.md](SAFE_TESTS.md): referencyjny CAN11 `0x110` kontra CAN29 `0x18DAF110` tylko na izolowanej magistrali, obserwacja UART i fizycznego CAN, bez prób w pojeździe. Nie wymyślać nowego opkodu CAN29.
+
+## Uzupełnienie: krytyczne błędy obsługi UART i pozorny sukces TX (2026-10-23)
+
+Po poprzednim audycie CAN29 użytkownik polecił **szukać dalej**. Ponownie statycznie analizowano te same EXE 3.0 beta/4.5 z `VAG-CAN Commander V4.5.zip`, szczególnie niskopoziomowy COM, bez uruchamiania ani testów sprzętowych. Pełny raport: [ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md](ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md).
+
+**Trzy nowe istotne wnioski:**
+1. **Funkcja UART `0x408BD0`** w obu EXE: `WriteFile OVERLAPPED` → przy FALSE `WaitForSingleObject` → **`GetOverlappedResult(...,TRUE)` bez sprawdzania BOOL ani `bytesWritten`** → zawsze **return 1** jeśli uchwyt COM nie jest `INVALID_HANDLE_VALUE`. W **3.0 beta pierwszy wait jest INFINITE**, w **4.5 pierwszy wait to 258 ms**, ALE **GetOverlappedResult(TRUE) może nadal czekać bez limitu**. Nie ma skutecznego końcowego timeoutu ani prawdziwego potwierdzenia WriteFile.
+2. **TX CAN11 `0x403510` (3.0) i `0x4034F0` (4.5)** po wywołaniu writer **nie sprawdza jego wyniku**, odnotowuje próbę jako lokalny rekord TX z `GetTickCount` i statusem, `Sleep(10)`, **return 1**. W tej ścieżce nie czeka na `0x60` status PIC, tym bardziej fizyczny ACK CAN. Oznaczenie TX w starym GUI **nie dowodzi** transmisji na magistrali. Dodatkowe potwierdzenie braku CAN29: wewnętrzna mapa TX/RX ma indeks `(channel<<11)|(ID&0x7FF)`.
+3. **DTR/RTS** w otwarciu portu `0x408CD0`: **SETDTR(5)→Sleep(500ms)→CLRDTR(6)→SETRTS(3)** w obu. Skutek na niebieskim PIC nieznany. TX pobiera N jako **bajt**, kopiuje **N bajtów do lokalnego bufora stosu bez lokalnego ograniczenia do 8**. Ograniczenia mogą istnieć w caller/GUI; testy błędnych N robić wyłącznie na własnym kodzie/mocku, NIE w starym EXE.
+
+**Nowe zadania:** [KCAN-D048, D049, D050](DISCREPANCIES.md); uaktualniono `README.md`, `PROTOCOL.md`, `COMMANDS.md`, `SAFE_TESTS.md`, `SOURCES.md`. Nie znaleziono nowego protokołu CAN29 ani nie poznano semantyki `C0/54/6F`. Nie używać nieznanych komend ani starych niezweryfikowanych EXE w aucie.
+
+**Następne priorytety:** w osobnym, bezpiecznym kliencie rozdzielić stany `request/write/adapter/CAN`, implementować skuteczny timeout, walidować DLC i przetestować retry/missing responses. Przy testach sprzętu tylko odizolowany CAN i referencyjny analizator.
