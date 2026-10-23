@@ -87,3 +87,20 @@ Doprecyzowanie: problem `KCAN-D013` pozostaje otwarty tylko co do **semantyki CA
 | **KCAN-D028** | Przy błędnym ustawieniu COM program próbuje `9600` i zwraca błąd inicjalizacji | Czy to tylko procedura przywracająca ustawienia portu; nie wnioskować o pracy PIC z 9600 | OPEN |
 
 Adresy, zawartość obu bloków i ograniczenia: [ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md](ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md). Żadnej z kwestii nie zweryfikowano jeszcze na niebieskim adapterze.
+
+
+## Czwarta analiza FULL 2.5 — nowe testy KCAN-D029–D035
+
+| ID | Nowy wynik statyczny | Test rozstrzygający | Status |
+| --- | --- | --- | --- |
+| **KCAN-D029** | `0x42AE00`: 5-baud LSB-first, 8 bitów adresu + start/stop, generowane przez `EscapeCommFunction(8=SETBREAK,9=CLRBREAK)`, okres ~199 ms | Zarejestrować na izolowanej płytce przebieg TXD FTDI i K-Line; zmierzyć okres oraz sprawdzić drogę elektryczną | **OPEN — kod hosta potwierdzony** |
+| **KCAN-D030** | **Oddzielna** funkcja `0x434120`: 7 bitów LSB-first + bit parzystości z licznika jedynek, prawdopodobnie odd parity | Porównać tryby z różnych opcji diagnostycznych, pomierzyć wszystkie bity i polaryzację; nie zakładać jednego formatu 5-baud | **OPEN — kod hosta potwierdzony** |
+| **KCAN-D031** | `0x42AD62`: szybka sekwencja `CLRBREAK 15, SETBREAK 30, CLRBREAK 22`; odrębne dłuższe wzorce w `0x42B540` | Pomiar rzeczywistych czasów i identyfikacja zastosowania; nie utożsamiać z normą przed pomiarem | **OPEN** |
+| **KCAN-D032** | `0x42AFB0–0x42B249`: parser RX K-Line z osobnym przypadkiem `00` i długością `next+3`, eliminacją echa, oraz szczególną obsługą NRC `7F 78` | Symulowany strumień K-Line: rama standardowa, rozszerzona, echo identyczne, odpowiedź `7F ... 78`; porównać eventy i timeouty | **OPEN — mechanizmy hosta potwierdzone** |
+| **KCAN-D033** | `0x42B3FC–0x42B40A`: `TransmitCommChar` ponawiane bez lokalnego licznika/limitu czasu | W implementacji własnej wymusić błędy portu na mocku, zapewnić abort i limit prób. Nie powielać potencjalnego zapętlenia hosta | **OPEN — luka hosta zidentyfikowana** |
+| **KCAN-D034** | `0x42B575`: ścieżka K-Line otwiera COM przy `0x28E8=10472` bit/s (w przeciwieństwie do UART 833333 dla ścieżek CAN) | Przy symulowanym K-Line odczytać DCB po otwarciu, pomierzyć bitrate i odróżnić inicjalizację 5-baud od transferu danych | **OPEN — kod hosta potwierdzony** |
+| **KCAN-D035** | `0x40A543–0x40A56D`: EXE 2.5 obsługuje nazwy `COM%d` dla COM1–9 i `\\.\COM%d` dla COM10+ | Test otwarcia wyższego COM w izolowanej instancji; odróżnić limit starszej instrukcji COM1–4 od zachowania 2.5 | **OPEN — format nazw potwierdzony** |
+
+Pełne adresy i ograniczenia: [ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md](ANALYSIS_VWTESTER_25_KLINE_INIT_RX_2026-10-23.md).
+
+**Zasada:** funkcje `SETBREAK/CLRBREAK` i diagnostyczne `7F 78` są elementami pracy K-Line, nie nowymi opkodami binarnego protokołu `0x50–0x70`. Żadnej z nowych funkcji nie testowano dotąd na niebieskim adapterze.
