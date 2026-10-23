@@ -71,3 +71,9 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - Dwie wersje `VWTOOL.EXE` / `VWTOOL-pl.EXE` różnią się bajtowo, w znacznej części przez polskie komunikaty; program używa Windows NE, Visual Basic 3 i portu szeregowego COM, z plikiem `VWTOOL.INI`.
 - **Nowe ustalenie:** `ERRCODE4.CSV` i `LABELS.CSV` dekodują się przez **XOR 0x85** na każdym bajcie z wyjątkiem CR/LF; zawierają opisy usterek i 569 rekordów etykiet grup pomiarowych starszych ECU VAG. To **dane aplikacyjne**, nie ramki CAN.
 - [Szczegółowy raport i hashe](docs/ANALYSIS_VWTOOL_209_2026-10-23.md). Brak zmiany protokołu i nowych zadań KCAN-D0xx. Nie publikowano binariów ani pełnych danych z programu.
+
+## Nowy materiał — Polski VAG 4.9 (2026-10-23)
+
+- Archiwum `Polski VAG 4.9(1).rar` (RAR4, SHA-256 `3febfd5015830fb6626134f6e13fed107f09ff2d7544e36ad244e4102d0c8e7f`) zawiera **jeden plik** `setup.exe`, SHA-256 `132d7d275a1b3a406a963f1a625a3ceb4bea174ea1a5b22135f4720d8db6046e`, zidentyfikowany jako **Inno Setup 5.2.1** / `Polski VAG` / `4.9` / `www.obd2.pl`.
+- Rozpoznano stub PE32 i duże dane dołączone (99,33% EXE), ale **nie wydobyto wewnętrznych plików aplikacji**; nie ma potwierdzonego nowego kodu CAN Commandera. Publiczne źródła wskazują na **diagnostykę K-Line** i doniesienia o zgodności z *niektórymi* Commanderami K+CAN, bez dowodu współpracy z konkretnym egzemplarzem.
+- [Analiza, hashe i ograniczenia](docs/ANALYSIS_POLSKI_VAG_49_2026-10-23.md). Nie zmieniono protokołu ani listy opkodów; brak nowych testów KCAN-D0xx. Bez publikowania oryginalnego RAR/EXE.
