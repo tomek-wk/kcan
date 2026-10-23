@@ -158,3 +158,14 @@ Powiązane **KCAN-D048–D050** w [DISCREPANCIES.md](DISCREPANCIES.md), a testy 
 3. **Na odizolowanym CAN z drugim analizatorem**: porównywać stany żądanie nadania / zakończenie UART / odpowiedź PIC / fizyczny CAN, a w pasywnym teście porównać CAN11 `0x110` i CAN29 `0x18DAF110`; **nie wysyłać nieznanych `C0/53/55/60` w samochodzie**. Nie uruchamiać otrzymanego EXE bez oceny bezpieczeństwa i środowiska izolowanego.
 
 [Raport](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md), [D051/D052](DISCREPANCIES.md).
+
+## Testy TP2.0 i eksportu ReadMemory bez ryzyka (D052–D054; 2026-10-23)
+
+**Offline** z kodu `VAG-CAN Commander+EDC15.exe` potwierdzono eksport `memory.bin` (CFile modeCreate|modeWrite), segmentację **VAG TP2.0 po 7 B** oraz potencjalnie nieograniczone aktywne oczekiwanie/ryzyko dzielenia przez 0. Zob. [ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md](ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md).
+
+1. **Zachowanie danych:** nigdy nie nadpisywać dostarczonego `memory.bin`; to prawdopodobna próbka danych ECU, a stary program w swojej ścieżce ReadMemory używa `modeCreate`, które **zeruje istniejący plik**. Własny klient powinien tworzyć nowy plik pod unikalną nazwą, zapisywać atomowo i oznaczać kompletny/niekompletny odczyt. Nie publikować ECU VIN/PIN/kluczy.
+2. **Mock transportu:** sprawdzić segmentację `0,1,7,8,14,15` bajtów KWP2000, flagi `0x00/0x10/0x20`, sekwencję `0x0F→0x00`, punkt ACK przy block-size, składanie RX, timeout i anulowanie. **Tylko własny testowy kod**, bez uruchamiania starego EXE.
+3. **Kontrolowany CAN11:** po fizycznej identyfikacji interfejsu i ocenie bezpieczeństwa, na **izolowanej i poprawnie terminowanej** magistrali z analizatorem referencyjnym sprawdzić inicjalizację TP2.0, D0/A1/A3/B0 i liczbę ramek, zachowanie bez ACK, straty, retransmisje. Rozdzielać UART `0x60` i payload TP2.0 (np. `0x20|seq`). Nie wywnioskowywać CAN29.
+4. **Ryzyka kodu:** `0x420371` i `0x420498` czekają na flagi bez lokalnego timeoutu/Sleep; `0x42046D` dzieli przez `blockSize`, którego `!=0` nie sprawdzono w funkcji. Testy zerowego block-size i brakujących ACK **wyłącznie w własnym mocku**, nie w obcym EXE/pojeździe.
+
+Dalsza weryfikacja fizyczna UART/PIC/CAN i skutków `C0/53` tylko na izolowanym bench. Nie ma nowych, potwierdzonych opkodów PC↔PIC ani CAN29.
