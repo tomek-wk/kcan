@@ -69,3 +69,14 @@ Zgodność 2.5 z konkretnym firmware oraz znaczenie `0x54`/`0x6F` pozostają otw
 - `0x55`: występuje wielokrotnie także w kodzie dotyczącym diagnostyki ECU. **Nie należy przypisywać tych wystąpień komendzie konfiguracji prędkości CAN** znanej z innej DLL.
 
 Zobacz [ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).
+
+## Potwierdzenia wykonawczego kodu z Commandera 3.0 beta i 4.5 (2026-10-23)
+
+| Polecenie | 3.0 beta | 4.5 | Uwaga |
+| --- | --- | --- | --- |
+| **`0x60` PC→PIC** | TX `0x403510` | TX `0x4034F0` | Budowa **CAN11 `length=N+4`** z ID i N bajtami; dowód z kodu hosta |
+| **`0x70` PIC→PC** | RX `0x402D10`; walidator `0x402C80` | RX `0x402CE0`; walidator `0x402C40` | Akceptowane `length=4..12`; dekodowanie ID CAN11 |
+| **`0x53` PC→PIC** | `0x403470`, budowa filtrów `0x40A3F9` | `0x403450`, budowa filtrów `0x40A489` | `53 20 [32B]`, **6×4 + 2×4 B** |
+| **`0x60` PIC→PC** | walidacja poprzez ogólne deskryptory; brak osobnej gałęzi w zbadanej funkcji | `0x402C64`: **`length<=4`** | Nie jest to fizyczny ACK; semantyka statusów nieznana |
+
+**Uwaga dotycząca `0x50/0x51/0x52/0x54/0x55`:** ich wartości występują również w kodzie niezwiązanym bezpośrednio z ramkowaniem CAN; **nie przypisujemy żadnego nowego znaczenia PC↔PIC bez wywołania nadawczego i kontekstu**. To szczególnie ważne dla `0x55` z bibliotek J2534. Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md). Zgodność z konkretnym PIC/firmware pozostaje do przetestowania.
