@@ -58,3 +58,9 @@ Nie uruchamiano nieznanych plików wykonywalnych; dotychczasowe wnioski pochodz�
 - **Przed następnym plikiem w nowym czacie:** zacząć od **[HANDOFF_NEXT_CHAT.md](docs/HANDOFF_NEXT_CHAT.md)**. Podano tam kompletny stan projektu, hashe wszystkich znanych wersji, źródła, mapę CAN, niedowiedzione funkcje, plan testów i zasady zapisu do repo.
 
 Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, programów, bibliotek i logów.
+
+## Nowa analiza — wersja zainstalowana 1.4 (2026-10-23)
+
+- Otrzymane `VAG K+CAN COMMANDER 1.4zainstalowany.rar` zawiera **ten sam bajtowo EXE 1.4** (`ea69c09b...`) i `RCMicroDogSetup.dll` (`5671711c...`) co wcześniejsze archiwa. Nie stwierdzono nowej implementacji CAN.
+- `Uninstall/uninstall.xml` wskazuje jako źródło instalacji `Setup VAG K+CAN COMMANDER 1.4.exe`; jest to **pośrednia**, a nie kryptograficzna weryfikacja zawartości wcześniejszego instalatora. `Tester.ini` ma `FILEINDEX=1955` zamiast `1956` w `FULL 1.4`. Zaktualizowano **KCAN-D006 i D011**.
+- [Pełne porównanie i ograniczenia](docs/ANALYSIS_INSTALLED14_2026-10-23.md). Nie dodano do repo żadnych materiałów źródłowych ani lokalnych danych użytkownika.
