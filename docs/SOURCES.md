@@ -160,3 +160,9 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Metoda: statyczna deasemblacja x86, parsowanie tablic PE IMAGE_IMPORT_DESCRIPTOR/Import Lookup Table potwierdzające importy po adresach IAT: **4.5 `0x44C278=WriteFile`, `0x44C27C=GetOverlappedResult`, `0x44C2A4=WaitForSingleObject`, `0x44C270=EscapeCommFunction`**, 3.0 odpowiednio `0x44A278`, `0x44A27C`, `0x44A2A4`, `0x44A270`. Nie uruchomiono programu ani sterowników.
 - Dowody `0x408BD0` (bezwarunkowy sukces przy otwartym porcie, brak kontroli write result i liczby bajtów), `0x403510/0x4034F0` (TX rejestruje i zwraca sukces bez potwierdzenia CAN), `0x408CD0` (SETDTR/500ms/CLRDTR/SETRTS), lokalny brak walidacji N<=8 w kodzie TX. **Nadal nie oznaczają rzeczywistego zachowania PIC i firmware**.
 - Wyniki i szczegółowe adresy: [ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md](ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md), zadania [D048–D050](DISCREPANCIES.md). Bez kopii obcych EXE/DLL i surowych logów w repo.
+
+### Win32 API do S16 — weryfikacja niezależna
+
+- [Microsoft Learn: GetOverlappedResult](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getoverlappedresult) — `bWait=TRUE` może blokować do zakończenia, mimo wcześniejszego `WaitForSingleObject(258)`; zwraca liczbę rzeczywiście przetransferowanych bajtów.
+- [Microsoft Learn: WriteFile](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile) — rozróżnienie `ERROR_IO_PENDING` od błędów oraz zapis częściowy.
+- [Microsoft Learn: EscapeCommFunction](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-escapecommfunction) — znaczenie numerycznych rozkazów DTR/RTS `3/5/6`.
