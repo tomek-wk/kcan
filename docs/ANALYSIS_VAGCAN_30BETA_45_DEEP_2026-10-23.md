@@ -81,3 +81,9 @@ Zdekodowano pierwsze dwa bajty każdego rekordu bezpośrednio z rozpakowanych bi
 **Wciąż niepotwierdzone:** wynik komunikacji z konkretną płytką PIC, działanie firmware i czy `C0` ma związek z `50`; efekty `53` na rejestry CAN, listen-only bez ACK, CAN29, zachowanie gdy brak odpowiedzi `C0`/ `51`, poprawność `54` i `6F`, oraz czy port COM1 z 115200 odpowiada odmiennemu wariantowi urządzenia.
 
 **Testy:** aktualizacja **KCAN-D044** (C0, walidatory), **KCAN-D045** (mapowanie baud→PORT), nowy **KCAN-D046** (COM10+ i granice 16-slotowej tablicy). Walidację sprzętową przeprowadzić wyłącznie na izolowanym stanowisku, nie w samochodzie. W repo tylko niniejszy raport, bez bajtów programu w całości.
+
+## 6. Skutek braku Tester.ini w bieżącym katalogu
+
+Kod obu aplikacji pobiera katalog wywołaniem **`GetCurrentDirectoryA`**, dołącza dosłowne `\\TESTER.INI`, po czym `GetPrivateProfileIntA("COM","PORT",0,path)` pobiera numer COM. Jest to **current working directory**, nie jawnie ustalony katalog zawierający EXE.
+
+**Implikacja bez uruchamiania:** jeśli w katalogu roboczym nie ma poprawnego `TESTER.INI` albo brak pola `[COM] PORT`, Windows API zwróci domyślne **0**. Program 4.5 następnie spróbuje skonstruować **`COM0`** przy baud **115200**, 3.0 beta **`COM0`** przy baud **833333**. Nie wiadomo, czy istnieją dodatkowe globalne mechanizmy korekty przy innych ścieżkach aplikacji, ale zrekonstruowana inicjalizacja używa tej wartości bezpośrednio. Do porównywania stanów błędu koniecznie zapisać katalog roboczy uruchomienia i widoczny plik INI. **Nie jest to dowód fizycznej prędkości UART.**
