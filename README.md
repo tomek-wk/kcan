@@ -113,3 +113,12 @@ Po ponownej deasemblacji obu EXE potwierdzono **ograniczenie do CAN11 w zbadanyc
 Sekwencja init obu: COM → `51 00` → `C0 00` → `53 20[32 B]`; początkowy blok 0x53 składa się z sześciu `FF 1C 00 00`, następnie `FF 1C 00 FF` i `FF 1C 00 00`. **Nie znaleziono jawnego przełączenia CAN29**. Bajt formatu UART nie jest rejestrem PIC `SIDL`: standardowe bity ID są przesunięte o 2 (protokół PC↔PIC), a w hipotetycznym PIC18F248/258 byłyby w bitach 7–5. Nie interpretować wartości `1C` jako flagi EXIDE.
 
 [Pełny raport z adresami i ograniczeniami](docs/ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), nowe **KCAN-D047**, bez modyfikowania potwierdzonych opkodów. Nadal brak fizycznej walidacji konkretnego adaptera.
+
+## Audyt niezawodności UART i pozornego sukcesu CAN TX (2026-10-23)
+
+- Odtworzono niskopoziomową funkcję **`0x408BD0`** z niezależnych EXE **3.0 beta i 4.5**: `WriteFile` z OVERLAPPED, błędnie uproszczona obsługa wyniku, bez weryfikacji liczby zapisanych bajtów. Jeśli uchwyt COM nie ma wartości `INVALID_HANDLE_VALUE`, funkcja zwraca **1 nawet po nieudanej próbie**, bez sprawdzenia błędu API.
+- **Wersja 3.0 beta** wywołuje `WaitForSingleObject(INFINITE)`; **4.5** używa tam `258 ms`, ale następne **`GetOverlappedResult(...,TRUE)` może nadal czekać bez limitu**. Nie jest to skuteczny końcowy timeout.
+- **CAN TX `0x60`** `0x403510/0x4034F0` ignoruje wynik funkcji write, zapisuje lokalny rekord TX i `GetTickCount`, wykonuje **`Sleep(10)`**, po czym zwraca sukces **bez oczekiwania na fizyczny ACK ani potwierdzenie transmisji przez PIC**. Lista TX nie jest dowodem obecności ramki na CAN.
+- Przy otwieraniu COM obie wersje żądają **SETDTR → Sleep(500 ms) → CLRDTR → SETRTS**; fizyczny wpływ na FTDI/PIC pozostaje nieznany.
+- TX kopiuje **N bajtów do lokalnego bufora stosu bez jawnej w tej funkcji walidacji `0<=N<=8`**. Przetestowanie złych N w oryginalnym EXE jest niebezpieczne; własny klient powinien walidować na wejściu. Dodatkowo rozpoznano surową ścieżkę GUI nadawania bajtów i indeksowanie rekordów według `channel<<11|ID11`, ale to **nie dowodzi CAN29**.
+- [Raport statyczny z adresami i sprawdzonymi importami](docs/ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md). Zaktualizowano [D048–D050](docs/DISCREPANCIES.md); bez nowego protokołu sprzętowego.
