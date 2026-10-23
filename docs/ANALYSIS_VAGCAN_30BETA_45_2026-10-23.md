@@ -105,3 +105,9 @@ Testy właściwych ramek CAN i wpływu na magistralę — **wyłącznie na odizo
 **Drugie odkrycie:** oba EXE w sekwencji startowej *faktycznie nadają* **`51 00`, `C0 00`**, a później `53 20`. **`C0 00`** jest nowo potwierdzonym opcode hosta, różnym od `50 00` z FULL 2.5. Tablice walidacji RX zawierają `C0 00/51 00/52 20/53 00/54 02/60 00 lub 04/6F 00/70 00`. Badany parser 3.0 akceptuje `60 00` dokładnie, a 4.5 akceptuje 0–4 B. Nie są to dowody semantyki firmware.
 
 **Pełne adresy i metodologia:** [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). Ten dopisek koryguje wcześniejsze ostrożniejsze stwierdzenie o niezidentyfikowanym argumencie baud i nie podnosi hipotez o sprzęcie do faktów.
+
+## Suplement: wspólna implementacja TP2.0 i ograniczenia RX (2026-10-23)
+
+Ponowna analiza **czytelnych** plików 3.0 beta/4.5 potwierdziła, że oba już implementowały VAG TP2.0 ponad CAN11: `0x4166E0/0x417FB0` framer, `0x416900/0x4181D0` reassembler/ACK. Wersja 5.0+ECU z ZIP nazwanego V5.1 zawiera niemal analogiczny kod `0x420360/0x420580`, więc są to **wspólne źródła implementacji**, a nie dopiero nowe rozwiązanie z wydania 5.0+ECU.
+
+We wszystkich trzech parserach `AND EAX,0xFF` bezpośrednio przed `CMP AX,0x300` czyni gałąź A1/A3 w tym miejscu nieosiągalną; równocześnie `DLC=0` w niechronionej ogólnej gałęzi RX może wywołać underflow `DLC-1` przed `rep movsd`, a maska ACK `&0xB0` jest zbyt szeroka. **Nie twierdzimy**, że każde puste DLC powoduje crash albo że całe TP2.0 jest niesprawne; obserwacje wynikają ze statycznej kontroli konkretnych wywołań i warunków. [Pełny audyt, adresy i ryzyka](AUDIT_READABLE_FILES_2026-10-23.md), D053–D056.
