@@ -122,3 +122,11 @@ Sekwencja init obu: COM → `51 00` → `C0 00` → `53 20[32 B]`; początkowy b
 - Przy otwieraniu COM obie wersje żądają **SETDTR → Sleep(500 ms) → CLRDTR → SETRTS**; fizyczny wpływ na FTDI/PIC pozostaje nieznany.
 - TX kopiuje **N bajtów do lokalnego bufora stosu bez jawnej w tej funkcji walidacji `0<=N<=8`**. Przetestowanie złych N w oryginalnym EXE jest niebezpieczne; własny klient powinien walidować na wejściu. Dodatkowo rozpoznano surową ścieżkę GUI nadawania bajtów i indeksowanie rekordów według `channel<<11|ID11`, ale to **nie dowodzi CAN29**.
 - [Raport statyczny z adresami i sprawdzonymi importami](docs/ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md). Zaktualizowano [D048–D050](docs/DISCREPANCIES.md); bez nowego protokołu sprzętowego.
+
+## V5.1 ZIP — faktyczny program 5.0+ECU, nowe EDC15 i CAN11 (2026-10-23)
+
+- `VAG-CAN Commander V5.1.zip`: 1 113 420 B, SHA-256 `151913526f55e2528ccf153a0d47b69d67d53dde96ed8057af9efe083aeea94f`, **28 plików i 4 katalogi**. `VAG-CAN Commander+EDC15.exe` **466 968 B**, SHA-256 **`811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`**. Zasób UI mówi **`VAG-CAN COMMANDER 5.0+ECU (full)`**, więc nazwa „V5.1” archiwum nie jest dowodem wersji EXE/firmware.
+- Nowy, częściowo czytelny **PE32 Win32 COM**, w badanej ścieżce UART **833333**; `Tester.ini` ma `CAN_PORT=5`, `KWP_PORT=5`. Inicjalizacja hosta **`51 00 → C0 00 → 53 20 [32B]`**; blok początkowy **7×`FF 1C 00 00` + rekord #6 `FF 1C 00 FF`**.
+- CAN TX `0x403520` i RX `0x402CE0` w kodzie przenoszą **tylko 11-bitowe ID** (`0x60/0x70`); brak ujawnionej alternatywy EID29 w tych funkcjach. Kontynuują też starsze ryzyka: UART writer może oczekiwać bez limitu i nie kontroluje `bytesWritten`; TX wpisuje historię i zwraca sukces bez dowodu sprzętowego ACK.
+- **Nowy plik `memory.bin`, 2048 B**, ma odniesienie w EXE; nieustalone dane/rola (nie dowiedziono firmware PIC), **nie publikować**. Wszystkie cztery pliki tekstowe danych identyczne z 1.4 po CRLF→LF. FTDI sterowniki **2.04.06 (13.03.2008), i386+amd64**, brak bezpośredniego importu D2XX przez EXE.
+- [Raport analizy](docs/ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md), nowe **KCAN-D051/D052**, aktualizacja wiedzy D047/D048/D049/D050. Analiza statyczna, bez uruchamiania i bez dodawania archiwum/binarki.
