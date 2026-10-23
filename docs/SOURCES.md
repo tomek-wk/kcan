@@ -166,3 +166,12 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - [Microsoft Learn: GetOverlappedResult](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getoverlappedresult) — `bWait=TRUE` może blokować do zakończenia, mimo wcześniejszego `WaitForSingleObject(258)`; zwraca liczbę rzeczywiście przetransferowanych bajtów.
 - [Microsoft Learn: WriteFile](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile) — rozróżnienie `ERROR_IO_PENDING` od błędów oraz zapis częściowy.
 - [Microsoft Learn: EscapeCommFunction](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-escapecommfunction) — znaczenie numerycznych rozkazów DTR/RTS `3/5/6`.
+
+## S17 — VAG-CAN Commander V5.1 (EXE 5.0+ECU), 2026-10-23
+
+- Użytkownik przekazał `VAG-CAN Commander V5.1.zip`, ZIP 1 113 420 B, SHA-256 **`151913526f55e2528ccf153a0d47b69d67d53dde96ed8057af9efe083aeea94f`**, 28 plików w 4 katalogach.
+- `VAG-CAN Commander+EDC15.exe` — **466968 B**, SHA-256 **`811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`**, Win32 x86, czytelne funkcje COM/CAN. Dosłowny napis w zasobach GUI: `VAG-CAN COMMANDER 5.0+ECU (full)` — etykieta ZIP **V5.1 nie jest samodzielnym dowodem wersji**. Główne importy to API Win32 COM, **nie** import FTChipID/FTD2XX (choć sterownik dostarcza D2XX).
+- `memory.bin`: **2048 B**, SHA-256 **`739e3bf5eca392955fa70e7aeea725dad3c39e6d3d69d13b1d65c183596d6ea4`**. EXE ma odniesienie do tej nazwy przy `0x4135E0` w ścieżce obsługi pliku; **rola niepotwierdzona**, oryginału ani zawartości nie publikować.
+- Sterownik FTDI INF: **`DriverVer=03/13/2008,2.04.06`**, 32/64-bit; `ftdiport.inf`: domyślna propozycja `LatencyTimer=16`, nie wynik na urządzeniu użytkownika. `Tester.ini`: `CAN_PORT=5, KWP_PORT=5, FILEINDEX=1656`.
+- Cztery teksty po CRLF→LF mają zgodne SHA-1 obiektów Git jak 1.4: `FixDiag.ini 402da46683ecfa09e3742fae8791e3dea2e4963e`, `MWB.TXT 94aff48b1782e1b42cd9679b48e1303b45a70cf0`, `MWB_de.TXT b665cca873deedf86b1e4887dc1fd9103c150a7e`, `VAG.txt 64a4503a6d5708ecf42e2702946d871bf0ed90ce`.
+- Pełna analiza deasemblacji 0x51/C0/0x53/0x60/0x70, UART, CAN29 i statusów Win32: [ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md). Tylko źródło użytkownika i autorskie opracowanie; brak programów, sterowników, surowych logów i `memory.bin` w GitHub.
