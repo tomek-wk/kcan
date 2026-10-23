@@ -104,3 +104,9 @@ Pełny kontekst adresowy i rozróżnienie TX/RX w [ANALYSIS_VAGCAN_30BETA_45_DEE
 **Audyt wykonawczych ścieżek 3.0 beta/4.5:** `0x60` TX pobiera **WORD ID**, konstruuje nagłówek wyłącznie `((ID>>3)&FF),((ID&7)<<2),00,00`. `0x70` RX zwraca ID `(byte2<<3)|((byte3>>2)&7)` zapisane jako WORD, bez odtworzenia wyższych 18 bitów i bez flagi IDE. **Nie należy oferować tych funkcji jako CAN29.** Przykład `0x18DAF110` i `0x110` kodują się w tym TX identycznie (`22 00 00 00`). Nie odnaleziono drugiej, jawnie zakodowanej ścieżki CAN29 w prześledzonym kodzie; **sam surowy zapis bajtów przez interfejs GUI `0x403740` nie oznacza obsługi EID29**.
 
 Przy starcie oba EXE nadają **`51 00` → `C0 00` → `53 20[32]`**; żadna z tych komend **nie ma jeszcze potwierdzonej funkcji włączania CAN29**. Nie dorabiać nowych opkodów do `0x54/0x6F/0x61/0x71` bez dowodu TX/RX. Szczegóły: [ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md).
+
+## Co znaczy sukces transmisji 0x60 — uwaga z audytu UART (2026-10-23)
+
+**Rozdzielać `UART_write_requested` / `UART_write_completed` / `PIC_0x60_status` / `physical_CAN_TX/ACK`.** Stare EXE 3.0 beta i 4.5 w funkcji `0x408BD0` nie sprawdzają końcowego wyniku `WriteFile/GetOverlappedResult` ani `bytesWritten`, zaś funkcje `0x403510/0x4034F0` **ignorują** wynik writer, zapisują historię CAN TX i zwracają **1 po `Sleep(10)`**, bez powiązania z odpowiedzią `0x60` PIC. Wpis TX w GUI nie jest dowodem sprzętowej transmisji lub ACK.
+
+W `0x60` PC→PIC odczytywane jest N z pojedynczego bajtu rekordu i kopiowane do pakietu **bez lokalnego ograniczenia do Classical CAN DLC 0..8**; nie wnioskować stąd o CAN-FD, a w własnej implementacji zawsze walidować `N<=8`. Rozpoznano także GUI/raw-writer `0x403740` (ogólny strumień binarny UART) — **nie jest to nowa komenda CAN29 ani deklaracja zdolności firmware**. [Dokładne adresy i zastrzeżenia](ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md).
