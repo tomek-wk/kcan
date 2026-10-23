@@ -102,3 +102,9 @@ Użytkownik zapowiedział **następny plik w nowym czacie**. Gdy go prześle:
 6. W odpowiedzi wskazać nowe, sprawdzone ustalenia, otwarte pytania i linki do konkretnego commita. Nie rozpoczynać pracy nad nowym plikiem bez załącznika użytkownika.
 
 **Priorytet z perspektywy przyszłych testów:** fizyczny model niebieskiego adaptera i zasilanie, `52 00` read-only po inicjalizacji, dwa różne tryby wysyłania `0x53`, CAN11 z N=3 vs N=8 i niezależnym DLC, TX/RX przy obciążeniu, ACK/listen-only, CAN29 i rozkazy `0x54/0x6F`. Testy tylko na odizolowanym stanowisku CAN, nie na samochodzie.
+
+## Uzupełnienie stanu: zainstalowany Commander 1.4 (2026-10-23)
+
+Po piątej analizie 2.5 użytkownik przesłał `VAG K+CAN COMMANDER 1.4zainstalowany.rar` (SHA-256 `8f76b5f4e1b420878e159b42f83367e7a4586c826cae3d5319715268409fdbd2`). Zainstalowany EXE 1.4 i DLL są **identyczne bajtowo** z już opisanymi plikami (hashe w tabeli powyżej). Metadane deinstalacji podają `Setup VAG K+CAN COMMANDER 1.4.exe` jako źródło, co **częściowo przybliża KCAN-D006**, bez bezpośredniej ekstrakcji oryginalnego instalatora. `Tester.ini` zawiera `FILEINDEX=1955` względem `1956` dla wcześniejszego FULL 1.4; aktualizacja **D011**. Bez nowych opkodów, bez pomiaru CAN. Raport: [ANALYSIS_INSTALLED14_2026-10-23.md](ANALYSIS_INSTALLED14_2026-10-23.md).
+
+Dalsze zadanie zależy od kolejnego materiału lub badań laboratoryjnych. Przy przyszłym porównywaniu instalatorów nie publikować lokalnych ścieżek, danych konta ani surowego XML deinstalatora.
