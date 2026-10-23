@@ -81,3 +81,12 @@ Każde niepowodzenie `EscapeCommFunction` (poza `Sleep`) jest w tej ścieżce sp
 Powiązania z istniejącymi: D012 (DLC), D016 (DTR/RTS), D022 (RX), D037/D038 (rzeczywista przepustowość/straty), D039 (odpowiedź `0x60`), D046 (numery COM), D047 (CAN29). Nie przypisywać obserwacji z programu do fizycznego zachowania danego adaptera. **Wszystkie testy z komunikacją CAN tylko na stanowisku izolowanym**, bez samochodu i bez losowych poleceń.
 
 **Raport poprzedni:** [ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
+
+## 7. Niezależna weryfikacja semantyki Win32
+
+Zestawiono z aktualną dokumentacją producenta systemu, niezależną od samego pliku EXE:
+- [Microsoft, GetOverlappedResult](https://learn.microsoft.com/en-us/windows/win32/api/ioapiset/nf-ioapiset-getoverlappedresult): `bWait=TRUE` **nie zwraca przed ukończeniem wciąż oczekującej operacji**, a `lpNumberOfBytesTransferred` podaje rzeczywisty rozmiar — oba aspekty są istotne dla zidentyfikowanej wady.
+- [Microsoft, WriteFile](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile): dla asynchronicznego `WriteFile` wynik FALSE z `ERROR_IO_PENDING` wymaga późniejszego zakończenia; inne błędy muszą być rozróżnione. Brak sprawdzenia to błąd hosta.
+- [Microsoft, EscapeCommFunction](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-escapecommfunction): stałe Win32 **SETRTS=3, SETDTR=5, CLRDTR=6** są udokumentowane. **Nie wynika** z tego połączenie fizycznego pinu FTDI z określoną funkcją PIC.
+
+Nie wykonywano dynamicznych testów Windows, więc ewentualne konsekwencje na konkretnej maszynie i urządzeniu pozostają prognozą na podstawie kodu i kontraktów API.
