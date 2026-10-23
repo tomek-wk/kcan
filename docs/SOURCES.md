@@ -113,3 +113,12 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Publiczne potwierdzenie tożsamości poprzez dokładnie ten sam hash: [herdProtect, Polski VAG 4.9](https://www.herdprotect.com/polski-vag-4.9.exe-db8089cd37de46fe56348b93656403e366d0da0a.aspx).
 - Kontekst obsługi: [opis Polski VAG 4.9 — brak diagnostyki CAN](https://pliki.pl/polski-vag-4-9/), [historyczna relacja zgodności K+CAN z Polski VAG](https://forum.vw-passat.pl/topic/34160-interfejs-diagnostyczny-co-nim-mozna/), [opis K+CAN 3.6 — Polski VAG po K-Line vs Commander po CAN](https://www.ccy.pl/pl/sklep/interfejs-obd2-vag-k-can-3-6-usb-detail.html). To **relacje/opisy zewnętrzne**, nie pomiary posiadanego interfejsu.
 - Raport: [ANALYSIS_POLSKI_VAG_49_2026-10-23.md](ANALYSIS_POLSKI_VAG_49_2026-10-23.md). Archiwum i instalator nie trafiają do repo.
+
+## S11 — VAG Commander „3.6” (2026-10-23)
+
+- Materiał użytkownika: `VAG COMMANDER 3.6(2).rar`, RAR4, 1 730 114 B, SHA-256 `4c4e448077836806c593ef2f08a948ee56d0bde73f6f7dd8f56148b0097403a4`; 28 wpisów (26 plików, 2 katalogi).
+- Główna kompilacja: `VAGCAN+K V3.6/VWTester.exe`, 647 168 B, SHA-256 `a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`. **Nowa w stosunku do 1.4/2.5, chroniona sekcjami `.vmp0/.vmp1`**.
+- `FTD2XX.dll` 176 128 B, SHA-256 `391644ee8db7dd5fe5ceaf612ea963280a54e4f4e03af8faf2008c35039a3c06` (dwie identyczne kopie); `FTChipID.dll` 61 440 B, SHA-256 `d63d9ec2f0557184aba3d4156d755767cd234fc4b108f4209abbf28c064936c6`; `RCMicroDogSetup.dll` SHA-256 `5671711caf7446ce3496028375156cf4443c12311ac4e75c626dd740652d8ef4` (jak 1.4/2.5).
+- Analiza importów programu i eksportów dołączonych bibliotek: D2XX ordinal 1=`FT_Open`, 2=`FT_Close`, 61=`FT_GetDeviceInfo`, FTChipID ordinal 8=`FTID_GetChipIDFromHandle`. **Jest to dowód zależności na etapie importu, nie wykonanych wywołań, sposobu nadawania CAN ani dodatkowego dongla.**
+- `FTDIBUS.INF` i `FTDIPORT.INF`: `DriverVer=05/19/2006,2.00.00` (wersja pakietu, nie potwierdzona wersja sterownika na PC). `FixDiag.ini`, `MWB.TXT`, `MWB_de.TXT`, `VAG.txt` identyczne po normalizacji CRLF→LF z publicznym katalogiem [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4), co potwierdzono Git blob SHA-1.
+- Raport: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md). Wyłącznie własne opracowanie; oryginalne binaria/sterowniki niepublikowane.
