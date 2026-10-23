@@ -118,3 +118,9 @@ Oryginalna instrukcja instalacji mówi o „2.0 beta” i ustawianiu `[COM] PORT
 Nowy pakiet `VAG-CAN Commander V5.1.zip` dostarczył `VAG-CAN Commander+EDC15.exe` (466968 B, SHA-256 `811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`). W zasobach UTF-16 aplikacja określa się jako **`VAG-CAN COMMANDER 5.0+ECU (full)`**, nie bezpośrednio 5.1. Program ma czytelny Win32 CAN11 **`0x60/0x70`**, inicjalizację **`51 00 → C0 00 → 53 20[32B]`**, UART **833333** w zbadanej ścieżce, ale nie odkryto tam poprawnego CAN29. Zwrócić uwagę na ponownie wykazane wady potwierdzania serial-write i TX.
 
 Plik `memory.bin` 2048 B pojawia się także jako **nazwa w kodzie EXE**; przeznaczenie niejasne, możliwe dane ECU, **nie wolno publikować zawartości ani nazywać go firmware PIC bez dowodu**. Pakiet ma nowsze **FTDI 2.04.06 (2008) dla 32/64 bit**, `LatencyTimer=16` w INF, ale EXE nie importuje bezpośrednio D2XX. Raport: [ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md).
+
+## Dalsza analiza 5.0+ECU: ReadMemory i TP2.0 (2026-10-23)
+
+Wykryte wcześniej `memory.bin` nie jest w rozpoznanej ścieżce wejściem firmware: kod `0x4135E0` otwiera **CFile::modeCreate|modeWrite**, `0x413A13/0x413A86` zapisuje bajty, a `0x413DC4` zamyka wynik z komunikatem **`ReadMemory - Done.`**. To **eksport pamięci diagnostycznej**, mogący nadpisać wcześniej istniejący plik. Dokładne pochodzenie dołączonej 2048-bajtowej próbki pozostaje nieznane. Funkcja `0x414F40` ma trzy nominalne wielkości odczytu 4 KiB/16 KiB/512 KiB i tryb własny.
+
+W `0x420360` rozpoznano faktyczną segmentację diagnostyki **VAG TP2.0 na CAN11**: do 7 bajtów payload, 4-bitowe numery sekwencji, flagi oczekiwania ACK, negocjowany block-size, wywołanie zwykłego CAN11 transmittera. To wyższa warstwa względem `0x60/0x70` PC↔PIC, **nie CAN29**. [Raport i dowody](ANALYSIS_VAGCAN_50ECU_V51_MEMORY_TP20_2026-10-23.md), D052–D054.
