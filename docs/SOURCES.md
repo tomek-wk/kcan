@@ -139,3 +139,10 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Dołączone `USB driver/FTDIBUS.INF` oraz `FTDIPORT.INF` deklarują `DriverVer=04/16/2004,1.00.2154`; oznaczenia PID w sterowniku nie dowodzą VID/PID konkretnego adaptera. `Tester.ini`: `[COM] PORT=4`, `FILEINDEX=716`, dwa `TARGET=0`.
 - Cztery pliki danych `FixDiag.ini`, `MWB.TXT`, `MWB_de.TXT`, `VAG.txt` są identyczne z pakietem 1.4 po normalizacji CRLF→LF, co potwierdzono przez zgodne SHA-1 obiektów Git z [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4).
 - `installation.txt` odnosi się do starszej „2.0 beta”, choć w katalogu są EXE 3.0 beta i 4.5. Nazwy/etykiety dystrybucji nie są identyfikatorem firmware. Nie przechowujemy w `kcan` żadnych surowych plików ani pełnych instrukcji.
+
+## S14 — pogłębiona analiza starych EXE 3.0 beta/4.5 (2026-10-23)
+
+- **Brak nowego zewnętrznego binarium**: wykonano drugą, głębszą deasemblację tych samych `VAG-CAN Commander 3.0 beta.exe` i `VAG-CAN Commander4.5.exe` z archiwum **S13**. Oba SHA-256 oraz hash ZIP pozostają jak w S13.
+- Potwierdzono cały łańcuch od **`GetPrivateProfileIntA("COM","PORT",0,....\\TESTER.INI)`** (4.5 `0x409D0A..0x409D11`) przez globalną wartość `0xDC23E4`, otwarcie `0x409EFA`, wybór UART w `0x40317E`, po `CreateFileA("COM%d")` w `0x408CD0`. **Prędkość 115200/833333 zależy od numeru COM, nie od zmapowanego trybu GUI**.
+- Inicjalizacja 4.5 zawiera wysyłanie `51 00` (`0x409F0F`), **`C0 00`** (`0x409F25`) i `53 20 [32B]` (`0x409FC4`). Te same fakty potwierdzone kodem 3.0 beta. RX descriptor table 3.0 VA `0x44A998`, 4.5 `0x44C998`: różnica `60 00`/ `60 04` i odrębna walidacja 4.5 `len<=4`. Tablica oczekuje także `54 02`, `6F 00` (bez nadawania dowiedzionego).
+- Ograniczenie `CreateFileA("COM%d")` dla COM10+ jest zgodne z dokumentacją [Microsoft Learn — CreateFileA](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea). Nie dowodzi faktycznej pracy portu na sprzęcie. Szczegóły i zakres dowodu: [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
