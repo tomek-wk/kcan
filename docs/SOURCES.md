@@ -89,3 +89,11 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - `RCMicroDogSetup.dll` jest bajtowo identyczne z wcześniejszym pakietem FULL 1.4.
 - Raport szczegółowy z adresami VA, algorytmami i ograniczeniami: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Rozbieżności do testów: [DISCREPANCIES.md](DISCREPANCIES.md).
 - Nie dołączono żadnego oryginalnego EXE/DLL ani ZIP do repozytorium.
+
+## S8 — zainstalowany Commander 1.4 (2026-10-23)
+
+- Plik użytkownika `VAG K+CAN COMMANDER 1.4zainstalowany.rar` (RAR5, SHA-256 `8f76b5f4e1b420878e159b42f83367e7a4586c826cae3d5319715268409fdbd2`) zawiera 16 plików i 2 katalogi.
+- EXE `VAG K+CAN COMMANDER 1.4.exe`: SHA-256 `ea69c09b51fda25107d9926d7d033f4e25f5374ec0dd2b1bc4a9867a7b19b932` identyczny z wcześniej analizowanym `1[X].4` / `FULL 1.4`. `RCMicroDogSetup.dll`: SHA-256 `5671711caf7446ce3496028375156cf4443c12311ac4e75c626dd740652d8ef4`, także identyczna.
+- Użyte pliki: `Tester.ini` oraz **lokalnie** `Uninstall/uninstall.xml` (zawiera dane konta i ścieżki komputera; **nie publikować treści**). Nazwa instalatora podana w XML potwierdza kontekst Setup Factory, ale nie jest hashem konkretnego instalatora.
+- Wyniki porównania 8 pozostałych tekstów po CRLF→LF z [repo Skylakc](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4): identyczne; `Tester.ini` wariant `FILEINDEX=1955`.
+- Raport: [ANALYSIS_INSTALLED14_2026-10-23.md](ANALYSIS_INSTALLED14_2026-10-23.md). Oryginalne binaria, archiwum, lokalny XML i logi pozostają poza repo.
