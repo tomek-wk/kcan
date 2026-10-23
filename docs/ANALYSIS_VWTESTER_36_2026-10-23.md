@@ -104,3 +104,7 @@ W porównaniu z FULL 2.5 w dokumentacji `kcan`: tam pierwszy `TARGET=0`, `DIAGNO
 Powiązane wcześniejsze kwestie: **KCAN-D003** (dongle), **D004** (COM vs D2XX), **D015** (nazwy wersji a firmware), **D016** (DTR/RTS). Nowe zadanie **D043** koncentruje się na zgodności protokołu *nowej chronionej kompilacji* z wariantami wcześniej opisanymi.
 
 **Polityka:** oryginalny RAR/EXE/DLL/SYS/INF nie są commitowane; tylko wyniki, sumy, małe przykłady i odnośniki.
+
+## Addendum: trzy dystrybucje tej samej kompilacji 3.6 (2026-10-23)
+
+Po pierwszej analizie otrzymano jeszcze `VAG K CAN COMMANDER FULL 3,6.rar` oraz `VAG-K CAN-V3.6.zip`. Każde z trzech archiwów zawiera **dokładnie to samo, chronione `VWTester.exe` (SHA-256 `a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`)**, a po pominięciu nazwy katalogu głównego **25/26 plików jest bajtowo identycznych**. Zmienia się tylko `Tester.ini` (pierwszy `TARGET=6/6/0`, `FILEINDEX=1872/1877/1879`). Nie są to nowe kompilacje ani nowe dowody funkcji protokołu CAN; aktualizacja D011/D043. [Pełny audyt porównawczy](ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md).
