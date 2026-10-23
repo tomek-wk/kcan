@@ -60,3 +60,36 @@ W `VWTester.exe` FULL 2.5 (SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7
 Dla wpisów z tej ścieżki użyto kodowania CAN11 `SIDH=(ID>>3)&0xFF`; `SIDL=((ID&7)<<2)&0x1C`; dalsze 2 B = 0. To dobrze odpowiada architekturze **6 filtrów RX + 2 masek RX** w rodzinie PIC18, ale **nie dowodzi wprost kolejności RXF0..RXF5, RXM0..RXM1 w pamięci PIC**. Inna funkcja `0x419510` używa również dodatkowych bitów `0x40` i `0x60` w części bloku, których znaczenia jeszcze nie wyjaśniono.
 
 **Nowe testy KCAN-D019:** na izolowanym CAN odczytać pierwotny blok przez `52 00`, porównywać pojedyncze kontrolowane zmiany w jednym z ośmiu pól i mierzyć rzeczywistą akceptację ID. Nie kopiować losowych konfiguracji do samochodu.
+
+
+## Dwa bloki inicjalizacji odtworzone w FULL 2.5
+
+**Nowe, mocniejsze ustalenie:** `VWTester.exe` najpierw wysyła **stałą konfigurację** `53 20 [32 B]` (kod `0x41AA6F–0x41AAF8`), następnie **drugą, zależną od jednobajtowego `x`** (funkcja `0x419510`, wywołanie `0x41AB0B`). To nie jest pojedynczy blok 6+2.
+
+| Wpis, 4 bajty | Blok A | Blok B |
+| --- | --- | --- |
+| 0 | `FF 1C 00 00` | `SIDH SIDL 00 00` |
+| 1 | `FF 1C 00 00` | `FF 1C 00 00` |
+| 2 | `FF 1C 00 00` | `FF 1C 00 00` |
+| 3 | `FF 1C 00 00` | `FF 1C 00 00` |
+| 4 | `FF 1C 00 00` | `60 00 00 00` |
+| 5 | `FF 1C 00 00` | `SIDH SIDL 00 00` |
+| 6 | `FF 1C 00 FF` | `FF 1C 00 FF` |
+| 7 | `FF 1C 00 00` | `FF 1C 00 00` |
+
+```text
+SIDH = (x >> 3) | 0x40
+SIDL = (x & 7) << 2
+
+Wyinterpretowane standardowe CAN ID:
+  SIDH/SIDL → 0x200 + x
+  60 00 → 0x300
+
+Przykład B, x=0x37 (wyliczony, bez pomiaru):
+53 20 46 1C 00 00 FF 1C 00 00 FF 1C 00 00 FF 1C 00 00
+      60 00 00 00 46 1C 00 00 FF 1C 00 FF FF 1C 00 00
+```
+
+**Interpretacja „6 filtrów + 2 maski” nadal jest hipotezą mapowania na rejestry PIC.** Nie wiemy, jak w firmware działają wpisy `FF1C` i szczególny końcowy `FF` w pozycji 6. Bloki są wynikiem deasemblacji hosta, a nie pomiaru ruchu UART na Twoim adapterze.
+
+[Pełny ślad kodu i metodologia](ANALYSIS_VWTESTER_25_DEEP_2026-10-23.md) · [KCAN-D023/D024](DISCREPANCIES.md).
