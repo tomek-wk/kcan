@@ -84,3 +84,9 @@ Nadal obowiązuje zakaz umieszczania w repozytorium oryginalnych archiwów, prog
 - `VWTester.exe` **647 168 B**, SHA-256 **`a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`** — **nowa, różna kompilacja** od 1.4/2.5. Sekcje `.vmp0/.vmp1`, zaszyfrowana/skompresowana reprezentacja właściwego kodu; nie udało się statycznie odtworzyć wykonawczych funkcji CAN. **Numer „3.6” wynika z nazwy pakietu**, zasób FileVersion nadal `1.0.0.1`.
 - **Nowy ślad:** jawne importy `FTD2XX.dll` ordinal `1/2/61` = `FT_Open/FT_Close/FT_GetDeviceInfo` oraz `FTChipID.dll` ordinal `8` = `FTID_GetChipIDFromHandle`. Są też importy Win32 COM; **nie ustalono**, która ścieżka służy do ramek CAN. `RCMicroDogSetup.dll` jest identyczne z 1.4/2.5. Sterowniki FTDI pochodzą z pakietu `2.00.00` (2006).
 - [Raport statyczny i granice wnioskowania](docs/ANALYSIS_VWTESTER_36_2026-10-23.md); nowy **KCAN-D043** dotyczy zgodności protokołu tej wersji, powiązany z D003/D004/D015/D016. Brak nowych potwierdzonych opkodów CAN; oryginalne pliki poza repo.
+
+## Porównanie trzech pakietów Commander „3.6” (2026-10-23)
+
+- Dwa nowe źródła: `VAG K CAN COMMANDER FULL 3,6.rar` (RAR4, SHA-256 `e0059df5cb1e51434ae1eea95d4f7ff7234a176360fb739d2b382dbace83069b`) oraz `VAG-K CAN-V3.6.zip` (SHA-256 `9b59b9490c0011edea1976d9d4ad16a4671e1870b45576088f298ed23b5d8b32`).
+- Zestawiono je z wcześniej analizowanym `VAG COMMANDER 3.6(2).rar`. We **wszystkich trzech dokładnie 25/26 plików jest bajtowo identycznych**; różni się wyłącznie `Tester.ini`: pierwsze `TARGET` to **6/6/0**, `FILEINDEX` to **1872/1877/1879**, przy niezmiennych COM2/COM2 i reszcie ustawień.
+- `VWTester.exe` ma w każdym pakiecie SHA-256 **`a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`**. Nie znaleziono kolejnej kompilacji ani nowych informacji o opkodach CAN. [Porównanie z hashami](docs/ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md). Zaktualizowano zagadnienia **D011 i D043**; nie dodano D044.
