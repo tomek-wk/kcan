@@ -193,3 +193,15 @@ Po poprzednim audycie CAN29 użytkownik polecił **szukać dalej**. Ponownie sta
 **Nowe zadania:** [KCAN-D048, D049, D050](DISCREPANCIES.md); uaktualniono `README.md`, `PROTOCOL.md`, `COMMANDS.md`, `SAFE_TESTS.md`, `SOURCES.md`. Nie znaleziono nowego protokołu CAN29 ani nie poznano semantyki `C0/54/6F`. Nie używać nieznanych komend ani starych niezweryfikowanych EXE w aucie.
 
 **Następne priorytety:** w osobnym, bezpiecznym kliencie rozdzielić stany `request/write/adapter/CAN`, implementować skuteczny timeout, walidować DLC i przetestować retry/missing responses. Przy testach sprzętu tylko odizolowany CAN i referencyjny analizator.
+
+## Uzupełnienie: ZIP „V5.1”, ale EXE 5.0+ECU (2026-10-23)
+
+Nowy materiał użytkownika `VAG-CAN Commander V5.1.zip`, **1 113 420 B**, SHA-256 `151913526f55e2528ccf153a0d47b69d67d53dde96ed8057af9efe083aeea94f` (28 plików, 4 katalogi). Zawiera **nową kompilację** `VAG-CAN Commander+EDC15.exe`, **466 968 B**, SHA-256 **`811bf59355614e0d07aa2e4c10fedd01fbff2b0148feab4491f0f731c98d45ba`**. W zasobach GUI jawnie `VAG-CAN COMMANDER 5.0+ECU (full)` i `VAG-EDC15x`; **nie utożsamiać nazwy ZIP V5.1 z wersją binarium lub firmware**.
+
+**Najważniejsze wykonawcze ścieżki CAN:** TX `0x403520`: `60 (N+4) ((ID>>3)&FF) ((ID&7)<<2) 00 00 [N]`, ID pobierany jako WORD; RX `0x402CE0`: `70` długości 4..12 i dekoder tylko 11-bit; walidator `0x402C40` dopuszcza `0x60` N=0..4 pomimo tablicy z `60 00`. Brak obsługi CAN29 w tych funkcjach, bez wniosku o całym firmware. Inicjalizacja `0x40AE9C` → `0x403370` **51 00**, `0x4033F0` **C0 00**, `0x403470` **53 20[32]** (7 rekordów `FF 1C 00 00`, jeden nr 6 `FF 1C 00 FF`); znaczenie C0 i ostatniego FF nadal nieznane. UART `0x4031BA` **833333 bit/s** w zbadanej ścieżce; `Tester.ini` ma **CAN_PORT=5/KWP_PORT=5** rozpoznawane osobno przez `GetPrivateProfileIntA`.
+
+**Nowy materiał poboczny:** `memory.bin` 2048 B, SHA-256 `739e3bf5eca392955fa70e7aeea725dad3c39e6d3d69d13b1d65c183596d6ea4`, nazwa odnaleziona także jako referencja w EXE `0x4135E0`. Nie ustalono, czy to backup EEPROM, przykład czy inne dane. **Nie publikować ani nie określać firmware PIC bez dowodu**. Cztery TXT/INI danych po CRLF→LF identyczne z 1.4, FTDI INF **2.04.06 (2008), i386 + amd64**, domyślny zapis `LatencyTimer=16`. EXE bez bezpośredniego importu D2XX, choć paczka zawiera DLL w sterownikach.
+
+**Powtórzone ryzyka:** write COM `0x408BF0` = OVERLAPPED, brak walidacji wyniku `GetOverlappedResult`, potencjalny `INFINITE`; CAN TX lokalny sukces po `Sleep(10)`, brak potwierdzenia PIC i CAN; brak lokalnej walidacji N<=8. Powiązania D047–D050. **Nowe D051/D052** w [DISCREPANCIES.md](DISCREPANCIES.md). [Pełna analiza](ANALYSIS_VAGCAN_50ECU_V51_2026-10-23.md).
+
+Dalsza praca: offline prześledzić obsługę `memory.bin` i czy w aplikacji EDC15 ukryto jakiś alternatywny format komunikacji. Do testów CAN29 i listen-only nadal potrzeba własnych danych PC↔PIC, kontrolera/PIC i drugiego referencyjnego interfejsu na **izolowanej magistrali**, nie pojeździe. Repo zawiera tylko dokumentację, bez plików źródłowych EXE/ZIP/BIN i sterowników.
