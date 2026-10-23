@@ -56,3 +56,15 @@ Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
 - Zgodność EXE z [publicznym repozytorium Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4) ustalono po rzeczywistym identyfikatorze Git blob SHA-1, a nie nazwie pliku.
 - Pełne podsumowanie techniczne: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md). Lista wersji i niepewności: [DISCREPANCIES.md](DISCREPANCIES.md).
 - Żadnych binariów z tego źródła nie publikujemy w `kcan`.
+
+
+---
+
+## S5 — kolejny pakiet dostarczony do analizy (2026-10-23)
+
+- `commander vag-k can.zip`, SHA-256 `5ee88477ab1e7b691b20119a44ce1298c122dcaba7713f17ca98ad90a644c7cf`, otrzymany od użytkownika; 46 plików w tym `Setup VAG K+CAN COMMANDER 1.4.exe` i polskie instrukcje PDF.
+- `instrukcja obslugi interfejsu vag k+can.pdf` autorstwa Marcina Laszczewskiego (`auto-interfejsy.pl`): FTDI VCP, ustawienia portu/USB i wskazówki dla Commandera FULL 1.4.
+- `korekcja licznika VAG CAN K.pdf` (`viaken.pl`): opis innego, historycznego wariantu interfejsu.
+- `ftdiport.inf` z archiwum: metadane wersji FTDI 2.04.06.
+- Analiza bez wykonywania programów: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-10-23.md). Rozbieżności: [DISCREPANCIES.md](DISCREPANCIES.md).
+- Brak publikacji zawartości ZIP/PDF/EXE/DLL w GitHubie.

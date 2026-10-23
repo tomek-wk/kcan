@@ -20,3 +20,16 @@ Dla każdej pozycji po teście dopisać: **model PIC**, oznaczenia PCB, mostek U
 
 - **2026-10-23:** otwarto KCAN-D001–D005 po otrzymaniu pierwszego archiwum oryginalnej aplikacji. Na razie **żadna z pozycji nie podważa potwierdzonych bajtów komend z J2534/KCANTEST**. Wiele jest rozbieżnościami nazw/wersji lub brakami dowodowymi, nie wykazanymi konfliktami protokołu.
 - EXE SHA-256 `ea69c09b51fda25107d9926d7d033f4e25f5374ec0dd2b1bc4a9867a7b19b932` jest **identyczny** z wcześniej zlokalizowanym plikiem na GitHubie (Git blob SHA-1 `daffe47c50f0e6554c91c723f3774aacc6d9b845`), dlatego nie stanowi drugiego niezależnego wariantu do porównań.
+
+
+## Nowe obserwacje z pakietu 2026-10-23 — `commander vag-k can.zip`
+
+| ID | Materiał A | Materiał B | Pytanie do rozstrzygnięcia | Test | Status |
+| --- | --- | --- | --- | --- | --- |
+| **KCAN-D006** | Pierwszy pakiet: bezpośredni chroniony `VAG-K+CAN Commander.exe` | Drugi pakiet: instalator `Setup VAG K+CAN COMMANDER 1.4.exe` (Setup Factory 8.0) | Czy wewnętrzny EXE jest identyczny, czy to inna wersja aplikacji/protokołu? | Statycznie wyodrębnić zawartość instalatora, policzyć SHA-256 i zestawić pliki/wywołania portu; do tego czasu **brak dowodu różnicy protokołu**. | OPEN |
+| **KCAN-D007** | Dokumentacja pierwszego pakietu mówi o osobnym donglu USB | Polska instrukcja drugiego pakietu opisuje jeden interfejs USB–COM; nie wspomina osobnego dongla | Różne licencje czy różne warianty aplikacji? | Porównać wersje programu i modele dystrybucji, ewentualnie ruch USB na odizolowanym stanowisku. **Brak wzmianki ≠ brak wymogu.** | OPEN |
+| **KCAN-D008** | `ftdiport.inf`: `DriverVer=03/13/2008,2.04.06` | Polska instrukcja wymienia FTDI `2.6.0.0` z 22.10.2009 | Które wydanie sterownika rzeczywiście było używane? | Sprawdzić zainstalowany sterownik i zachowanie adaptera. Nie instalować starych sterowników bez konieczności. | OPEN |
+| **KCAN-D009** | Pierwszy pakiet podaje FTDI Latency Timer 1 ms | Polska instrukcja: dodatkowo bufory USB RX/TX po 512 B i COM1–4 | Czy bufory i numer COM wpływają na zgodność/timing? | Porównać sesje 512/4096 B, 1/16 ms i różne porty; odróżnić ograniczenie UI od sprzętu/protokołu. | OPEN |
+| **KCAN-D010** | Model z Viaken (instrukcja PDF) podaje zasilanie 12,5–15 V przez OBD | Konkretny niebieski egzemplarz nie został zmierzony | Czy PIC działa przy samym USB i z jakiego źródła zasilana jest elektronika CAN? | Pomiar napięć PIC i transceiverów przy kontrolowanych wariantach zasilania na stanowisku, bez auta. | OPEN |
+
+**Uwaga metodologiczna:** nie wykryto nowej sprzeczności w kodowaniu bajtów `0x52/0x53/0x55/0x60/0x70`, ponieważ nowe materiały nie pokazują niskopoziomowej transmisji. Są to kwestie dystrybucji, sterowników i sprzętu.

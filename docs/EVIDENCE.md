@@ -77,3 +77,19 @@ W publicznym repozytorium `Skylakc/BoschME7.5-Tools` znaleziono plik `tools/VAG-
 - Nie znaleziono w jawnym kodzie EXE czytelnej, powtarzalnej implementacji protokołu CAN; **nie wolno stwierdzać braku komend** — są prawdopodobnie schowane w chronionym programie. Żaden plik EXE/DLL nie był uruchamiany.
 
 Szczegółowa karta analizy: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md).
+
+
+---
+
+## Pakiet `commander vag-k can.zip` (2026-10-23)
+
+- ZIP: **7 159 335 B**, SHA-256 `5ee88477ab1e7b691b20119a44ce1298c122dcaba7713f17ca98ad90a644c7cf`; **53 pozycji (46 plików, 7 katalogów)**, 10 122 682 B plików po rozpakowaniu.
+- Instalator `Setup VAG K+CAN COMMANDER 1.4.exe`: **2 189 988 B**, SHA-256 `07c476c9cb21d250a7f34049c455f08b6d46c22f01145fda38ef41555371aefa`; Windows PE32 x86 z jawnymi metadanymi `Setup Factory 8.0 Run-time`, sygnatura `irsetup.exe` / `irsetup.dat`.
+- W ZIP są osobne instrukcje PDF (2010), pakiet sterowników FTDI (z lat 2003–2009), instalator, ale **nie ma samodzielnego `VAG-K+CAN Commander.exe`** jako pozycji ZIP.
+- Nie uruchamiano instalatora. Nie rozpakowano wewnętrznego formatu Setup Factory — **brak możliwości porównania programu instalowanego przez EXE** z wcześniejszym `VAG-K+CAN Commander.exe`.
+- Odczytane `ftdiport.inf`: `DriverVer=03/13/2008,2.04.06`, `VID_0403&PID_6001` i `VID_0403&PID_6010`. Nie przesądza to rzeczywistego VID/PID adaptera użytkownika.
+- Instrukcja `instrukcja obslugi interfejsu vag k+can.pdf` (21 stron, `auto-interfejsy.pl`) zaleca **Latency Timer 1 ms**, bufor USB RX **512 B** / TX **512 B**, wybór **COM1–COM4**. Wymienia instalację sterownika **2.6.0.0 z 22.10.2009**, niezgodną z wersją INF w tym ZIP (2.04.06). Instrukcja wskazuje archiwum `VAG K+CAN COMMANDER FULL 1.4.rar` na **osobnej płycie CD**, które nie jest składnikiem przesłanego ZIP.
+- Dokument `korekcja licznika VAG CAN K.pdf` (Viaken, 18 stron) podaje dla opisywanego wariantu zasilanie 12,5–15 V z gniazda diagnostycznego. **Nie jest to pomiar ani specyfikacja zasilania konkretnej niebieskiej płytki**.
+- Nie znaleziono nowych, potwierdzonych bajtów protokołu PC ↔ PIC; dokumenty dotyczą instalacji i używania funkcji diagnostycznych, nie niskopoziomowego protokołu USB–UART.
+
+Szczegóły: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-10-23.md).

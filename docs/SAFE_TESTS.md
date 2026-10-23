@@ -50,3 +50,13 @@
 5. Test **KCAN-D005** (CAN11 ID): przy późniejszym uruchomieniu na stanowisku CAN wysłać ID `0x123` i porównać z potwierdzoną funkcją DLL; nie rozstrzygać na podstawie istniejących logów obejmujących wyłącznie `0x7E0/0x7E8`.
 
 Szczegóły i interpretacja stanów: [DISCREPANCIES.md](DISCREPANCIES.md).
+
+
+---
+
+## Testy wyprowadzone z dokumentacji dystrybucji Setup Factory
+
+- **KCAN-D006** — statyczne wydobycie EXE z instalatora lub pozyskanie niezależnego, legalnego pakietu rozpakowanego; porównanie hashy i tabel komend. Nie uruchamiać nieznanego instalatora dla samego rozpakowania.
+- **KCAN-D008** — sprawdzić urządzenie w Menedżerze urządzeń oraz jego rzeczywistą wersję sterownika; PDF podaje FTDI 2.6.0.0, a INF w ZIP 2.04.06.
+- **KCAN-D009** — w izolowanym eksperymencie ze stałą sekwencją odczytów porównać ustawienia Latency Timer 1/16 ms i USB TX/RX 512/4096 B, rejestrując pełny TX/RX, liczbę timeoutów i opóźnienia. To parametry sterownika, nie opkody Commandera.
+- **KCAN-D010** — zweryfikować zasilanie PIC i transceivera przy podłączeniu **tylko USB** oraz na bezpiecznie przygotowanym zasilaniu laboratoryjnym OBD; nie zakładać, że Viaken i niebieski klon mają tę samą architekturę.

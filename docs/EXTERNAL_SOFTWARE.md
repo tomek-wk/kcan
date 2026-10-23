@@ -61,3 +61,14 @@ Plik `VAG-K+CAN Commander.exe` został **fizycznie otrzymany** i jego SHA-1 Git 
 - Nadal **nie wiadomo**, czy ta wersja programu współpracuje z konkretnym niebieskim klonem i czy wymaga dodatkowego dongla USB.
 
 Dokładne ustalenia i plan porównawczy: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md) i [DISCREPANCIES.md](DISCREPANCIES.md).
+
+
+---
+
+## Druga dystrybucja: `commander vag-k can.zip`
+
+Nowy ZIP zawiera instalator **Setup Factory 8.0** (`Setup VAG K+CAN COMMANDER 1.4.exe`), polską dokumentację i stare sterowniki FTDI. Nie jest tym samym plikiem co wcześniej badany, bezpośredni `VAG-K+CAN Commander.exe` chroniony przez EXECryptor. Jednak **nie udało się wyodrębnić wewnętrznych plików instalatora**, a więc nie wiemy, jaka rzeczywista aplikacja została w nim spakowana ani czy jest to inne wykonanie protokołu PC↔PIC.
+
+Instrukcja pakietu podaje konfigurację VCP COM1–COM4, Latency Timer 1 ms, USB RX/TX po 512 B. Opisuje uruchamianie `VAG K+CAN COMMANDER FULL 1.4` z osobnego archiwum na płycie CD, nie potwierdza więc zgodności zawartości tego ZIP z opisywaną aplikacją. Nie zawiera instrukcji używania osobnego dongla USB, ale **jego brak w instrukcji nie dowodzi braku takiego wymagania**.
+
+[Wynik audytu](ANALYSIS_SETUP_FACTORY_2026-10-23.md).

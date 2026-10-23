@@ -40,3 +40,14 @@ Przy zamykaniu zadania dopisać źródło, wersję sprzętu, próbkę HEX lub pa
 - [ ] **P1** Sprawdzić CAN11 dla ID **niepodzielnych przez 8** (np. `0x123`), ponieważ istniejące logi obejmują tylko `0x7E0/0x7E8`.
 
 Lista rozbieżności, proponowanych testów i statusów: [DISCREPANCIES.md](DISCREPANCIES.md).
+
+
+---
+
+## Po analizie `commander vag-k can.zip`
+
+- [ ] **P1 / KCAN-D006:** ustalić zawartość instalatora Setup Factory 8.0 bez uruchamiania go; porównać wewnętrzny EXE z wersją chronioną EXECryptor przez SHA-256.
+- [ ] **P1 / KCAN-D007:** czy w dokumentacji różnych dystrybucji występuje osobny dongle USB z powodu odmiennego modelu licencjonowania?
+- [ ] **P1 / KCAN-D008:** weryfikacja wersji sterownika FTDI (własny INF 2.04.06 versus PDF 2.6.0.0) i faktycznie zainstalowanego na PC.
+- [ ] **P1 / KCAN-D009:** pomiar wpływu buforów USB 512/4096 B i Latency Timer 1/16 ms na zachowanie starej aplikacji; **nie zakładać**, że te wartości są częścią protokołu UART.
+- [ ] **P1 / KCAN-D010:** określić, czy konkretny egzemplarz PIC jest zasilany z USB czy OBD (i jakie ma wartości napięcia); instrukcje różnych urządzeń nie rozstrzygają tego.
