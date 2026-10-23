@@ -1,0 +1,19 @@
+# Surowe materiały badawcze i pobrane aplikacje nie należą do tego repozytorium.
+downloads/
+originals/
+raw/
+captures/
+artifacts/
+*.rar
+*.7z
+*.zip
+*.exe
+*.dll
+*.sys
+*.hex
+*.bin
+*.pcap
+*.pcapng
+*.log
+*.dmp
+*.dump

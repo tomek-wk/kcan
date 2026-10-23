@@ -1,0 +1,48 @@
+# Inne programy i warianty Commandera
+
+## Oryginalny Commander 1.4
+
+Archiwalny pakiet [Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4) zawiera `VAG-K+CAN Commander.exe` (1 060 864 B; Git SHA-1 blob `daffe47c50f0e6554c91c723f3774aacc6d9b845`) oraz dokumentację. **Zlokalizowano, nie pobrano binarnie i nie zdeasemblowano.**
+
+Z pliku `Tester.ini`:
+
+```ini
+[COM]
+CAN_PORT=3
+KWP_PORT=3
+
+[PROTOKOL]
+Protokol=KWP2000
+UseSrcAddress=1
+
+[KWP1281]
+WakeupEchoDelay=40
+CommEchoDelay=5
+InterByteTime=5
+TimeBetweenMsg=40
+```
+
+Plik instalacyjny zaleca ustawienie FTDI Latency Timer na 1 ms oraz wspomina osobny klucz USB. Ta dystrybucja może być odmienna od programu działającego z niebieskim klonem.
+
+## J2534KCAN v1.0.0.10
+
+Analizowana biblioteka `J2534KCAN.dll` implementuje funkcje PassThru API i korzysta z COM przez Win32. Z niej pochodzą najważniejsze ustalenia protokołu CAN. Zestawienie eksportów i SHA: [EVIDENCE.md](EVIDENCE.md).
+
+## KCANTEST v1.0/v1.1
+
+Dostarczone archiwa zawierały testery i logi transmisji. W pięciu logach są 4081 TX i 4081 RX tej samej pary ID CAN11. Wersje EXE mają identyczny rozmiar, lecz odmienne SHA-256.
+
+## Inne programy niezależne
+
+- [HUD ECU Hacker](https://www.netcult.ch/elmue/HUD%20ECU%20Hacker/) — obsługuje K+CAN; autor wskazuje brak znanego trybu monitorowania bez ACK w jego obsłudze Commandera.
+- [DAP4CS](https://dap4cs.com/adapters) — obsługa różnych interfejsów, w tym K+CAN.
+- [EconTool](https://t.me/s/econtool) — niezależna implementacja, autor opisywał konsultacje z twórcą TECU III.
+- [Subaru SSM Dashboard](https://github.com/surtaeff/subaru-ssm-dashboard) — K-Line przez adaptery z przełączaniem DTR/RTS, nie dekoder CAN Commandera.
+
+Wpisanie programu na tej liście **nie oznacza**, że jego binaria lub kod źródłowy są tu przechowywane ani że ich funkcje działają na każdej wersji adaptera.
+
+## Ważne różnice sprzętowe
+
+Istnieją odmiany PIC18F248, PIC18F258, PIC18F25K80 i różne schematy FTDI, lecz model mikrokontrolera i sposób resetu w konkretnym niebieskim Commanderze **nie zostały potwierdzone**. Parametr `LVP` oraz obecność bootloadera także są nieznane.
+
+Oryginalne pakiety EXE mogą zawierać przestarzałe sterowniki lub niepożądane dodatki. **Nie uruchamiać ich bez weryfikacji bezpieczeństwa.**
