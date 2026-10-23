@@ -116,3 +116,13 @@ Kod 4.5 ujawnił **warunkowy wybór 115200/833333 bit/s**, a obie nowe kompilacj
 - **Tylko izolowana magistrala CAN** z drugim referencyjnym interfejsem: CAN11 ID 0x123, DLC=3 i 8, skutki konfiguracji `0x53`, dokładne straty i odpowiedzi `0x60` o długości 0–4, fizyczny ACK. Nie wysyłać niesprawdzonych komend do pojazdu.
 
 Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md), rejestr [DISCREPANCIES.md](DISCREPANCIES.md).
+
+## Testy po odkryciu C0 i mapowania baud→PORT (D044–D046)
+
+**Potwierdzenie z kodu hosta, nie sprzętu:** w starym Commanderze 4.5 `[COM] PORT` określa jednocześnie wybór COM i prędkość `115200` (`PORT=0/1`) albo `833333` (`PORT>=2`); w 3.0 beta zawsze 833333 w tej ścieżce. Oba nadają sekwencję `51 00 → C0 00 → 53 20[32]`. `C0` jest **nowym nierozpoznanym rozkazem** — nie wysyłać go w ciemno do własnego adaptera, szczególnie podłączonego do samochodu.
+
+**Bezpieczny plan:**
+1. **Offline**: porównać kod i tablice RX (3.0 `60 00` ściśle; 4.5 `0x60` N=0..4); opisać przyczynę dziwnego baud dla COM1 i granice tablicy 16 portów.
+2. Przy badaniu komunikacji **bez samochodu** użyć izolowanego środowiska, zweryfikowanej aplikacji i bezpiecznych numerów **COM2–COM9**. **COM10+** w tych starych EXE jest problematyczne przez nazwę `COM%d`, a `PORT>=16` może przekraczać tablicę rekordów. Weryfikować systemowy `DCB.BaudRate`, rzeczywisty UART i DTR/RTS, bez założenia, że inne wydania sprzętu zadziałają.
+3. Do eksperymentów `C0/53/60` używać **tylko odizolowanego, prawidłowo zakończonego stanowiska CAN** po poznaniu rodzaju płytki i trybu; nie wykonywać losowych rozkazów na pojeździe.
+4. Pełny raport: [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). Wzorce `54 02` i `6F 00` to **sam walidator RX**, bez potwierdzenia, że zostały wygenerowane przez firmware.
