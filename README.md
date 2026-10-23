@@ -147,3 +147,7 @@ Sekwencja init obu: COM → `51 00` → `C0 00` → `53 20[32 B]`; początkowy b
 - **Ważne ryzyko odbioru:** legalna ramka CAN z **DLC=0** może trafić do ogólnego składania TP2.0, gdzie `dec ecx` przed `rep movsd` zamienia długość `0` w `0xFFFFFFFF`. Zbadana ścieżka ma brak ogólnej walidacji `DLC>=1`; **nie twierdzimy**, że awaria występuje dla każdej pustej ramki.
 - Dodatkowo odbiór ACK sprawdza `control & 0xB0 == 0xB0`, przez co m.in. `0xF0` również przechodzi test maski (przy zgodnym ID kanału). Nie znaleziono nowego CAN29 ani opkodu.
 - [Pełny audyt z adresami, inwentarzem i poziomami dowodów](docs/AUDIT_READABLE_FILES_2026-10-23.md), aktualizacje **D053/D054**, nowe **D055/D056**. Bez uruchamiania obcych plików i bez binariów w repo.
+
+## Lista kandydatów na dumpy PIC i nieudanych odczytów (2026-10-23)
+
+W nowym [rejestrze **14 tropów firmware i prób odczytu**](docs/FIRMWARE_DUMP_LEADS_2026-10-23.md) zapisano odnośniki do potencjalnych obrazów PIC18F2480 (`pic18f2480.hex` w `KCAN-ELM327.RAR`), PIC18F248/PIC18F258 (`PIC18F248.rar`), PIC18F25K80 (`CAN-PIC18F25K80.rar`, 36,65 KB) i aktualizatora firmware dla alternatywnego **NXP LPC2119FBD64**. Zweryfikowano też pierwotną relację o zgraniu firmware z Commandera 1.4 oraz **nieudane próby odczytu FLASH/EEPROM przy ochronie kodu**, a także przypadki błędnej weryfikacji i zapisu. **Żaden wsad procesora nie został jeszcze pobrany ani zweryfikowany kryptograficznie**. Odróżniono EEPROM FTDI, ECU `memory.bin` i raporty dongla od kodu mikrokontrolera. Repo zawiera **wyłącznie dokumentację i odnośniki**.
