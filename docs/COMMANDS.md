@@ -98,3 +98,9 @@ Wykonawcze funkcje TX **3.0 beta** i **4.5** ujawniają sekwencję inicjalizacji
 | `70 04..0C` | PIC→PC | Obie wersje mają osobny walidator | CAN11, N=0..8, kod hosta |
 
 Pełny kontekst adresowy i rozróżnienie TX/RX w [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). **Żadna z nowych danych nie jest pomiarem konkretnego adaptera**.
+
+## Granice komend 0x60/0x70 i init w audycie CAN29 (2026-10-23)
+
+**Audyt wykonawczych ścieżek 3.0 beta/4.5:** `0x60` TX pobiera **WORD ID**, konstruuje nagłówek wyłącznie `((ID>>3)&FF),((ID&7)<<2),00,00`. `0x70` RX zwraca ID `(byte2<<3)|((byte3>>2)&7)` zapisane jako WORD, bez odtworzenia wyższych 18 bitów i bez flagi IDE. **Nie należy oferować tych funkcji jako CAN29.** Przykład `0x18DAF110` i `0x110` kodują się w tym TX identycznie (`22 00 00 00`). Nie odnaleziono drugiej, jawnie zakodowanej ścieżki CAN29 w prześledzonym kodzie; **sam surowy zapis bajtów przez interfejs GUI `0x403740` nie oznacza obsługi EID29**.
+
+Przy starcie oba EXE nadają **`51 00` → `C0 00` → `53 20[32]`**; żadna z tych komend **nie ma jeszcze potwierdzonej funkcji włączania CAN29**. Nie dorabiać nowych opkodów do `0x54/0x6F/0x61/0x71` bez dowodu TX/RX. Szczegóły: [ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md).
