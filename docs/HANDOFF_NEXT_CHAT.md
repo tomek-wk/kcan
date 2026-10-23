@@ -138,3 +138,18 @@ Użytkownik przesłał dwa dalsze pakiety:
 Porównano je **bajtowo po rozpakowaniu** z poprzednim `VAG COMMANDER 3.6(2).rar` (S11). Każde ma **26 plików**, z czego **25/26 identycznych we wszystkich trzech pakietach**: `VWTester.exe` SHA-256 **`a448ff313cce8ee2597f14675e51196ca5b677a5561833bb65965b05628d8a23`**, `FTChipID.dll`, `FTD2XX.dll`, `RCMicroDogSetup.dll`, kompletny `CDM_Setup`, dane VAG/INI/TXT. **Wyłącznie `Tester.ini` różni się**: pierwszy `TARGET=6/6/0`, drugi `TARGET=0`, `FILEINDEX=1872/1877/1879`; `CAN_PORT=2`, `KWP_PORT=2`, `DIAGNOSTICID=-674897751` bez zmian.
 
 Szczegółowy raport: [ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md](ANALYSIS_VWTESTER_36_PACKAGES_2026-10-23.md). **Brak nowego EXE, nowej deasemblacji CAN, nowego opkodu oraz dowodu działania na sprzęcie.** Zaktualizowano **KCAN-D011** i **D043**, bez D044. Nie wysyłać nieznanych komend do samochodu; do dalszego rozpoznania CAN potrzebne są nowe bajty EXE lub własne logi PC↔PIC/izolowany CAN.
+
+## Uzupełnienie stanu: dwie nowe kompilacje 3.0 beta i 4.5 (2026-10-23)
+
+**Nowy, ważny pakiet:** `VAG-CAN Commander V4.5.zip`, SHA-256 `e7980df7b33847af86ad12c52ae99c377b39c1d8f067abbe12e2d8c5de5e2b1c`, 32 pliki, 3 katalogi. **Dwa odrębne EXE z wykonywalnymi i statycznie czytelnymi fragmentami protokołu CAN:**
+
+- `VAG-CAN Commander 3.0 beta.exe` — **417 792 B**, SHA-256 `dfb5e3f4724f6898c7c82d5d6e69ed3f795edb5f536f4aa5ff37ab17eae2a39b`; PE32 x86, 4 sekcje, Win32 COM `CreateFileA/ReadFile/WriteFile/SetCommState/EscapeCommFunction`.
+- `VAG-CAN Commander4.5.exe` — **477 472 B**, SHA-256 `85e89882a434ad83d19381ecbb5f9e77b14b237343b1432feb2f7300810e0050`; PE32 x86 z sekcją `.mackt`, ale duża część kodu CAN jest czytelna, nie jest to ta sama chroniona kompilacja co „3.6”.
+
+**Nowe potwierdzenia kodowe:** 3.0 beta `0x403510`, 4.5 `0x4034F0`: TX `60 (N+4) SIDH SIDL 00 00 [N]` z CAN11; RX `0x70 length=4..12` i ten sam dekoder ID. Zapis `53 20 [32 B]` w `0x403470` i `0x403450`; niezależne konstrukcje **6 filtrów + 2 maski (interpretacja fizyczna nadal hipoteza)** w `0x40A3F9` i `0x40A489`. **4.5** ma jawny walidator `0x60 length<=4` w `0x402C64`; w 3.0 beta w badanej funkcji nie ma takiego osobnego wyjątku. **Nowa ważna różnica:** w 4.5 `0x403170` wybiera **115200 przy parametrze 0/1** oraz **833333 przy parametrze >=2**, natomiast 3.0 beta `0x4031A0` przekazuje 833333; **brak potwierdzonego mapowania tych parametrów na GUI/CAN/K-Line**. Nie jest to bitrate CAN.
+
+Pozostałe dane: stare INF FTDI `DriverVer=04/16/2004,1.00.2154`; `Tester.ini` ma `[COM] PORT=4`, `FILEINDEX=716`, dwa `TARGET=0`; cztery pliki tekstów/INI po CRLF→LF identyczne z 1.4. `installation.txt` niekonsekwentnie opisuje „2.0 beta”; nie zmienia to zawartości EXE.
+
+Raport: [ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md). **Nowe testy KCAN-D044 i KCAN-D045** w [DISCREPANCIES.md](DISCREPANCIES.md). Uaktualniono `PROTOCOL.md`, `COMMANDS.md`, `FILTERS.md`. Nadal nie ma pomiarów konkretnego niebieskiego adaptera, potwierdzenia CAN29, listen-only/ACK, rzeczywistego efektu filtrów i pełnej procedury inicjalizacji. Nigdy nie mieszać poziomu dowodów z hosta z zachowaniem firmware.
+
+**Priorytety dalszej pracy:** statycznie prześledzić wywołujących funkcję 4.5 `0x403170` i zmapować warianty 115200/833333; porównać pełny parser odpowiedzi `0x60` w 3.0 beta z 4.5 i 2.5; następnie laboratoryjny zrzut TX/RX PC↔PIC oraz odizolowany CAN. Tylko autorska dokumentacja w repo, nie programy, sterowniki, archiwa ani logi.
