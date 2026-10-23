@@ -97,3 +97,11 @@ Nowe zagadnienia do rozstrzygnięcia:
 Testy właściwych ramek CAN i wpływu na magistralę — **wyłącznie na odizolowanym, prawidłowo terminowanym stanowisku**, nigdy przez losowe komendy do samochodu. Nie podmieniać stanów `POTWIERDZONE (kod)` na `POTWIERDZONE (sprzęt)`.
 
 **Powiązana dokumentacja:** [PROTOCOL.md](PROTOCOL.md), [COMMANDS.md](COMMANDS.md), [FILTERS.md](FILTERS.md), [DISCREPANCIES.md](DISCREPANCIES.md), [SAFE_TESTS.md](SAFE_TESTS.md).
+
+## Istotna korekta: parametr wyboru baud to numer COM (dalsza analiza, 2026-10-23)
+
+**Rozstrzygnięto wcześniejszą niewiadomą:** parametr `0x403170` w 4.5 jest **wprost wartością `[COM] PORT`** z `Tester.ini` (załadowaną przez `GetPrivateProfileIntA` do `0xDC23E4`, podaną dalej przez `0x409EFA`). Warunek **`<2→115200`, `>=2→833333` zależy zatem od *numeru portu*, nie od niezidentyfikowanego trybu CAN/K-Line**. W dostarczonym `PORT=4` → `COM4`, 833333. 3.0 beta analogicznie czyta PORT, lecz nie ma gałęzi 115200. Dalszy kod używa dokładnie `COM%d`, przez co COM10+ jest problematyczny na Windows.
+
+**Drugie odkrycie:** oba EXE w sekwencji startowej *faktycznie nadają* **`51 00`, `C0 00`**, a później `53 20`. **`C0 00`** jest nowo potwierdzonym opcode hosta, różnym od `50 00` z FULL 2.5. Tablice walidacji RX zawierają `C0 00/51 00/52 20/53 00/54 02/60 00 lub 04/6F 00/70 00`. Badany parser 3.0 akceptuje `60 00` dokładnie, a 4.5 akceptuje 0–4 B. Nie są to dowody semantyki firmware.
+
+**Pełne adresy i metodologia:** [ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md). Ten dopisek koryguje wcześniejsze ostrożniejsze stwierdzenie o niezidentyfikowanym argumencie baud i nie podnosi hipotez o sprzęcie do faktów.
