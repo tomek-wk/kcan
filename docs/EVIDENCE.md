@@ -122,3 +122,20 @@ Szczegóły: [ANALYSIS_SETUP_FACTORY_2026-10-23.md](ANALYSIS_SETUP_FACTORY_2026-
 - Różnice INI: `DIAGNOSTICID=-674897751`, `FILEINDEX=1802`, pierwsze `TARGET=0`; pozostałe TXT/INI bez nowych treści względem FULL 1.4, oprócz wymienionych wartości.
 
 **Dowód jest statyczny:** podane adresy dotyczą wyłącznie wskazanego SHA-256 EXE; to nie dowód działania na konkretnym adapterze. [Kompletny raport i granice wnioskowania](ANALYSIS_VWTESTER_25_2026-10-23.md).
+
+
+---
+
+## Powtórna deasemblacja FULL 2.5 — dowody uzupełniające
+
+Weryfikowano ten sam `VWTester.exe` SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`; **bez uruchamiania** programu. Wyniki:
+
+- `0x4037D0`: walidacja nagłówka; `0x70 length 4..12`, `0x60 length 0..4`, pozostałe przez 8 deskryptorów z krokiem 34 bajty.
+- `0x404070`: trzystanowe składanie ramek z ciągłego strumienia UART, reset i ponowna synchronizacja przy złej parze opcode/length. Analogiczna ścieżka `0x409D30`.
+- `0x40A160`: pętla COM `ReadFile` z rozmiarem **1024 B**, przekazanie bajtów do parsera.
+- `0x403850` oraz `0x409500`: niezależne dyspozytory `0x70`; host kolejkuje rekordy o **20 B**, stosuje indeksy **`&0x7FF`** (2048 pozycji) i przesunięcie wskaźnika przy zapełnieniu.
+- `0x41AA33–0x41AA5D`: `SendMessage` z `CB_GETCURSEL=0x147`; indeks zero prowadzi do `0x404210` (`50 00`), pozostałe do `0x4041B0` (`51 00`).
+- `0x40E490–0x40E565`: `0x53` zawiera 6 kodowanych wpisów + 2 kodowane wpisy, każdy 4 B; `0x419510` ustawia dodatkowe `0x40/0x60`.
+- `0x40A3D0`: Win32 `WriteFile` i obsługa OVERLAPPED z czekaniem do 500 ms.
+
+Nie odkryto pewnej semantyki `0x54`/`0x6F` ani trybu CAN29/listen-only. [Raport analizy](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).

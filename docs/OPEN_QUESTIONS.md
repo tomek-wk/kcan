@@ -75,3 +75,15 @@ Lista rozbieżności, proponowanych testów i statusów: [DISCREPANCIES.md](DISC
 - [ ] **P1:** odtworzyć obsługę CAN29, przepełnienia kolejki i asynchronicznych statusów w tej kompilacji (bez uruchamiania nieznanego EXE).
 
 [Adresy kodu i wyniki analizy 2.5](ANALYSIS_VWTESTER_25_2026-10-23.md).
+
+
+## Priorytety po drugiej analizie FULL 2.5
+
+- [ ] **P0 / KCAN-D019:** zweryfikować kolejność i bitowe znaczenie 6 filtrów oraz 2 masek w `0x53`; w nowej analizie **6+2 jest potwierdzone konstrukcją EXE**.
+- [ ] **P0 / KCAN-D021:** zmapować `50 00` / `51 00` na pozycje CAN/K-Line GUI. Wybór przez `CB_GETCURSEL` jest już potwierdzony.
+- [ ] **P0 / KCAN-D022:** opracować tolerancyjny parser PC→PIC, kody odpowiedzi i resynchronizację po błędach.
+- [ ] **P1 / KCAN-D020:** oszacować rzeczywistą przepustowość ciągłego RX i nadpisywanie kolejek 2048-slotowych.
+- [ ] **P1 / KCAN-D018:** ustalić strukturę innych niż `60 00` odpowiedzi TX CAN, dopuszczonych przez kod hosta.
+- [ ] **P1:** dokończyć znaczenie `0x54`/`0x6F`; **wystąpienie w deskryptorze nie dowodzi użycia**. Nadal brak wiarygodnego CAN29 i listen-only.
+
+[Uzupełniająca analiza](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).

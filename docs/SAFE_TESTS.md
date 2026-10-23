@@ -84,3 +84,14 @@ Szczegóły i interpretacja stanów: [DISCREPANCIES.md](DISCREPANCIES.md).
 - **KCAN-D015/D017:** porównać metadane EXE i INI bez instalowania lub uruchamiania nieznanych programów; późniejsze eksperymenty tylko na izolowanym stanowisku.
 
 Kod 2.5 i hipotezy: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Testy należą do konkretnej kompilacji/wersji sprzętu, a nie całej rodziny produktów.
+
+
+## Testy po powtórnej analizie 2.5
+
+- **KCAN-D018 (status odpowiedzi TX):** najpierw rejestrować rzeczywiste odpowiedzi `0x60` podczas poprawnych testów na izolowanej magistrali; osobno testować parser programowo offline dla długości 0–4. Nie prowokować awarii CAN w aucie.
+- **KCAN-D019 (filtry 6+2):** odczyt `0x52`, zapis pierwotnego bloku poza GitHub i kontrolowane zmiany pojedynczych pól dopiero na izolowanej magistrali. Porównać akceptowane ID przy każdej zmianie. Znaczenie bitów `0x40`/`0x60` nieustalone.
+- **KCAN-D020 (ciągły RX):** podać kontrolowany strumień CAN o znanej liczbie ramek, mierzyć straty i przepełnienie przy różnym obciążeniu oraz, osobno, obecność ACK. Dane pełnych logów pozostają poza repozytorium.
+- **KCAN-D021 (tryb):** przechwycić selekcję GUI i odpowiadający opcode `0x50`/`0x51`; nie zakładać mapowania CAN/K-Line przed pomiarem.
+- **KCAN-D022 (walidacja):** przygotować testy jednostkowe parsera dla `0x70` długość 4 i 12, odrzucenia 3 i 13, `0x60` długości 0..4 i 5 oraz synchronizacji po śmieciach. Wszystkie te testy można zrobić **bez adaptera i bez wykonywania obcego EXE**.
+
+Szczegóły i adresy kodu: [ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).

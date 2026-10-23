@@ -118,3 +118,10 @@ N = length - 4 przy dekodowaniu
 Przykład **wyłącznie wyliczony z kodu** (`CAN_ID=0x123`, N=3): `60 07 24 0C 00 00 11 22 33`. **Nie jest to wynik pomiaru z interfejsu.** Warianty DLC/RTR i obsługiwany zakres N po stronie konkretnego PIC nadal wymagają testów. Funkcje: TX `0x403DC0/0x403E73`, RX `0x403850`.
 
 W EXE 2.5 odkryto również **prawdziwe użycie `0x50` i `0x51`**, oraz niezależne nadawanie `53 20 + 32 bajty`. Patrz [COMMANDS.md](COMMANDS.md), [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md). Nie zmieniać wcześniejszych ustaleń dla konkretnej DLL, lecz traktować dane jako **wariant implementacji hosta**.
+
+
+## Uzupełnienie: parser i ciągły odbiór w hostcie 2.5
+
+Ponowna deasemblacja **tego samego EXE 2.5** (SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`) wykazała, że w `0x4037D0` nagłówek `0x70` jest akceptowany tylko dla `length 4..12` (N=0..8); `0x60` w **kierunku PIC→PC** tylko dla `length 0..4`. W `0x404070` jest stanowy parser strumienia, który synchronizuje się ponownie po niepoprawnym nagłówku. Praca RX jest asynchroniczna — wątek `0x40A160` odczytuje do 1024 B z COM, a `0x403850` i `0x409500` demultipleksują `0x70` do kolejki hosta. Dwa bajty `[opcode,length]` nie muszą dotrzeć jednym odczytem USB. [Analiza szczegółowa](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).
+
+**Uściślenie:** obserwowane `60 00` to jeden możliwy wariant; parser 2.5 dopuszcza także odpowiedzi `60 01`.. `60 04` z payloadem, których semantyka jest nieustalona. Odbiór ciągły **nie dowodzi trybu bez ACK** ani bezstratnego monitorowania pełnej magistrali CAN.

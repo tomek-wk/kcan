@@ -58,3 +58,18 @@ Dla każdej pozycji po teście dopisać: **model PIC**, oznaczenia PCB, mostek U
 | **KCAN-D017** | INI FULL 1.4: `TARGET=6`, `DIAGNOSTICID=1761195548`, `FILEINDEX=1956` | INI FULL 2.5: `TARGET=0`, `DIAGNOSTICID=-674897751`, `FILEINDEX=1802` | Które parametry pochodzą z programu, które są zmienne użytkownika i czy mają wpływ na protokół? | Prześledzić parser INI / przygotować porównawcze logi na izolowanym stanowisku. Powiązane KCAN-D011. | **OPEN** |
 
 **Uwaga:** różnice KCAN-D012–D017 są na razie udokumentowane kodem lub plikami programu, **nie pomiarem adaptera**. Nie zakładać, że ten sam firmware działa ze wszystkimi dystrybucjami. Pełne miejsca kodu: [ANALYSIS_VWTESTER_25_2026-10-23.md](ANALYSIS_VWTESTER_25_2026-10-23.md).
+
+
+---
+
+## Druga analiza statyczna tego samego `VWTester.exe` 2.5 — nowe zagadnienia
+
+| ID | Dotychczasowa dokumentacja / wynik | Nowy dowód | Pytanie i test rozstrzygający | Status |
+| --- | --- | --- | --- | --- |
+| **KCAN-D018** | Z logów znano tylko odpowiedź `60 00` | Parser `0x4037D0` akceptuje `0x60 length=0..4` | Co oznacza payload długości 1..4 i czy zawiera błędy CAN? Najpierw obserwacja oryginalnego programu na izolowanym stanowisku oraz sztuczne odpowiedzi offline parserowi; bez wywoływania usterek w samochodzie. | **OPEN** |
+| **KCAN-D019** | `0x53` ma 32 B, hipoteza 6 filtrów i 2 masek | Kod `0x40E490–0x40E565` tworzy 6×4 B + 2×4 B, `0x419510` ustawia dodatkowe `0x40/0x60` | Czy kolejność to RXF0..5 / RXM0..1? Co oznaczają flagi? Odczyt `0x52`, pojedyncze zmiany `0x53`, weryfikacja akceptacji na izolowanym CAN. | **OPEN — format 6+2 poparty kodem** |
+| **KCAN-D020** | Odbiór `0x70` rozpoznano z logów | Wątek `0x40A160`, parser `0x404070`, kolejki 2048×20 B | Czy przy pełnym obciążeniu CAN host lub firmware gubi ramki? Zmierzyć ilość ramek wstrzykniętych i odebranych, przepełnienia oraz ACK na izolowanej magistrali. | **OPEN — architektura hosta potwierdzona** |
+| **KCAN-D021** | `0x50`/`0x51` bez przypisania do trybu | Wybór przez `CB_GETCURSEL=0x147` w `0x41AA33–0x41AA5D` | Która pozycja GUI to CAN, a która K-Line? Przypisać nazwy pozycji i przechwycić `50 00` / `51 00` w kontrolowanym środowisku. **Uzupełnia KCAN-D013.** | **OPEN — wybór GUI potwierdzony** |
+| **KCAN-D022** | Ogólny schemat pakietów `[opcode,length,payload]` | `0x4037D0` waliduje `0x70` length 4..12, `0x60` 0..4, a inne pakiety z ośmioma deskryptorami; parser próbuje resynchronizacji | Czy konkretne firmware generuje wszystkie warianty; jakie są statusy i recovery? Przechwycenie transmisji + test jednostkowy offline parsera. | **OPEN — reguły hosta potwierdzone** |
+
+Doprecyzowanie: problem `KCAN-D013` pozostaje otwarty tylko co do **semantyki CAN/K-Line na adapterze**; fakt przełączania `0x50/0x51` przez wybór w GUI został ustalony kodem. Żadne z powyższych nie dowodzi trybu *listen-only* bez ACK.

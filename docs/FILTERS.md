@@ -45,3 +45,18 @@ W kodzie `J2534KCAN.dll` operacja odpowiadająca `PassThruStartMsgFilter` prowad
 - Czy istnieje polecenie włączenia ciągłego odbioru, czy `0x70` jest spontaniczną odpowiedzią po konfiguracji?
 
 **Nie wysyłać losowych bloków `0x53` do adaptera w samochodzie.** Najpierw zidentyfikować znaczenie pól na testowej magistrali.
+
+
+---
+
+## Drugie niezależne potwierdzenie układu 6+2: kod programu 2.5
+
+W `VWTester.exe` FULL 2.5 (SHA-256 `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a10d`) funkcja `0x40E490–0x40E565` przygotowuje komunikat `53 20`:
+
+1. pętla `0x40E4E3–0x40E513` koduje **6** identyfikatorów po **4 bajty** (24 B);
+2. pętla `0x40E515–0x40E545` koduje **2** identyfikatory/maski po **4 bajty** (8 B);
+3. cały blok ma **32 B** i jest wysyłany komendą `0x53`.
+
+Dla wpisów z tej ścieżki użyto kodowania CAN11 `SIDH=(ID>>3)&0xFF`; `SIDL=((ID&7)<<2)&0x1C`; dalsze 2 B = 0. To dobrze odpowiada architekturze **6 filtrów RX + 2 masek RX** w rodzinie PIC18, ale **nie dowodzi wprost kolejności RXF0..RXF5, RXM0..RXM1 w pamięci PIC**. Inna funkcja `0x419510` używa również dodatkowych bitów `0x40` i `0x60` w części bloku, których znaczenia jeszcze nie wyjaśniono.
+
+**Nowe testy KCAN-D019:** na izolowanym CAN odczytać pierwotny blok przez `52 00`, porównywać pojedyncze kontrolowane zmiany w jednym z ośmiu pól i mierzyć rzeczywistą akceptację ID. Nie kopiować losowych konfiguracji do samochodu.

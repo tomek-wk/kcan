@@ -58,3 +58,14 @@ EXE 2.5 SHA-256: `b90fc612decb04759a77fd0f02946157d832053186c7adf5e50624a1b103a1
 **Uściślenie względem tabeli na początku dokumentu:** stwierdzenie „`0x50` tylko w zewnętrznym logu” dotyczyło **materiału dostępnego przed analizą EXE 2.5**. Teraz mamy osobne, mocniejsze potwierdzenie kodowe `0x50` oraz pierwszą przesłankę `0x51`.
 
 Zgodność 2.5 z konkretnym firmware oraz znaczenie `0x54`/`0x6F` pozostają otwarte; nie traktować tych kodów jako poleceń gotowych do nadawania do samochodu. [Pełny raport](ANALYSIS_VWTESTER_25_2026-10-23.md).
+
+
+### Ważne doprecyzowania (ponowna analiza EXE 2.5)
+
+- `0x50` i `0x51`: w `0x41AA33–0x41AA5D` wywołanie Windows `SendMessage(..., CB_GETCURSEL=0x147,...)` wybiera przy pozycji 0 **`50 00`**, a w innych przypadkach **`51 00`**. Są to więc alternatywne polecenia zależne od opcji w GUI, **bez jeszcze ustalonego mapowania CAN/K-Line**. Ich funkcje sprawdzają odpowiedź w oknie do 100 ms.
+- Odpowiedź `0x60` z PIC: parser `0x4037D0` akceptuje **`length<=4`**, a nie tylko `60 00`. Kody/payloady 1..4 pozostają niezidentyfikowane.
+- `0x70`: parser dopuszcza **`length=4..12`**, czyli 0..8 B CAN; to ograniczenie wykonawcze tej wersji EXE.
+- `0x54` / `0x6F`: występują w deskryptorach rozpoznawania odpowiedzi, ale nie ustalono, w jakich warunkach są nadawane ani co oznaczają. Nie są gotowymi do wysyłania komendami.
+- `0x55`: występuje wielokrotnie także w kodzie dotyczącym diagnostyki ECU. **Nie należy przypisywać tych wystąpień komendzie konfiguracji prędkości CAN** znanej z innej DLL.
+
+Zobacz [ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md](ANALYSIS_VWTESTER_25_FOLLOWUP_2026-10-23.md).
