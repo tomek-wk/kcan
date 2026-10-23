@@ -137,3 +137,14 @@ Ponowna deasemblacja 3.0 beta/4.5 potwierdziła, że opisane funkcje `0x60/0x70`
 4. `C0`, `51`, `53`, `55` i `60` **nie są** obecnie udowodnionymi przełącznikami CAN29; nie wysyłać ich do auta ani w ciemno do nieznanego sprzętu.
 
 [Analiza z adresami kodu](ANALYSIS_CAN29_INIT_30BETA_45_2026-10-23.md), [KCAN-D047](DISCREPANCIES.md).
+
+## Niezawodność COM, statusy TX i granice DLC (D048–D050; 2026-10-23)
+
+Nowy audyt statyczny [ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md](ANALYSIS_SERIAL_TX_RELIABILITY_30BETA_45_2026-10-23.md) pokazuje, dlaczego sama lista TX starego Commandera nie dowodzi CAN TX: writer portu ignoruje wynik `WriteFile/GetOverlappedResult`, nie weryfikuje `bytesWritten`, a funkcja TX zwraca sukces po `Sleep(10)`. Pozorny 258ms timeout 4.5 nie jest skuteczny po późniejszym `GetOverlappedResult(...,TRUE)`.
+
+1. **Offline/własny mock portu:** sprawdzić i odtworzyć oddzielnie `WriteFile` pełny/częściowy, `ERROR_IO_PENDING`, błąd natychmiastowy, `WAIT_TIMEOUT`, zakończenie/cancel. W nowym programie nie kopiować semantyki „return 1”; wymagać sprawdzenia `bytesWritten==requested` i końcowego timeoutu.
+2. **Kontrolowana inicjalizacja bez samochodu:** zmierzyć kolejność **SETDTR→500ms→CLRDTR→SETRTS** i skutki na konkretnym interfejsie; nie zakładać, że DTR resetuje PIC ani że RTS ma impuls w obie strony.
+3. **Izolowana CAN z interfejsem referencyjnym:** zestawić cztery zdarzenia: wywołanie UART, ukończenie UART, odpowiedź PIC `0x60`, faktyczna ramka na CAN wraz z ACK/błędem; nie utożsamiać `GetTickCount` programu z czasem ramki CAN.
+4. **DLC tylko offline:** własny encoder jawnie odrzuca `N>8`, test `N=0,3,8,9,255` wykonywać na własnym kodzie/mocku, **nigdy w starym EXE**, ponieważ kopiuje N bajtów do ograniczonego bufora stosu bez lokalnej walidacji.
+
+Powiązane **KCAN-D048–D050** w [DISCREPANCIES.md](DISCREPANCIES.md), a testy sprzętowe **wyłącznie poza autem**.
