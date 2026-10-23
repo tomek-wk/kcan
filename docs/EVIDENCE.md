@@ -61,3 +61,19 @@ Niniejsze fragmenty są **opracowaniem dokumentacyjnym**, nie kopią logów w ca
 W publicznym repozytorium `Skylakc/BoschME7.5-Tools` znaleziono plik `tools/VAG-K_CAN_Commander_1[X].4/VAG-K+CAN Commander.exe` (1 060 864 B, Git blob SHA `daffe47c50f0e6554c91c723f3774aacc6d9b845`). Kod binarny **nie został pobrany i nie wykonano jego deasemblacji**. Analizowano tekstowe pliki `Tester.ini`, `installation 1.2-6+.txt`, `bugfixes open issues.txt`. Instrukcja opisuje też oddzielny klucz sprzętowy USB; kompatybilność pakietu z niebieskim klonem jest nieznana.
 
 Źródła i linki: [SOURCES.md](SOURCES.md).
+
+
+---
+
+## Uzupełnienie — dostarczony oryginalny pakiet Commander 1[X].4 (2026-10-23)
+
+- `VAG-K_CAN_Commander_1[X].4.zip`: **SHA-256** `6912218b24524ae629f7ccfa77599aca3823132ea77e42e0145f155a32852028`; 56 pozycji ZIP, z tego **53 pliki**, 3 katalogi, 7 404 037 bajtów danych po rozpakowaniu.
+- `VAG-K+CAN Commander.exe`: **1 060 864 B**, SHA-256 `ea69c09b51fda25107d9926d7d033f4e25f5374ec0dd2b1bc4a9867a7b19b932`, Git blob SHA-1 `daffe47c50f0e6554c91c723f3774aacc6d9b845`. **Git blob SHA odpowiada dokładnie** plikowi w `Skylakc/BoschME7.5-Tools`, zatem jest to ta sama wersja binarna, nie drugi niezależny egzemplarz.
+- Pliki `Tester.ini`, `RCMicroDogSetup.dll`, `installation 1.2-6+.txt`, `bugfixes open issues.txt`, `FixDiag.ini`, `FTD2XX.dll` i `VAG.txt` również mają Git blob SHA zgodny z tym pakietem GitHub; nie potwierdzano zgodności 53/53 plików osobno.
+- EXE: PE32 i386 GUI, **5 sekcji**, `aspack` / `.adata`; bardzo wysoka entropia dwóch dużych sekcji (**7,970 / 7,897 bitów/bajt**). Eksportuje funkcje `_EXECryptor_*`. Jawna tablica importów podaje wyłącznie `KERNEL32!CreateFileA`, `KERNEL32!ExitProcess`, `COMCTL32!InitCommonControls`. **Nie można z tego wywnioskować, że aplikacja używa tylko tych funkcji ani jakiego API używa do komunikacji z PIC**, ponieważ kod jest spakowany/chroniony.
+- EXE: pole wersji w zasobach `FileVersion=1, 0, 0, 1`, `ProductVersion=1, 0, 0, 1`; PE export name `VWTester.exe`, podczas gdy plik jest nazwany `VAG-K+CAN Commander.exe`. Nie świadczy to samo w sobie o wersji firmware adaptera.
+- PE TimeDateStamp: **2007-11-12 12:55:33** (wartość pola PE, nie potwierdzona data zbudowania programu); czas pozycji ZIP **2023-01-09** (data przepakowania, nie wersja protokołu).
+- Odczytane teksty konfiguracji mówią o `[COM] CAN_PORT=3; KWP_PORT=3`, `[KWP1281]` timing i ustawieniu **FTDI latency timer 1 ms**; instrukcja wspomina również **osobny dongle USB**.
+- Nie znaleziono w jawnym kodzie EXE czytelnej, powtarzalnej implementacji protokołu CAN; **nie wolno stwierdzać braku komend** — są prawdopodobnie schowane w chronionym programie. Żaden plik EXE/DLL nie był uruchamiany.
+
+Szczegółowa karta analizy: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md).

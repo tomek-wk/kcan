@@ -27,3 +27,16 @@
 ## Polityka dowodowa
 
 Przy zamykaniu zadania dopisać źródło, wersję sprzętu, próbkę HEX lub parametry pomiaru i ograniczenia. Nie zastępować `nieustalone` słowem `potwierdzone` tylko na podstawie podobnej płytki.
+
+
+---
+
+## Kolejny materiał — oryginalny EXE 1[X].4
+
+- [ ] **P0** Uzyskać czytelną implementację komunikacji PC ↔ PIC z innej, niechronionej wersji programu lub własnych przechwyconych sesji. Ten EXE jest spakowany/chroniony; jego jawne importy nie ujawniają funkcji CAN.
+- [ ] **P1** Porównać oznaczenia wersji **1.4**, zasobów EXE **1.0.0.1** i informacji o firmware na konkretnym interfejsie. Nie utożsamiać ich bez dowodu.
+- [ ] **P1** Ustalić, czy wymaganie **oddzielnego dongla USB** dotyczy badanej dystrybucji, a nie zwykłych klonów.
+- [ ] **P1** Porównać zachowanie programu Commander i sterownika J2534 względem transportu COM/D2XX po uzyskaniu wiarygodnych przechwyceń komunikacji.
+- [ ] **P1** Sprawdzić CAN11 dla ID **niepodzielnych przez 8** (np. `0x123`), ponieważ istniejące logi obejmują tylko `0x7E0/0x7E8`.
+
+Lista rozbieżności, proponowanych testów i statusów: [DISCREPANCIES.md](DISCREPANCIES.md).

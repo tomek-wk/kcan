@@ -46,3 +46,18 @@ Wpisanie programu na tej liście **nie oznacza**, że jego binaria lub kod źró
 Istnieją odmiany PIC18F248, PIC18F258, PIC18F25K80 i różne schematy FTDI, lecz model mikrokontrolera i sposób resetu w konkretnym niebieskim Commanderze **nie zostały potwierdzone**. Parametr `LVP` oraz obecność bootloadera także są nieznane.
 
 Oryginalne pakiety EXE mogą zawierać przestarzałe sterowniki lub niepożądane dodatki. **Nie uruchamiać ich bez weryfikacji bezpieczeństwa.**
+
+
+---
+
+## Aktualizacja po otrzymaniu pakietu 1[X].4 — 2026-10-23
+
+Plik `VAG-K+CAN Commander.exe` został **fizycznie otrzymany** i jego SHA-1 Git blob w pełni zgadza się z egzemplarzem obecnym w repozytorium Skylakc. Poprzednie stwierdzenie „nie pobrano i nie zdeasemblowano” odnosi się do **stanu sprzed przekazania archiwum**.
+
+- PE32 i386, 1 060 864 B; pakowanie / ochrona (`aspack`, funkcje `EXECryptor`).
+- Metadane zasobów `FileVersion=1.0.0.1` nie muszą oznaczać wersji protokołu/firmware `1.0`, mimo nazwy dystrybucji `1[X].4`.
+- Eksportowany moduł nazywa się `VWTester.exe`, mimo nazwy pliku `VAG-K+CAN Commander.exe` — nie dowodzi to obecności innego EXE.
+- Zabezpieczenia programu uniemożliwiły obecnie wyznaczenie dodatkowych komend przy **samej analizie statycznej pliku w stanie spakowanym**.
+- Nadal **nie wiadomo**, czy ta wersja programu współpracuje z konkretnym niebieskim klonem i czy wymaga dodatkowego dongla USB.
+
+Dokładne ustalenia i plan porównawczy: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md) i [DISCREPANCIES.md](DISCREPANCIES.md).

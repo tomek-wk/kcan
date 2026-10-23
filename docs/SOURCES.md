@@ -45,3 +45,14 @@ Każde nowe ustalenie powinno zawierać:
 5. datę oraz odnośnik do źródła.
 
 Nie commitować materiałów oryginalnych ani pobranych plików wykonywalnych.
+
+
+---
+
+## S4 — archiwum oryginalnego programu dostarczone 2026-10-23
+
+- Użytkownik przesłał `VAG-K_CAN_Commander_1[X].4.zip` (SHA-256: `6912218b24524ae629f7ccfa77599aca3823132ea77e42e0145f155a32852028`).
+- Statycznie przeanalizowano program `VAG-K+CAN Commander.exe`, ustawienia oraz komponenty pakietu. **Nie wykonywano** plików PE.
+- Zgodność EXE z [publicznym repozytorium Skylakc/BoschME7.5-Tools](https://github.com/Skylakc/BoschME7.5-Tools/tree/main/tools/VAG-K_CAN_Commander_1%5BX%5D.4) ustalono po rzeczywistym identyfikatorze Git blob SHA-1, a nie nazwie pliku.
+- Pełne podsumowanie techniczne: [ANALYSIS_ORIGINAL_EXE_2026-10-23.md](ANALYSIS_ORIGINAL_EXE_2026-10-23.md). Lista wersji i niepewności: [DISCREPANCIES.md](DISCREPANCIES.md).
+- Żadnych binariów z tego źródła nie publikujemy w `kcan`.
