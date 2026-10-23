@@ -144,3 +144,11 @@ Z dwóch **różnych** EXE dostarczonych razem w `VAG-CAN Commander V4.5.zip` od
 **Nowe ograniczenie uogólniania UART:** w 3.0 beta kod `0x4031A0` ustawia `833333` w badanej ścieżce, ale 4.5 w `0x403170` **warunkowo** wybiera `115200` (parametr 0 lub 1) albo `833333` (parametr >=2). Jest to konfiguracja po stronie **COM/UART**, nie prędkość CAN. Semantyka parametru i przypisanie do CAN/K-Line wymagają sprawdzenia. Zatem `833333` **nie jest udowodnioną uniwersalną prędkością wszystkich trybów Commandera**.
 
 W 4.5 walidator `0x402C64` jawnie przyjmuje `0x60 length=0..4`; w 3.0 beta w badanym walidatorze nie ma takiego specjalnego wyjątku (inne wiadomości przechodzą przez tablicę deskryptorów). Nie interpretować dodatkowych bajtów odpowiedzi jako sprzętowego ACK. [Dowody z deasemblacji i ograniczenia](ANALYSIS_VAGCAN_30BETA_45_2026-10-23.md) · [testy D044/D045](DISCREPANCIES.md).
+
+## Korekta 3.0 beta/4.5: prędkość zależy od numeru COM (2026-10-23)
+
+W 4.5 argument wybierający `115200` przy `arg<2` i `833333` przy `arg>=2` ma **konkretne źródło**: `GetPrivateProfileIntA("COM","PORT",0,.....\\TESTER.INI)` → globalne `0xDC23E4` → `0x409EFA` → `0x403110` → `0x403170`. Ta sama wartość jest formatowana jako **`COM%d`** w `0x408CD0`. Nie jest to selektor trybu CAN/K-Line! W dostarczonym `Tester.ini` ustawiono **`PORT=4`**, więc 4.5 żąda **833333 bit/s**. W 3.0 beta odpowiadająca ścieżka używa zawsze 833333. **Na sprzęcie nadal niezweryfikowane.**
+
+Nowe fakty **PC↔PIC** w 3.0 beta/4.5: w zbadanej inicjalizacji `51 00` → `C0 00` → `53 20 [32B]`. Polecenie **`C0 00`** jest potwierdzone kodem nadawczym i walidatorem odbioru, ale nie jego znaczenie. 3.0 beta akceptuje odpowiedź `60 00` dokładnie, 4.5 `0x60 length 0..4`. Dla obu RX `0x70 length 4..12`. Pełne tablice spod `0x44A998` (3.0) i `0x44C998` (4.5) opisano w [raporcie](ANALYSIS_VAGCAN_30BETA_45_DEEP_2026-10-23.md).
+
+**Ograniczenie hosta:** stare wersje otwierają `COM%d` bez `\\\\.\\`; według [Microsoft CreateFileA](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilea) to nie wystarcza do COM10+. FULL 2.5 ma ścieżkę z długą nazwą. [D044–D046](DISCREPANCIES.md). Przypominamy: żadne odkrycie nie potwierdza pracy fizycznego CAN ani firmware.
