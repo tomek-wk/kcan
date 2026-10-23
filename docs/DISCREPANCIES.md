@@ -134,3 +134,13 @@ Nowy materiał: `VAG K+CAN COMMANDER 1.4zainstalowany.rar`, SHA-256 `8f76b5f4e1b
 | **KCAN-D011** | `Tester.ini` z instalacji ma pierwsze `TARGET=6`, drugie `TARGET=0`, `DIAGNOSTICID=1761195548`, `FILEINDEX=1955`. W `FULL 1.4` było analogicznie, poza `FILEINDEX=1956`. | **OPEN — nowa wariacja ustawienia śladu.** Wyjaśnić parser duplikatów `[CHANNEL]` i czy `FILEINDEX` zmienia się w czasie; **nie traktować go jako opkodu PC↔PIC**. |
 
 Nie powstał nowy test `KCAN-D043`: zidentyfikowane różnice należą do już istniejących zadań D006/D011. Brak nowych dowodów działania CAN na konkretnym adapterze.
+
+## KCAN-D043 — zgodność chronionej kompilacji „3.6” i D2XX/FTChipID (2026-10-23)
+
+Źródło: [ANALYSIS_VWTESTER_36_2026-10-23.md](ANALYSIS_VWTESTER_36_2026-10-23.md), archiwum SHA-256 `4c4e448077836806c593ef2f08a948ee56d0bde73f6f7dd8f56148b0097403a4`.
+
+| ID | Materiał A | Materiał B | Czego nie wiemy | Test rozstrzygający | Status |
+| --- | --- | --- | --- | --- | --- |
+| **KCAN-D043 (P0/P1)** | `VWTester.exe` FULL 2.5 ma **jawnie odtworzony** Win32 COM UART 833333 i pakiety `0x50/51/53/60/70` | `VWTester.exe` „3.6” **inny SHA-256**, kod ukryty w `.vmp0/.vmp1`, jawne importy `FT_Open/FT_Close/FT_GetDeviceInfo`, `FTID_GetChipIDFromHandle` oraz Win32 COM | Czy 3.6 używa tego samego **protokołu PC↔PIC**, czy D2XX dotyczy tylko wykrywania/ID, czy UART/baudrate/RTS/DTR/format CAN i inicjalizacja są kompatybilne? | Najpierw pomiary identyfikacji FTDI, stanów DTR/RTS, użytych Win32 COM/D2XX i bajtów UART z **bezpiecznej, kontrolowanej sesji bez samochodu**; następnie porównać z 2.5 i DLL J2534. Komendy transmitujące CAN wyłącznie na izolowanej magistrali. Alternatywnie zdobyć czytelną, inną implementację albo własny log PC↔PIC. | **OPEN — binarium/importy potwierdzone, protokół 3.6 NIEPOTWIERDZONY** |
+
+**Powiązania ze starszymi testami:** D003 (dongle), D004 (Win32 COM kontra D2XX), D015 (numery aplikacji/firmware), D016 (DTR/RTS). W szczególności **nowe bezpośrednie importy FTDI nie dowodzą ani transportu CAN przez D2XX, ani użycia `FT_Read/FT_Write`, ani zależności licencyjnej od chip ID**. Dodatkowy pomiar nie powinien zakładać kompatybilności adaptera tylko na podstawie etykiety „3.6”. Nie ogłaszać nowych komend bez ścieżki wykonawczej lub logów.
