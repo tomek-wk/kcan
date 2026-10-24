@@ -93,3 +93,9 @@ Zamiast niej **TypeDef328** zawiera spójny zestaw komend i potwierdzoną transm
 - Wyniki **nie wymagają** reflasha ani eksperymentów na magistrali samochodu. Testy powinny być pasywne, na stole i ze świadomym ryzykiem ACK.
 
 **Stan: po raz pierwszy w HUD ECU Hacker 6.1 udało się potwierdzić i zlokalizować faktyczne bajty komend w jednej spójnej klasie Commandera, wyprowadzić mapowanie bitrate i konfigurację filtrów.**
+
+## Niezależna walidacja z dotychczasowego protokołu kcan
+
+Po zakończeniu identyfikacji gałęzi HUD 6.1 porównano wynik z [PROTOCOL.md](PROTOCOL.md), napisanym wcześniej na podstawie **innej implementacji DLL i logu z interfejsu**. Tam niezależnie ustalono `55 03 N FA 07` i **`55 03 01 FA 07` zaobserwowane w logu przy CAN 500000 bit/s**. Jest to **mocna niezależna zgodność** dla całej struktury komendy i konkretnego testu 500 kbit/s; pozostałe wartości bitrate są nadal wyliczeniami z kodu, a nie potwierdzonymi przechwyceniami dla każdej szybkości.
+
+Drobna różnica formuł: wcześniejszy raport używa `round(1000000/bitrate - 1)`, HUD wykonuje `round(1000000/bitrate) - 1`; dla udokumentowanych dzielników całkowitych dają identyczny rezultat, lecz przy danych granicznych/zaokrągleniach nie należy uogólniać równoważności bez testu.
