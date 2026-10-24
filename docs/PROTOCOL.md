@@ -190,3 +190,16 @@ Ryzyka kodu transportowego: aktywne pętle bez timeoutu `0x420371` i `0x420498`;
 **Niebezpieczeństwo warstw:** prawidłowa ogólna ramka CAN ma prawo mieć **DLC=0**. Jednak rekord przekazany do **TP2.0** powinien mieć co najmniej 1 bajt sterujący. W trzech handlerach jest **`mov cl,[frame+2]; dec ecx; shr ecx,2; rep movsd`**, bez lokalnego sprawdzenia N>=1, a wywołanie z dekodera `0x70` przechodzi przez filtr zwracający stałe 1. Przy N=0 w ogólnej gałęzi składania licznik kopii wynosi `0x3FFFFFFF` DWORD (ryzyko odczytu/zapisu poza buforem). **Własny sniffer CAN przyjmuje DLC0, ale parser TP2.0 musi odrzucić go przed `N-1`.** Nie testować uszkodzenia na starym EXE.
 
 **Negocjacja:** wszystkie trzy RX wykonują `and eax,0xFF` + `cmp ax,0x300` w gałęzi A1/A3, co czyni tę **konkretną gałąź martwą**; inna ścieżka D0 pozwala nadal obsługiwać elementy zestawiania połączenia. Dopasowanie ACK przez `(control & 0xB0)==0xB0` jest szersze od ścisłego górnego nibble `0xB0`; w nowym parserze stosować `(control & 0xF0)==0xB0` wraz z numerem sekwencji/kanałem. [Pełny audyt trzech EXE](AUDIT_READABLE_FILES_2026-10-23.md), D053–D056.
+
+
+## 2026-10-24 — HUD 6.1: dokładny format 4-bajtowego CAN ID i maski 0x53
+
+[**Analiza wykonania RID3655/RID3656/RID3649 i parsera RID3650**](ANALYSIS_HUD_ECU_HACKER_61_CODEC_RX_FOLLOWUP_2026-10-24.md) · [**Koder referencyjny Python (offline)**](../tools/hud_kcan_codec.py). **Źródło:** odzyskany `ECU_Hacker.exe` 6.1, SHA256 `b70fa891953927da0600eac420d18acdc15a39bdba25dad366e1c52a602eeeb8`. Obfuskowane IL wykonano w interpreterze instrukcji i porównano z wcześniejszymi wynikami DLL oraz EXE 2.5; **żadnego fizycznego adaptera nie testowano**.
+
+- `RID3655` **CAN11** ID `0x123` → `24 0C 00 00`; **CAN29** ID `0x01ABCDE3` → `0D 4B CD E3`; `RTR` ustawia bit `0x00800000` w czterobajtowym słowie. `extended || isMask` ustawia `0x00400000`.
+- **Formuła:** `v = extended ? id : (id << 18)`; `w = (((v & 0xFFE00000) << 3) | (v & 0x001FFFFF)) & 0xffffffff`; następnie dodanie flag, `w` zapisane **big-endian**.
+- `RID3656` wykonuje operację odwrotną, ale używa **osobnego globalnego trybu `mode29` z FieldDef 0x0400085F** do odróżnienia CAN11 od CAN29. Zdekodowano `out RTR` z bitu 23. Wynik **nie dowodzi CAN29 w MCU PIC**, ale potwierdza implementację protokołu po stronie HUD.
+- **`0x53` show-all CAN11**: `53 20` + 6×`00 00 00 00` (filtry) + 2×`00 40 00 00` (maski); **CAN29**: `53 20` + 8×`00 40 00 00`. To są **bajty hosta**, nie gwarancja skuteczności lub true listen-only.
+- `RID3649` emulowany z interceptem `Write`: `54 00`, `55 03 01 FA 07`, `60 07 24 0C 00 00 11 22 33`; szczególny wariant **`0x60` kończy się bez synchronicznego wywołania parsera odpowiedzi**. `0x53/0x54/0x55` odczytują odpowiedź przez RID3650, z timeoutem zadanym przez caller.
+- `RID3650` **RX**: buforuje opcode i długość, po `0x70` dekoduje ID z **offsetu 2** przez RID3656, a dane CAN z **offsetu 6**; odkłada pakiety w kolejce. Pełna maszyna stanów, resynchronizacja i dokładna semantyka innych statusów **do dalszego odtworzenia**.
+- 8 lokalnych testów zestawów wektorów oraz 20 000 dodatkowych losowych round-tripów kodera/dekodera przeszło poprawnie. Wszystkie wyniki kodera są **potwierdzone w symulacji IL hosta, nie na fizycznym adapterze**.
