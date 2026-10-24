@@ -4,6 +4,8 @@ Repozytorium dokumentuje **protokół binarny między komputerem a interfejsem V
 
 **Status:** dokumentacja robocza, częściowo odtworzona przez analizę statyczną biblioteki J2534 oraz logów KCANTEST. **Nie zweryfikowano jej jeszcze na konkretnym niebieskim adapterze.** Klony i wersje firmware mogą się różnić.
 
+**Kontynuacja w nowym czacie (stan 2026-10-24):** [Krótki handoff HUD ECU Hacker 6.1 / protokół Commandera](docs/HANDOFF_HUD_61_PROTOCOL_2026-10-24.md) — aktualne komendy, narzędzia offline, analiza `RID2688`/`RID2694` i kolejność dalszych badań.
+
 ## Dokumentacja
 
 | Plik | Zawartość |
