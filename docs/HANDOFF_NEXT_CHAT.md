@@ -253,3 +253,14 @@ Najbardziej obiecujące: **FD-001** CXEM `KCAN-ELM327.RAR` z `pic18f2480.hex` (P
 **Stan: nadal 0 autentycznych obrazów MCU Commandera pobranych / zweryfikowanych.** Brak uruchamiania plików, zapisów PIC i dostępu do samochodu; dokumentacja i odnośniki GitHub, bez kopiowania cudzych binariów.
 
 **FD-025 (2026-10-24):** [Carmasters — VAG K+CAN Commander, 27.03.2015](https://carmasters.org/topic/5640-vag-kcan-commander/) wymienia **`PGMKCAN2.rar`** jako „firmware i program do testowania”, odpowiadając użytkownikowi adaptera **FT232RL + LPC2119FBD64** (wcześniej działał z PC Commander 1.4). **Nie pobrano; forum 403, brak mirrora; nieznane wnętrze/target**. Historyczne skargi na brak pobrania już w 2015 i 2019. Szczegóły i ważne zastrzeżenia w [FIRMWARE_DUMP_FOLLOWUP_2026-10-24.md](docs/FIRMWARE_DUMP_FOLLOWUP_2026-10-24.md).
+
+## Inne źródła firmware i aktualizatorów — nowe ślady 2026-10-24
+
+Nowy raport: [FIRMWARE_ALTERNATIVE_SOURCES_2026-10-24.md](FIRMWARE_ALTERNATIVE_SOURCES_2026-10-24.md) — **FD-027–FD-033**, poszukiwania na GarageForum, MHH Auto, Elektrodzie, GitHub i otwartych indeksach/mirrorach, wraz z oceną prób pobrania oraz relacjami o błędach aktualizacji.
+
+- **FD-027, inny protokół:** GarageForum 2018 potwierdza nazwę konkretnego HEX **`cable_7i_PIC18F4685__SN17000_firmware44.hex`**, a także firmware 58 i starszy PIC18F2685 w rodzinie SuperVAG. Treść forum dostępna, **odnośniki HEX ukryte przez logowanie, brak bajtów**.
+- **FD-028, kandydat do przeanalizowania w pierwszej kolejności dla Commandera:** MHH „**K+can com 3.6 UPDATER TOOL**” — zindeksowany opis twierdzi, że aktualizuje firmware interfejsu 1.4 do 3.6. **HTTP403; nie pozyskano aktualizatora**, więc nie wiadomo, czy zawiera obraz PIC i jak działa.
+- **FD-029:** Elektroda 2011 `vag can.rar` 1,54 MB opisany jako **„program i wsad do naprawy kabelka”** po nieudanym upgrade VCDS; autor zgłosił skuteczną naprawę. **Wymagane logowanie, pobranie nie powiodło się**. Może dotyczyć **tylko EEPROM FTDI**, nie przypisywać procesorowi bez dowodu.
+- **FD-030, korekta:** `VAGKCANUpdate V1.0.6/1.0.8/1.1.0/1.1.2` z archiwów 2011 jest **Super VAG K+CAN Plus 2.0** w MHH, a **nie potwierdzonym aktualizatorem Commandera**.
+- **FD-031:** „cable not responding” przy próbie aktualizacji SuperVAG firmware 58 (09.2018) jest **niepowodzeniem aktualizacji, a nie odczytu Flash**.
+- **Wynik:** **nadal żaden nowy oryginalny obraz MCU ani updater nie został pobrany**, brak analizy bajtów takich plików, żaden adapter nie był dotykany. Zebrane referencje i cele statycznej analizy bez publikowania cudzych binariów.
