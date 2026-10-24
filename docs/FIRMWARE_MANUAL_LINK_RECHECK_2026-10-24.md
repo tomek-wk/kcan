@@ -4,12 +4,12 @@
 
 **Bardzo ważne:** reset statusu ręcznego NIE usuwa starych adresów, informacji bibliograficznych, ani historycznych rezultatów narzędziowych zapisanych w innych raportach. Wystąpienie HTTP 403 w narzędziu automatycznym **nie rozstrzyga**, czy plik da się pobrać zwykłą przeglądarką po zalogowaniu. „Dostępny” oznacza co najmniej uzyskanie **rzeczywistych bajtów**, a nie jedynie zobaczenie nazwy na stronie. Nie mieszać firmware MCU, EEPROM FTDI i instalatorów PC.
 
-**Aktualny status całej listy:** 1/20 pozycji ponownie sprawdzona ręcznie po resecie. Użytkownik będzie odsyłać pozostałe wyniki kolejno; po każdej próbie aktualizować wyłącznie dany wiersz, bez automatycznego przejmowania dawnego werdyktu.
+**Aktualny status całej listy:** 2/20 pozycji ponownie sprawdzone ręcznie po resecie. Użytkownik będzie odsyłać pozostałe wyniki kolejno; po każdej próbie aktualizować wyłącznie dany wiersz, bez automatycznego przejmowania dawnego werdyktu.
 
 | Nr | Szukany plik / materiał | Adres do ponownego sprawdzenia | Ręczna weryfikacja od nowa |
 |---:|---|---|---|
 | 01 | `PGMKCAN2.rar` — firmware + tester (nieznany target) | https://carmasters.org/topic/5640-vag-kcan-commander/ | **SPRAWDZONY RĘCZNIE — załącznik dostępny warunkowo; forum wymaga reputacji do pobrania. Użytkownik nie ma możliwości spełnienia wymogu. BAJTÓW NIE POBRANO.** |
-| 02 | `K+can com 3.6 UPDATER TOOL` | https://mhhauto.com/Thread-What-is-K-can-com-3-6-UPDATER-TOOL-and-what-does-it-do | **DO SPRAWDZENIA** |
+| 02 | `K+can com 3.6 UPDATER TOOL` | https://mhhauto.com/Thread-What-is-K-can-com-3-6-UPDATER-TOOL-and-what-does-it-do | **SPRAWDZONY RĘCZNIE — dyskusja o programie, niejednoznaczne odpowiedzi; brak załączników z narzędziem, tylko jedno zdjęcie. BRAK PLIKU DO POBRANIA W TYM WĄTKU.** |
 | 03 | `1.4 китай.rar` — możliwy EEPROM FTDI | https://www.auto-bk.ru/forum/applications/core/interface/file/attachment.php?id=46765 | **DO SPRAWDZENIA** |
 | 04 | `VAGCAN+K V3.6.rar` — archiwum oryginalnego CD | https://www.auto-bk.ru/forum/applications/core/interface/file/attachment.php?id=182944 | **DO SPRAWDZENIA** |
 | 05 | `KCAN-ELM327.RAR` / `pic18f2480.hex` | https://forum.cxem.net/applications/core/interface/file/attachment.php?id=342616 | **DO SPRAWDZENIA** |
@@ -44,3 +44,7 @@ Dla każdej pozycji zapisywać osobno:
 ## Próba ręczna 01 — Carmasters / PGMKCAN2.rar (2026-10-24)
 
 **Informacja bezpośrednio od użytkownika:** plik jest teoretycznie widoczny/dostępny jako załącznik forum, ale jego pobranie jest ograniczone systemem reputacji. Użytkownik nie może przejść etapu uzyskania reputacji uprawniającej do pobrania. **Nie otrzymano pliku; brak hashy i inspekcji zawartości.** Status ograniczony do *tego konta i tej próby* — nie oznacza, że URL jest martwy, ani że plik został usunięty. Nie ponawiać bezcelowo prośby o ręczne pobranie z tego forum; szukać alternatywnego mirrora lub uprawnionej kopii.
+
+## Próba ręczna 02 — MHH AUTO / K+can com 3.6 UPDATER TOOL (2026-10-24)
+
+**Informacja bezpośrednio od użytkownika:** wątek zawiera pytanie o program i niejasne, niejednoznaczne odpowiedzi; jedynym załącznikiem jest zdjęcie. **Brak załączonego aktualizatora, wsadu oraz bezpośredniego linku do narzędzia w sprawdzonym wątku.** Wątek pozostaje wzmianką bibliograficzną, nie źródłem pobrania firmware. Nie wynika z niego potwierdzenie aktualizacji MCU Commandera 1.4→3.6. Nie oznacza to, że program nie istnieje nigdzie indziej.
