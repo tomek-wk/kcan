@@ -1,5 +1,7 @@
 # Dodatkowe poszukiwania: bezpośrednie archiwa Commandera, niezależne firmware CAN i negatywne testy (2026-10-24)
 
+> **RESET RĘCZNEJ WERYFIKACJI (2026-10-24):** Użytkownik polecił wyzerować **wszystkie wcześniejsze ręczne oceny dostępności linków** i ponownie sprawdzić je od początku. Wartości `403`, `404`, `niedostępny` i podobne poniżej są **historycznymi wynikami wcześniejszych prób narzędziowych**, nie aktualnym werdyktem ręcznym. Nowa lista i statusy: [FIRMWARE_MANUAL_LINK_RECHECK_2026-10-24.md](FIRMWARE_MANUAL_LINK_RECHECK_2026-10-24.md). Nie usuwać historycznych dowodów, ale nie przenosić ich do nowej oceny.
+
 **Zakres:** kontynuacja rejestru [FD-001–014](FIRMWARE_DUMP_LEADS_2026-10-23.md), [FD-015–026](FIRMWARE_DUMP_FOLLOWUP_2026-10-24.md), [FD-027–033](FIRMWARE_ALTERNATIVE_SOURCES_2026-10-24.md). Użytkownik dopuszcza **każdy procesor i niekompatybilne implementacje protokołu** jako źródło hipotez i wyników prób, w tym nieudanych.
 
 **Kryteria:** *strona źródłowa czytelna* ≠ *bezpośredni link odpowiada* ≠ *bajty zostały pobrane* ≠ *zidentyfikowano firmware*. W tym etapie **nie zdobyto bajtów żadnego nowego firmware Commandera**. Narzędzie WWW rozpoznaje niektóre pliki ZIP, ale nie obsługuje binarnych odpowiedzi `application/zip`; bezpośrednia biblioteka `requests` w kontenerze i osobne narzędzie pobierające nie uzyskały danych (DNS lub ograniczenie kontekstu URL). Nie uruchamiano nieznanych EXE i nie wysyłano poleceń do adaptera.
