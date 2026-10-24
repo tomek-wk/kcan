@@ -1,5 +1,7 @@
 # HANDOFF — kontynuacja badań K+CAN w nowym czacie
 
+> **AKTUALNA DECYZJA UŻYTKOWNIKA (2026-10-24):** Zresetowano **wszystkie wcześniejsze oceny ręcznej dostępności linków do firmware**. Niezależnie od dawnego statusu `403`/`nie działa` / `wymaga logowania`, każda pozycja ma nowy status **DO SPRAWDZENIA RĘCZNIE**. Zob. [FIRMWARE_MANUAL_LINK_RECHECK_2026-10-24.md](FIRMWARE_MANUAL_LINK_RECHECK_2026-10-24.md) — rejestr 20 pozycji do oceny od zera. Nie zmieniono historycznych rezultatów automatycznych prób ani treści dowodów.
+
 **Aktualny stan:** 2026-10-24, po analizie HUD ECU Hacker 6.1, w tym protokołu CAN11/CAN29, statusu `0x54`, DTR/RTS oraz `RID2688` (drain) / `RID2694` (częściowe timeouty). **Dokument narasta historycznie; zalecany aktualny punkt startowy to [HANDOFF_HUD_61_PROTOCOL_2026-10-24.md](HANDOFF_HUD_61_PROTOCOL_2026-10-24.md).**
 
 ## Cel użytkownika i zasady pracy
