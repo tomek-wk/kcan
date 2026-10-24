@@ -1,0 +1,43 @@
+# Dodatkowe poszukiwania: bezpośrednie archiwa Commandera, niezależne firmware CAN i negatywne testy (2026-10-24)
+
+**Zakres:** kontynuacja rejestru [FD-001–014](FIRMWARE_DUMP_LEADS_2026-10-23.md), [FD-015–026](FIRMWARE_DUMP_FOLLOWUP_2026-10-24.md), [FD-027–033](FIRMWARE_ALTERNATIVE_SOURCES_2026-10-24.md). Użytkownik dopuszcza **każdy procesor i niekompatybilne implementacje protokołu** jako źródło hipotez i wyników prób, w tym nieudanych.
+
+**Kryteria:** *strona źródłowa czytelna* ≠ *bezpośredni link odpowiada* ≠ *bajty zostały pobrane* ≠ *zidentyfikowano firmware*. W tym etapie **nie zdobyto bajtów żadnego nowego firmware Commandera**. Narzędzie WWW rozpoznaje niektóre pliki ZIP, ale nie obsługuje binarnych odpowiedzi `application/zip`; bezpośrednia biblioteka `requests` w kontenerze i osobne narzędzie pobierające nie uzyskały danych (DNS lub ograniczenie kontekstu URL). Nie uruchamiano nieznanych EXE i nie wysyłano poleceń do adaptera.
+
+## Nowe rekordy i wyniki
+
+| ID | Priorytet | Źródło / dosłowny URL | Dokładny wynik | Co zbadać po pozyskaniu |
+|---|---|---|---|---|
+| **FD-034** | **P1: dostępne archiwum programu 3.6, potencjalnie dodatek z firmware** | [tieCAR.net, „Downloads: VAG Commander”, post admina 23.10.2010](https://www.tiecar.net/forums/index.php?topic=1587.0). Bezpośredni link **`https://www.tiecar.net/downloads/sw/VAG_K%2BCAN_Commander_v36.zip`** | **Odpowiedź WWW `(400) Unsupported content-type: application/zip`**, **nie 404**, co stanowi dowód istnienia zasobu zwracającego binarne ZIP w danym momencie. **Brak bytes/Content-Length/SHA**, ponieważ narzędzie WWW nie potrafi go pobrać do analizy; dodatkowa próba `requests.get()` z kontenera: **DNS failure**. | Manifest archiwum i porównanie ze znanymi wersjami chronionego `VWTester.exe` 3.6; szukać bootloadera, `hex/bin/dat`, pakietu updater, nie zakładać firmware MCU. |
+| **FD-035** | **P1: potencjalny zbiorczy pakiet wielu wersji** | [tieCAR.net, ten sam post](https://www.tiecar.net/forums/index.php?topic=1587.0). Bezpośredni link **`https://www.tiecar.net/downloads/sw/VKCC_ALL.ZIP`** | **`(400) Unsupported content-type: application/zip`**, analogicznie do FD-034. **Brak pobranych bajtów i manifestu**, łącze do zasobu przetrwało w przeciwieństwie do 1.4 i 2.5. | Zweryfikować, czy `ALL` zawiera tylko EXE Windows, czy firmware/aktualizatory. Porównać SHA plików PC z `VAG-CAN Commander V4.5.zip`, `V5.1.zip`, `VAG-K CAN-V3.6.zip`. |
+| **FD-036** | **P2: historyczny „Latest firmware” z 2010** | [tieCAR.net, obok wersji 1.4](https://www.tiecar.net/forums/index.php?topic=1587.0): odnośnik prowadzi do **`https://www.tiecar.net/CANtieCAR_Firmware`**. | **404 Not Found**, nie ma tam dostępnego firmware. **Ważne doprecyzowanie:** sam odnośnik wyprowadza na produkt **CANtieCAR** z oferty tego sprzedawcy, a nie jednoznacznie firmware niebieskiego chińskiego Commandera. Bez źródłowego pliku nie kwalifikować jako aktualizator 1.4. | Szukać kopii strony w archiwach, identyfikować docelowy produkt/wersję. |
+| **FD-037** | **P1: dostępny niezależny firmware do urządzenia USB-CAN** | [tieCAR.net, oficjalny katalog Support, sekcja USB-CAN](https://www.tiecar.net/support.html). Bezpośrednio **`https://www.tiecar.net/downloads/winCAN_FW_v1000087.zip`**, oznaczony przez autora strony jako **„USB-CAN Firmware Version 1.0.87”**. | **`(400) Unsupported content-type: application/zip`**; wskazuje binarny ZIP, ale **brak pobranej zawartości**. Jest to **inny sprzęt / inny potencjalny protokół**, wartościowy jako porównanie CAN, zgodnie z założeniami użytkownika. | Po pobraniu rozpoznać procesor, czy jest Intel HEX, BIN, EXE z zaszytym firmware; analiza implementacji CAN i buforów RX. Nie zakładać zgodności opcode Commandera. |
+| **FD-038** | **P2: rodzina kilku dostępnych stron aktualizacyjnych, nie sam firmware** | [tieCAR.net/support](https://www.tiecar.net/support.html) — **CANtieCAR v1–v5** i odnośniki `CANtieCAR_Firmware_RC.html`, `CANtieCAR3_Firmware_RC.html`, `CANtieCAR5_Firmware_RC.html`. | Linki do stron RC otwierają się jako **HTML z zerową treścią w parserze**; to NIE potwierdza dostępności pliku firmware. Katalog deklaruje m.in. BW/FW **v1 BW1.10.22/FW1.8.300**, **v3 BW3.1.118/FW3.0.2150**, **v5 BW5.1.510/FW5.0.816**. | Analiza struktury stron aktualizatora i rzeczywistych odnośników po uwierzytelnieniu/wykonaniu JS, jeśli dostępna zgodna z prawem publiczna ścieżka. |
+| **FD-039** | **P0: negatywny wynik zastosowania wsadu 3.6 w kablu 1.4** | [Elektroda, dyskusja o zgodności 1.4/2.0/2.5/3.0/3.6, post `dob12`, **16.04.2014 23:01**, wpis #34](https://www.elektroda.pl/rtvforum/topic2198051-30.html) | Autor deklaruje **„próbowałem wrzucić wsad z wersji 3.6 do kabelka 1.4, ale nie ruszyło”**. To świadectwo **rzeczywistej nieudanej próby użycia innego wsadu**, nie tylko opinia. **Nie znamy programatora, procedury, wyników VERIFY, stanu CP, modelu PIC, szczegółów UART ani pliku**. | Znaleźć u autora lub w archiwum źródło samego wsadu 3.6, sprawdzić docelowy MCU i różnice. **Nie przesądzać**, czy przyczyną niepowodzenia była niezgodność kodu, flash, konfiguracji, HW czy PC. |
+| **FD-040** | **P1: kontrprzykład kompatybilności z programami hosta** | [Elektroda, ten sam wątek, użytkownik `hYP`, **18.04.2014**, wpis #35](https://www.elektroda.pl/rtvforum/topic2198051-30.html) | Autor twierdzi, że **ten sam adapter kupiony jako 1.4 działał z aplikacjami 1.4, 2.5, 4.5, 5.1**. **Nie dowodzi jednak zgodności firmware binarnego MCU**. Wspiera konieczność osobnego badania kompatybilności aplikacja↔firmware i programu MCU↔sprzęt. | Uzupełnić macierz zgodności wersji PC, UART i sprzętu, rozdzielając aplikacje od plików wsadów. |
+| **FD-041** | **P2: ostrzeżenie o aktywnym malware w starszych dystrybucjach aplikacji** | [Elektroda, topic 1322638, wpisy z czerwca 2009](https://www.elektroda.pl/rtvforum/topic1322638.html) | Uczestnik zgłasza po uruchomieniu pewnej paczki `VAG K+CAN` podejrzany program tworzący zadanie systemowe i wymuszający restart. To **relacja, nie zweryfikowana analiza malware**; ważne przy pobieraniu cudzych ZIP/EXE. | Nie uruchamiać archiwów Commandera, statycznie przeszukać pliki i analizować tylko bezpieczne formaty. |
+| **FD-042** | **P1, sporna identyfikacja K+CAN 3.6 updater** | [MHH Auto, 15.11.2018](https://mhhauto.com/Thread-What-is-K-can-com-3-6-UPDATER-TOOL-and-what-does-it-do) | Indeksowany fragment wątku podaje dwie **rozbieżne interpretacje**: ktoś twierdzi, że updater **przeprogramowuje interfejs 1.4 do 3.6**, inny rozmówca stwierdza **„is for update super vag”**. Oryginalny wątek blokuje **403**. **Nie ma wystarczającego dowodu, że to updater PIC Commandera**. | **Skorygować wcześniejszy priorytet**: nadal szukać pliku, ale do czasu inspekcji traktować docelowy sprzęt jako **UNKNOWN / CONTESTED**, nie powtarzać bez zastrzeżenia twierdzenia 1.4→3.6. |
+
+## Wynik kontroli bezpośrednich URL z tieCAR.net
+
+Odczytane z HTML strony `https://www.tiecar.net/forums/index.php?topic=1587.0`:
+- `VAG_K%2BCAN_Commander_v36.zip` → **`application/zip`, narzędzie nie czyta typu binarnego**.
+- `VKCC_ALL.ZIP` → **`application/zip`, narzędzie nie czyta typu binarnego**.
+- `K_CAN_VAG_COMMANDER_14.ZIP` → **404**.
+- `vagk%2Bcan25_neednot_dongle.rar` → **404**.
+- `CANtieCAR_Firmware` → **404**.
+Odczytane z `https://www.tiecar.net/support.html`:
+- `winCAN_FW_v1000087.zip` → **`application/zip`**.
+- `CANtieCAR*_Firmware_RC.html` → **strona HTML otwarta, brak tekstu**.
+
+**Żadne odpowiedzi `application/zip` nie są dowodem integralności archiwum ani nie nadają sum SHA-256.** Do próby pobrania nie używać błędnej metody traktującej `HTTP 400 Unsupported content-type` zwrócone przez warstwę przeglądającą jako autentyczny błąd serwera ZIP. Wnioskujemy tylko, że strona zwraca treść w formacie, którego obecne narzędzie nie analizuje.
+
+## Sugerowany kolejny krok
+
+1. **FD-035** `VKCC_ALL.ZIP`: pobrać w normalnej przeglądarce, zarchiwizować metadane, statycznie spisać pliki i hashe. **Nie uruchamiać EXE**. Może zawierać więcej kompilacji niż obecnie analizowane.
+2. **FD-034** `VAG_K+CAN_Commander_v36.zip`: porównać z posiadanymi archiwami 3.6 oraz poszukać firmware/payloadu aktualizacji.
+3. **FD-037** `winCAN_FW_v1000087.zip`: skontrolować jako *osobną referencję*, bez oczekiwania opkodów 0x53/0x70.
+4. **FD-039** odnaleźć pierwotny wsad 3.6, którego użytkownik próbował użyć w 1.4. Ta relacja jest mocna właśnie jako **nieudana próba**.
+5. **FD-042** traktować wcześniejsze twierdzenie „3.6 updater aktualizuje K+CAN 1.4” jako **sporne**, dopóki nie mamy programu aktualizatora.
+
+Stan: **0 nowych rzeczywiście pobranych firmware MCU Commandera**, **3 rozpoznane bezpośrednie ZIP za pomocą WWW**, jeden nowy relacjonowany negatywny test firmware.
