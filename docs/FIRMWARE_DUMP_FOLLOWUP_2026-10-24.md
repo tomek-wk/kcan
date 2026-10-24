@@ -56,3 +56,12 @@ Poniższe pliki zostały **faktycznie odczytane jako tekst z publicznego GitHub*
 Drugie archiwum w tym samym wątku **`VAG-K_CAN_Commander_1X.4.rar`** jest opisane jako *działający program Commander 1.4* do połączenia z adapterem KKL; **brak podstaw**, aby zaliczać je do wsadów MCU. Jest to osobny materiał PC, nie drugi dump.
 
 **Weryfikacja mirrorów:** frazy `PGMKCAN2.rar`, `PGMKCAN2`, `PGMKCAN2 LPC2119` w wyszukiwarce WWW oraz wyszukiwarce plików połączonego GitHub zwróciły jedynie ten wątek lub wyniki niepowiązane. Brak pliku do statycznej analizy, co jest wynikiem kontroli dostępności, a nie dowodem braku pliku na innych, prywatnych mirrorach.
+
+## FD-026 — „K+CAN COM 3.6 UPDATER TOOL” z CD (niskie potwierdzenie; 2026-10-24)
+
+- **Źródło:** [MHH Auto, pytanie „What is K+can com 3.6 UPDATER TOOL and what does it do?”, 15.11.2018](https://mhhauto.com/Thread-What-is-K-can-com-3-6-UPDATER-TOOL-and-what-does-it-do).
+- **Opis:** użytkownik pisze, że na starym CD z **K+CAN 3.6** znajdowało się narzędzie aktualizacyjne. To **dodatkowy trop do przeszukania starych nośników/instalatorów wersji 3.6** z perspektywy potencjalnego payloadu mikrokontrolera, a nie zwykły plik HEX ze znaną zawartością.
+- **Weryfikacja dostępności:** indeks wyszukiwarki pokazuje tytuł i fragment wpisu; próba bezpośredniego otwarcia wątku **403 Forbidden**. **Nie pozyskano programu updatera ani payloadu**, nie wiadomo, czy aktualizuje firmware MCU, konfigurację FTDI czy tylko program Windows.
+- **Status:** **P2** — wskazówka bibliograficzna; brak udowodnionego dumpu. Zgodnie z decyzją użytkownika kompatybilność wersji nie jest warunkiem przydatności porównawczej.
+
+Nie mylić tego narzędzia z update request/installer nowszego Commandera, jak również z `PGMKCAN2.rar` (FD-025), który jest nazwanym archiwum opisanym jako „firmware oraz tester” w konkretnym wątku dotyczącym adaptera FT232RL + LPC2119FBD64.
