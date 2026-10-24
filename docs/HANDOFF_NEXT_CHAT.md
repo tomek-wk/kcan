@@ -1,6 +1,6 @@
 # HANDOFF — kontynuacja badań K+CAN w nowym czacie
 
-**Stan:** 2026-10-23, po **piątej** analizie `VWTester.exe` 2.5 (tym razem tylko CAN). **Ten dokument jest przeznaczony do przekazania kontekstu kolejnej rozmowie.**
+**Aktualny stan:** 2026-10-24, po analizie HUD ECU Hacker 6.1, w tym protokołu CAN11/CAN29, statusu `0x54`, DTR/RTS oraz `RID2688` (drain) / `RID2694` (częściowe timeouty). **Dokument narasta historycznie; zalecany aktualny punkt startowy to [HANDOFF_HUD_61_PROTOCOL_2026-10-24.md](HANDOFF_HUD_61_PROTOCOL_2026-10-24.md).**
 
 ## Cel użytkownika i zasady pracy
 
