@@ -4,14 +4,14 @@
 
 **Bardzo ważne:** reset statusu ręcznego NIE usuwa starych adresów, informacji bibliograficznych, ani historycznych rezultatów narzędziowych zapisanych w innych raportach. Wystąpienie HTTP 403 w narzędziu automatycznym **nie rozstrzyga**, czy plik da się pobrać zwykłą przeglądarką po zalogowaniu. „Dostępny” oznacza co najmniej uzyskanie **rzeczywistych bajtów**, a nie jedynie zobaczenie nazwy na stronie. Nie mieszać firmware MCU, EEPROM FTDI i instalatorów PC.
 
-**Aktualny status całej listy:** 3/20 pozycji ponownie sprawdzone ręcznie po resecie. Użytkownik będzie odsyłać pozostałe wyniki kolejno; po każdej próbie aktualizować wyłącznie dany wiersz, bez automatycznego przejmowania dawnego werdyktu.
+**Aktualny status całej listy:** 4/20 pozycji ponownie sprawdzone ręcznie po resecie. Użytkownik będzie odsyłać pozostałe wyniki kolejno; po każdej próbie aktualizować wyłącznie dany wiersz, bez automatycznego przejmowania dawnego werdyktu.
 
 | Nr | Szukany plik / materiał | Adres do ponownego sprawdzenia | Ręczna weryfikacja od nowa |
 |---:|---|---|---|
 | 01 | `PGMKCAN2.rar` — firmware + tester (nieznany target) | https://carmasters.org/topic/5640-vag-kcan-commander/ | **SPRAWDZONY RĘCZNIE — załącznik dostępny warunkowo; forum wymaga reputacji do pobrania. Użytkownik nie ma możliwości spełnienia wymogu. BAJTÓW NIE POBRANO.** |
 | 02 | `K+can com 3.6 UPDATER TOOL` | https://mhhauto.com/Thread-What-is-K-can-com-3-6-UPDATER-TOOL-and-what-does-it-do | **SPRAWDZONY RĘCZNIE — dyskusja o programie, niejednoznaczne odpowiedzi; brak załączników z narzędziem, tylko jedno zdjęcie. BRAK PLIKU DO POBRANIA W TYM WĄTKU.** |
 | 03 | `1.4 китай.rar` — pakiet szablonu FTDI/MProg `.ept`, niepotwierdzony firmware MCU | https://www.auto-bk.ru/forum/applications/core/interface/file/attachment.php?id=46765 | **POBRANY RĘCZNIE — według użytkownika jeden plik `*.ept`, około 2 kB. Prawdopodobnie konfiguracja EEPROM FTDI; nie jest rozpoznanym wsadem PIC/ARM. Brak przesłanego pliku/hasza i inspekcji bajtów.** |
-| 04 | `VAGCAN+K V3.6.rar` — archiwum oryginalnego CD | https://www.auto-bk.ru/forum/applications/core/interface/file/attachment.php?id=182944 | **DO SPRAWDZENIA** |
+| 04 | `VAGCAN+K V3.6.rar` — archiwum rzekomo z CD Commandera 3.6 | https://www.auto-bk.ru/forum/applications/core/interface/file/attachment.php?id=182944 | **SPRAWDZONY RĘCZNIE — według użytkownika plik niedostępny. Podejrzenie: pakiet aplikacji PC już analizowanej w `kcan`, ale bez pobrania brak weryfikacji zawartości/tożsamości. NISKI PRIORYTET, nie potwierdzone firmware MCU.** |
 | 05 | `KCAN-ELM327.RAR` / `pic18f2480.hex` | https://forum.cxem.net/applications/core/interface/file/attachment.php?id=342616 | **DO SPRAWDZENIA** |
 | 06 | `PIC18F2480.ZIP` z 25.01.2017 | https://forum.cxem.net/applications/core/interface/file/attachment.php?id=464785 | **DO SPRAWDZENIA** |
 | 07 | `PIC18F2480.ZIP` z 16.03.2017 | https://forum.cxem.net/applications/core/interface/file/attachment.php?id=477598 | **DO SPRAWDZENIA** |
@@ -52,3 +52,7 @@ Dla każdej pozycji zapisywać osobno:
 ## Próba ręczna 03 — AUTO-BK / `1.4 китай.rar` (2026-10-24)
 
 **Wynik użytkownika:** archiwum udało się pobrać. Po rozpakowaniu zawiera pojedynczy plik z rozszerzeniem `*.ept`, o rozmiarze około **2 kB**. Rozszerzenie `.ept` jest typowe dla szablonów EEPROM programu FTDI **MProg**; na podstawie informacji o zawartości klasyfikacja **prawdopodobny plik ustawień EEPROM FTDI**, a **nie potwierdzony firmware FLASH mikrokontrolera PIC/ARM**. **Plik nie został przekazany do analizy**, dlatego nie znamy dokładnej nazwy wewnętrznej, rozmiaru w bajtach, sumy SHA-256 ani pól VID/PID/serial. Nie używać do zapisu adaptera bez inspekcji. Dostępność: **POTWIERDZONO POBRANIE**, odrębnie od klasyfikacji zawartości.
+
+## Próba ręczna 04 — AUTO-BK / `VAGCAN+K V3.6.rar` (2026-10-24)
+
+**Relacja użytkownika:** archiwum niedostępne podczas ręcznej próby. Użytkownik uważa, że najprawdopodobniej jest to aplikacja PC analizowana już wcześniej w `kcan`, zatem materiał o niskiej wartości dla obecnych poszukiwań firmware. **Ocena, że jest to duplikat PC, pozostaje hipotezą**; nie pobrano pliku, nie ma manifestu ani SHA do potwierdzenia. **Decyzja robocza:** bez dalszych prób w tym miejscu, przejście do następnego tropu. Nie zmieniać informacji bibliograficznej o źródle.
